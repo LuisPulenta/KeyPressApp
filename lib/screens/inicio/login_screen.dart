@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // String _password = '';
 
   String _email = 'LNUNEZ';
-  String _password = '123456';
+  String _password = '111111';
 
   String _emailError = '';
   bool _emailShowError = false;
@@ -82,10 +82,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 100,
                   ),
-                  Image.asset(
-                    "assets/logo.png",
-                    height: 150,
-                    width: 500,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Image.asset(
+                        "assets/logo.png",
+                        height: 150,
+                        width: 350,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
