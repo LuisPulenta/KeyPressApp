@@ -6,54 +6,49 @@ class Boton extends StatelessWidget {
   final String texto;
   final Color color1;
   final Color color2;
-  final Function onPress;
 
   const Boton(
       {this.icon = FontAwesomeIcons.plus,
       required this.texto,
       this.color1 = const Color(0xff6989f5),
-      this.color2 = const Color(0xff906ef5),
-      required this.onPress});
+      this.color2 = const Color(0xff906ef5)});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPress(),
-      child: Stack(
-        children: [
-          _BotonGordoBackground(
-            icon: icon,
-            color1: color1,
-            color2: color2,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 120, width: 40),
-              FaIcon(
-                icon,
-                size: 20,
-                color: Colors.white,
+    return Stack(
+      children: [
+        _BotonGordoBackground(
+          icon: icon,
+          color1: color1,
+          color2: color2,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 120, width: 40),
+            FaIcon(
+              icon,
+              size: 20,
+              color: Colors.white,
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: Text(
+                texto,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Text(
-                  texto,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(
-                width: 40,
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            const SizedBox(
+              width: 40,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

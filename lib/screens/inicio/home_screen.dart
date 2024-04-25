@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double ancho = MediaQuery.of(context).size.width;
     return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 60),
+        padding: const EdgeInsets.fromLTRB(0, 60, 0, 5),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -108,76 +108,108 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Row(
               children: [
-                Container(
-                  width: ancho * 0.5,
-                  child: Boton(
-                    icon: FontAwesomeIcons.car,
-                    texto: "Flota",
-                    color1: const Color(0xff6989F5),
-                    color2: const Color(0xff906EF5),
-                    onPress: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FlotaScreen(),
-                        ),
-                      );
-                    },
+                InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FlotaScreen(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: const Boton(
+                      icon: FontAwesomeIcons.car,
+                      texto: "Flota",
+                      color1: Color(0xff6989F5),
+                      color2: Color(0xff906EF5),
+                    ),
                   ),
                 ),
-                Container(
-                  width: ancho * 0.5,
-                  child: Boton(
-                    icon: FontAwesomeIcons.users,
-                    texto: "Usuarios",
-                    color1: const Color.fromARGB(255, 226, 105, 245),
-                    color2: const Color.fromARGB(255, 228, 177, 201),
-                    onPress: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const UsuariosScreen(),
-                        ),
-                      );
-                    },
+                InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UsuariosScreen(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: const Boton(
+                      icon: FontAwesomeIcons.users,
+                      texto: "Usuarios",
+                      color1: Color.fromARGB(255, 226, 105, 245),
+                      color2: Color.fromARGB(255, 228, 177, 201),
+                    ),
                   ),
                 ),
               ],
             ),
             Row(
               children: [
-                Container(
-                  width: ancho * 0.5,
-                  child: Boton(
-                    icon: FontAwesomeIcons.helmetSafety,
-                    texto: "EPP",
-                    color1: Color.fromARGB(255, 247, 88, 20),
-                    color2: Color.fromARGB(255, 215, 192, 179),
-                    onPress: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EppScreen(),
-                        ),
-                      );
-                    },
+                InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EppScreen(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: const Boton(
+                      icon: FontAwesomeIcons.helmetSafety,
+                      texto: "EPP",
+                      color1: Color.fromARGB(255, 247, 88, 20),
+                      color2: Color.fromARGB(255, 215, 192, 179),
+                    ),
                   ),
                 ),
-                Container(
-                  width: ancho * 0.5,
-                  child: Boton(
-                    icon: FontAwesomeIcons.personDigging,
-                    texto: "Obras",
-                    color1: const Color.fromARGB(255, 51, 7, 7),
-                    color2: const Color.fromARGB(255, 85, 51, 67),
-                    onPress: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ObrasScreen(),
-                        ),
-                      );
-                    },
+                InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ObrasScreen(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: const Boton(
+                      icon: FontAwesomeIcons.personDigging,
+                      texto: "Obras",
+                      color1: Color.fromARGB(255, 51, 7, 7),
+                      color2: Color.fromARGB(255, 85, 51, 67),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: ancho * 1,
+                    child: const Boton(
+                      icon: FontAwesomeIcons.doorOpen,
+                      texto: "Cerrar Sesión",
+                      color1: Color.fromARGB(255, 236, 8, 8),
+                      color2: Color.fromARGB(255, 211, 116, 113),
+                    ),
                   ),
                 ),
               ],
