@@ -60,4 +60,25 @@ class ApiHelper {
 
     return Response(isSuccess: true);
   }
+
+  //---------------------------------------------------------------------------
+  static Future<Response> getEmpresa(int idempresa) async {
+    var url = Uri.parse(
+        '${Constants.apiUrl}/api/Empresas/GetEmpresaByIdEmpresa/$idempresa');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: Empresa.fromJson(decodedJson));
+  }
 }

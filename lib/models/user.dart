@@ -6,6 +6,7 @@ class User {
   String? apellido = '';
   int? estado = 0;
   int? habilitaAPP = 0;
+  int idEmpresa = 0;
 
   User({
     required this.idUsuario,
@@ -15,6 +16,7 @@ class User {
     required this.apellido,
     required this.estado,
     required this.habilitaAPP,
+    required this.idEmpresa,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class User {
     apellido = json['apellido'];
     estado = json['estado'];
     habilitaAPP = json['habilitaAPP'];
+    idEmpresa = json['idEmpresa'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class User {
     data['apellido'] = apellido;
     data['estado'] = estado;
     data['habilitaAPP'] = habilitaAPP;
+    data['idEmpresa'] = idEmpresa;
 
     return data;
   }

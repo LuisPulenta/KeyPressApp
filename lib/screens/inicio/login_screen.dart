@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:keypressapp/helpers/helpers.dart';
 import 'package:keypressapp/models/models.dart';
 import 'package:keypressapp/screens/screens.dart';
 import 'package:keypressapp/themes/app_theme.dart';
@@ -32,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String _emailError = '';
   bool _emailShowError = false;
 
+  late Empresa _empresa;
+
   String _passwordError = '';
   bool _passwordShowError = false;
 
@@ -46,6 +49,23 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _empresa = Empresa(
+        idEmpresa: 0,
+        nombreempresa: '',
+        direccion: '',
+        telefono: '',
+        carpetaImagenes: '',
+        mensageSSHH: '',
+        activo: false,
+        logoEmpresa: '',
+        logoFullPath: '',
+        conexionServidor: '',
+        nombreBDObra: '',
+        usuarioBDObra: '',
+        passwordBDObra: '',
+        nombreBDInv: '',
+        usuarioBDInv: '',
+        passwordBDInv: '');
     setState(() {});
   }
 
@@ -310,10 +330,11 @@ class _LoginScreenState extends State<LoginScreen> {
 //-----------------------------------------------------------------
 //--------------------- _storeUser --------------------------------
 //-----------------------------------------------------------------
-  void _storeUser(String body) async {
+  void _storeUser(String body, String body2) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRemembered', true);
     await prefs.setString('userBody', body);
+    await prefs.setString('empresaBody', body2);
     await prefs.setString('date', DateTime.now().toString());
   }
 
@@ -398,8 +419,13 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    Response response2 = await ApiHelper.getEmpresa(user.idEmpresa);
+    _empresa = response2.result;
+
+    var body2 = jsonEncode(_empresa.toJson());
+
     if (_rememberme) {
-      _storeUser(body);
+      _storeUser(body, body2);
     }
 
     if (user.contrasena == _password) {
@@ -408,6 +434,7 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
               builder: (context) => HomeScreen(
                     user: user,
+                    empresa: _empresa,
                   )));
     }
   }

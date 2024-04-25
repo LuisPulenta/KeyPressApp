@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   bool _isLoading = true;
   bool _showLoginPage = true;
   late User _user;
+  late Empresa _empresa;
 
   //--------------------------- initState ----------------------------------
   @override
@@ -45,6 +46,7 @@ class _MyAppState extends State<MyApp> {
               ? const LoginScreen()
               : HomeScreen(
                   user: _user,
+                  empresa: _empresa,
                 ),
     );
   }
@@ -57,12 +59,15 @@ class _MyAppState extends State<MyApp> {
 
     if (isRemembered) {
       String? userBody = prefs.getString('userBody');
+      String? empresaBody = prefs.getString('empresaBody');
       String date = prefs.getString('date').toString();
       String dateAlmacenada = date.substring(0, 10);
       String dateActual = DateTime.now().toString().substring(0, 10);
       if (userBody != null) {
         var decodedJson = jsonDecode(userBody);
+        var decodedJson2 = jsonDecode(empresaBody!);
         _user = User.fromJson(decodedJson);
+        _empresa = Empresa.fromJson(decodedJson2);
         if (dateAlmacenada != dateActual) {
           _showLoginPage = true;
         } else {
