@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:keypressapp/models/models.dart';
-import 'constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiHelper {
   static Future<Response> put(
       String controller, String id, Map<String, dynamic> request) async {
-    var url = Uri.parse('${Constants.apiUrl}$controller$id');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+
+    var url = Uri.parse('$apiUrl$controller$id');
     var response = await http.put(
       url,
       headers: {
@@ -26,7 +29,10 @@ class ApiHelper {
 //---------------------------------------------------------------------------
   static Future<Response> post(
       String controller, Map<String, dynamic> request) async {
-    var url = Uri.parse('${Constants.apiUrl}$controller');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+
+    var url = Uri.parse('$apiUrl$controller');
     var response = await http.post(
       url,
       headers: {
@@ -45,7 +51,9 @@ class ApiHelper {
 
 //---------------------------------------------------------------------------
   static Future<Response> delete(String controller, String id) async {
-    var url = Uri.parse('${Constants.apiUrl}$controller$id');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+    var url = Uri.parse('$apiUrl$controller$id');
     var response = await http.delete(
       url,
       headers: {
@@ -63,8 +71,11 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getEmpresa(int idempresa) async {
-    var url = Uri.parse(
-        '${Constants.apiUrl}/api/Empresas/GetEmpresaByIdEmpresa/$idempresa');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+
+    var url =
+        Uri.parse('$apiUrl/api/Empresas/GetEmpresaByIdEmpresa/$idempresa');
     var response = await http.get(
       url,
       headers: {

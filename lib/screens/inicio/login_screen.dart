@@ -7,10 +7,11 @@ import 'package:keypressapp/screens/screens.dart';
 import 'package:keypressapp/themes/app_theme.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:keypressapp/helpers/constants.dart';
 import 'package:keypressapp/components/loader_component.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../widgets/confirm_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,15 +21,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-//---------------------------------------------------------------
 //----------------------- Variables -----------------------------
-//---------------------------------------------------------------
 
-  // String _email = '';
-  // String _password = '';
+  String _email = '';
+  String _password = '';
 
-  String _email = 'LNUNEZ';
-  String _password = '111111';
+  // String _email = 'GPRIETO';
+  // String _password = 'CELESTE';
 
   String _emailError = '';
   bool _emailShowError = false;
@@ -42,10 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordShow = false;
   bool _showLoader = false;
 
-  //---------------------------------------------------------------
-//----------------------- initState -----------------------------
-//---------------------------------------------------------------
+  String companySelected = '';
+  String connectionSelected = '';
 
+//----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
@@ -66,17 +65,25 @@ class _LoginScreenState extends State<LoginScreen> {
         nombreBDInv: '',
         usuarioBDInv: '',
         passwordBDInv: '');
+    _getData();
     setState(() {});
   }
 
+//----------------------- dispose ------------------------------
   @override
   void dispose() {
     super.dispose();
   }
 
-//---------------------------------------------------------------
+//----------------------- _getData ------------------------------
+  void _getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    companySelected = prefs.getString('company') ?? '';
+    connectionSelected = prefs.getString('connection') ?? '';
+    setState(() {});
+  }
+
 //----------------------- Pantalla ------------------------------
-//---------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -85,23 +92,23 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: <Widget>[
           Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 0),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppTheme.primary,
-                    AppTheme.secondary,
-                  ],
-                ),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 0),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppTheme.primary,
+                  AppTheme.secondary,
+                ],
               ),
+            ),
+          ),
+          Center(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -118,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -130,18 +137,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                ],
-              )),
-          Transform.translate(
-              offset: const Offset(0, -60),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Card(
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    companySelected,
+                    style: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     elevation: 15,
                     margin: const EdgeInsets.only(
-                        left: 20, right: 20, top: 260, bottom: 20),
+                        left: 20, right: 20, top: 20, bottom: 20),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 35, vertical: 20),
@@ -160,8 +171,42 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                ),
-              )),
+
+                  //----------------------------------------------------
+                  TextButton(
+                      onPressed: () async {
+                        bool result = await showConfirmDialog(context,
+                            title: 'Atención!',
+                            content: 'Está seguro de cambiar de empresa?');
+                        if (result) {
+                          await Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CompanyScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Cambiar de Empresa',
+                          style: TextStyle(color: Colors.white, fontSize: 20))),
+
+                  //----------------------------------------------------
+                  TextButton(
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UsersExample(),
+                          ),
+                        );
+                      },
+                      child: const Text('Usuarios de Ejemplo',
+                          style: TextStyle(
+                              color: AppTheme.primary, fontSize: 20))),
+                ],
+              ),
+            ),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -182,10 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//-----------------------------------------------------------------
 //--------------------- _showEmail --------------------------------
-//-----------------------------------------------------------------
-
   Widget _showEmail() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -207,10 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//-----------------------------------------------------------------
 //--------------------- _showPassword -----------------------------
-//-----------------------------------------------------------------
-
   Widget _showPassword() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -242,10 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//-----------------------------------------------------------------
 //--------------------- _showRememberme ---------------------------
-//-----------------------------------------------------------------
-
   _showRememberme() {
     return CheckboxListTile(
       title: const Text('Recordarme:'),
@@ -259,10 +295,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//-----------------------------------------------------------------
 //--------------------- _showButton -------------------------------
-//-----------------------------------------------------------------
-
   Widget _showButton() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20),
@@ -295,10 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//-----------------------------------------------------------------
 //--------------------- validateFields ----------------------------
-//-----------------------------------------------------------------
-
   bool validateFields() {
     bool isValid = true;
 
@@ -327,9 +357,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-//-----------------------------------------------------------------
 //--------------------- _storeUser --------------------------------
-//-----------------------------------------------------------------
   void _storeUser(String body, String body2) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRemembered', true);
@@ -338,10 +366,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('date', DateTime.now().toString());
   }
 
-//-----------------------------------------------------------------
 //--------------------- _login ------------------------------------
-//-----------------------------------------------------------------
-
   void _login() async {
     FocusScope.of(context).unfocus(); //Oculta el teclado
 
@@ -375,10 +400,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Map<String, dynamic> request = {
       'Email': _email,
-      'password': _password,
+      'Password': _password,
     };
 
-    var url = Uri.parse('${Constants.apiUrl}/Api/Account/GetUserByEmail');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+
+    var url = Uri.parse('$apiUrl/Api/Account/GetUserByEmail');
     var response = await http.post(
       url,
       headers: {
@@ -398,6 +426,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     var body = response.body;
+
+    if (body == "") {
+      setState(() {
+        _emailShowError = true;
+        _emailError = 'Usuario inexistente';
+        _showLoader = false;
+      });
+      return;
+    }
+
     var decodedJson = jsonDecode(body);
     var user = User.fromJson(decodedJson);
 
@@ -410,32 +448,13 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (user.habilitaAPP != 1) {
-      setState(() {
-        _showLoader = false;
-        _passwordShowError = true;
-        _passwordError = 'Usuario no habilitado';
-      });
-      return;
-    }
-
-    Response response2 = await ApiHelper.getEmpresa(user.idEmpresa);
-    _empresa = response2.result;
-
-    var body2 = jsonEncode(_empresa.toJson());
-
-    if (_rememberme) {
-      _storeUser(body, body2);
-    }
-
-    if (user.contrasena == _password) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomeScreen(
-                    user: user,
-                    empresa: _empresa,
-                  )));
-    }
+    await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(
+          user: user,
+        ),
+      ),
+    );
   }
 }
