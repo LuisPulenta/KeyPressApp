@@ -90,7 +90,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF484848),
+      backgroundColor: AppTheme.secondary,
       appBar: AppBar(
         title: Text('Obra ${widget.obra.nroObra}'),
         centerTitle: true,
@@ -100,19 +100,24 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
           Column(
             children: [
               _getInfoObra(),
-              const Expanded(child: Spacer()),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       _obrasDocumentosFotos.isNotEmpty
+                          // ? Container(
+                          //     width: 300,
+                          //     height: 200,
+                          //     color: Colors.amberAccent,
+                          //     child:
+                          //         Text(_obrasDocumentosFotos.length.toString()),
+                          //   )
                           ? _showPhotosCarousel()
                           : Container(),
                     ],
                   ),
                 ),
               ),
-              const Expanded(child: Spacer()),
               _showImageButtons(),
               const SizedBox(
                 height: 5,
@@ -130,8 +135,8 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 //-------------------------- _getInfoObra -------------------------------
   Widget _getInfoObra() {
     return Card(
-      color: const Color(0xFFC7C7C8),
-      shadowColor: Colors.white,
+      color: Colors.white,
+      shadowColor: const Color(0xFFC7C7C8),
       elevation: 10,
       margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: Container(
@@ -300,7 +305,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                                                     ? 'Proceso de reparación'
                                                     : '',
                         style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.black, fontWeight: FontWeight.bold),
                       ),
                     ],
                   );
@@ -659,27 +664,15 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estes conectado a internet.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      showMyDialog(
+          'Error', 'Verifica que estés conectado a Internet', 'Aceptar');
       return;
     }
 
     Response response = await ApiHelper.getObra(_obra.nroObra.toString());
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'N° de Obra no válido',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-
+      showMyDialog('Error', 'N° de Obra no válido', 'Aceptar');
       setState(() {});
       return;
     }

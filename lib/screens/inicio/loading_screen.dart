@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/gps/gps_bloc.dart';
+import '../../themes/app_theme.dart';
 import '../screens.dart';
 
 class LoadingScreen extends StatelessWidget {
@@ -24,8 +25,8 @@ class LoadingScreen extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xff242424),
-                        Color(0xff8c8c94),
+                        AppTheme.primary,
+                        AppTheme.secondary,
                       ],
                     ),
                   ),

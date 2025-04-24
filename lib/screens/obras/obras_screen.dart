@@ -345,6 +345,19 @@ class _ObrasScreenState extends State<ObrasScreen> {
                                       const SizedBox(
                                         width: 20,
                                       ),
+                                      const Text('Fotos: ',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppTheme.primary,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      Expanded(
+                                        child: Text(
+                                            e.obrasDocumentos.length.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            )),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(
