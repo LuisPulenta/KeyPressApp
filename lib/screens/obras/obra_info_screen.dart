@@ -351,9 +351,6 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF120E43),
                     minimumSize: const Size(double.infinity, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                   ),
                   onPressed: () => _goAddPhoto(),
                   child: Row(
@@ -373,9 +370,6 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFB4161B),
                     minimumSize: const Size(double.infinity, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                   ),
                   onPressed: () => _confirmDeletePhoto(),
                   child: Row(

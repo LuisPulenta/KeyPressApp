@@ -8,6 +8,8 @@ import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
 import '../screens.dart';
+import '../widgets/list_count.dart';
+import '../widgets/no_content.dart';
 
 class ObrasScreen extends StatefulWidget {
   final User user;
@@ -171,51 +173,16 @@ class _ObrasScreenState extends State<ObrasScreen> {
   Widget _getContent() {
     return Column(
       children: <Widget>[
-        _showObrasCount(),
+        listCount('Cantidad de Obras: ', _obras.length),
         Expanded(
-          child: _obras.isEmpty ? _noContent() : _getListView(),
+          child: _obras.isEmpty
+              ? noContent(
+                  _isFiltered,
+                  'No hay Obras con ese criterio de búsqueda',
+                  'No hay Obras registradas')
+              : _getListView(),
         )
       ],
-    );
-  }
-
-//------------------------------ _showObrasCount ------------------------
-
-  Widget _showObrasCount() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      height: 40,
-      child: Row(
-        children: [
-          const Text('Cantidad de Obras: ',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.primary,
-                fontWeight: FontWeight.bold,
-              )),
-          Text(_obras.length.toString(),
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppTheme.primary,
-                fontWeight: FontWeight.bold,
-              )),
-        ],
-      ),
-    );
-  }
-
-//------------------------------ _noContent -----------------------------
-  Widget _noContent() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: Center(
-        child: Text(
-          _isFiltered
-              ? 'No hay Obras con ese criterio de búsqueda'
-              : 'No hay Obras registradas',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 

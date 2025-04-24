@@ -123,9 +123,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF120E43),
                   minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                 ),
                 onPressed: () {
                   _usePhoto();
@@ -141,9 +138,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE03B8B),
                   minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                 ),
                 onPressed: () {
                   Navigator.pop(context);

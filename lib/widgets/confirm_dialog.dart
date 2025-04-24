@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:keypressapp/themes/app_theme.dart';
+
+import '../themes/app_theme.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context, {
@@ -24,7 +25,7 @@ class _DialogContent extends StatelessWidget {
   final String title;
   final String content;
 
-  const _DialogContent({super.key, required this.title, required this.content});
+  const _DialogContent({required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class _DialogContent extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context, true);
             },
-            child: const Text("Sí",
+            child: const Text('Sí',
                 style: TextStyle(
                     color: AppTheme.primary,
                     fontSize: 16,
@@ -57,7 +58,7 @@ class _DialogContent extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context, false);
             },
-            child: const Text("No",
+            child: const Text('No',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.red,

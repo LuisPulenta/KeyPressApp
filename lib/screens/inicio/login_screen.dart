@@ -26,9 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   // String _email = '';
   // String _password = '';
 
-  // String _email = 'NOUCHE';
-  // String _password = 'MN2023';
-
   String _email = 'GPRIETO';
   String _password = 'CELESTE';
 
@@ -58,18 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
 //-----------------------------------------------------------------
 
   Future<void> initPlatformState() async {
-    late String platformVersion,
-        imeiNo = '',
-        modelName = '',
-        manufacturer = '',
-        deviceName = '',
-        productName = '',
-        cpuType = '',
-        hardware = '';
-    var apiLevel;
-    // Platform messages may fail,
-    // so we use a try/catch PlatformException.
-
     var status = await Permission.phone.status;
 
     if (status.isDenied) {
@@ -85,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: const <Widget>[
                     Text(
-                        'La App necesita que habilite el Permiso de acceso al teléfono para registrar el IMEI del celular con que se loguea.'),
+                        'La App necesita que habilite los Permisos de Ubicación, Cámara y Teléfono.'),
                     SizedBox(
                       height: 10,
                     ),
@@ -355,9 +340,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
               ),
               onPressed: () => _login(),
               child: Row(
