@@ -1,17 +1,25 @@
-import 'dart:io';
 import 'dart:convert';
-import 'package:keypressapp/models/models.dart';
-import 'package:keypressapp/themes/app_theme.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:keypressapp/screens/screens.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'blocs/gps/gps_bloc.dart';
+import 'models/models.dart';
+import 'screens/screens.dart';
+import 'themes/app_theme.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   //Estas líneas son para que funcione el http con las direcciones https
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(create: (context) => GpsBloc()),
+  ], child: const MyApp()));
 }
 
 //--------------------------------------------------------------------------
@@ -28,7 +36,6 @@ class _MyAppState extends State<MyApp> {
   bool _showLoginPage = true;
   bool _showCompanyPage = true;
   late User _user;
-  late Empresa _empresa;
 
   //--------------------------- initState ----------------------------------
   @override
@@ -44,14 +51,15 @@ class _MyAppState extends State<MyApp> {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Cascaron App',
+      title: 'Keypress App',
       theme: AppTheme.lightTheme,
+      navigatorKey: navigatorKey,
       home: _isLoading
           ? const WaitScreen()
           : _showCompanyPage
               ? const CompanyScreen()
               : _showLoginPage
-                  ? const LoginScreen()
+                  ? const LoadingScreen()
                   : HomeScreen(
                       user: _user,
                     ),
@@ -71,15 +79,12 @@ class _MyAppState extends State<MyApp> {
       _showCompanyPage = false;
       if (isRemembered) {
         String? userBody = prefs.getString('userBody');
-        String? empresaBody = prefs.getString('empresaBody');
         String date = prefs.getString('date').toString();
         String dateAlmacenada = date.substring(0, 10);
         String dateActual = DateTime.now().toString().substring(0, 10);
         if (userBody != null && userBody != '') {
           var decodedJson = jsonDecode(userBody);
-          var decodedJson2 = jsonDecode(empresaBody!);
           _user = User.fromJson(decodedJson);
-          _empresa = Empresa.fromJson(decodedJson2);
           if (dateAlmacenada != dateActual) {
             _showLoginPage = true;
           } else {

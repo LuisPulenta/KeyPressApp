@@ -4,6 +4,10 @@ class User {
   String contrasena = '';
   String? nombre = '';
   String? apellido = '';
+  int? estado = 0;
+  int? habilitaAPP = 0;
+  int? habilitaFotos = 0;
+  String modulo = '';
 
   User({
     required this.idUsuario,
@@ -11,6 +15,10 @@ class User {
     required this.contrasena,
     required this.nombre,
     required this.apellido,
+    required this.estado,
+    required this.habilitaAPP,
+    required this.habilitaFotos,
+    required this.modulo,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -19,6 +27,10 @@ class User {
     contrasena = json['contrasena'];
     nombre = json['nombre'];
     apellido = json['apellido'];
+    estado = json['estado'];
+    habilitaAPP = json['habilitaAPP'];
+    habilitaFotos = json['habilitaFotos'];
+    modulo = json['modulo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +40,10 @@ class User {
     data['contrasena'] = contrasena;
     data['nombre'] = nombre;
     data['apellido'] = apellido;
+    data['estado'] = estado;
+    data['habilitaAPP'] = habilitaAPP;
+    data['habilitaFotos'] = habilitaFotos;
+    data['modulo'] = modulo;
     return data;
   }
 }

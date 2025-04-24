@@ -1,5 +1,6 @@
-import 'package:keypressapp/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+
+import '../themes/app_theme.dart';
 
 class LoaderComponent extends StatelessWidget {
   final String text;

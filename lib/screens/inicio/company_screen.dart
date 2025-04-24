@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:keypressapp/screens/inicio/login_screen.dart';
-import 'package:keypressapp/themes/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../themes/app_theme.dart';
+import '../screens.dart';
 
 class CompanyScreen extends StatefulWidget {
   const CompanyScreen({Key? key}) : super(key: key);
@@ -13,19 +14,23 @@ class CompanyScreen extends StatefulWidget {
 class _CompanyScreenState extends State<CompanyScreen> {
   //----------------------- Variables -----------------------------
   List<ApiToSelect> apisToSelect = [
+    // ApiToSelect(
+    //     company: "Rowing",
+    //     connection: "https://keypress.serveftp.net/KPRowingApi"),
+
     ApiToSelect(
-        company: "Rowing",
-        connection: "https://keypress.serveftp.net/KPRowingApi"),
+        company: 'Rowing', connection: 'http://190.111.249.225/RowingAppApi'),
+
     ApiToSelect(
-        company: "Fleet",
-        connection: "https://keypress.serveftp.net/KPFleetApi"),
+        company: 'Fleet',
+        connection: 'https://keypress.serveftp.net/KPFleetApi'),
     ApiToSelect(
-        company: "TYC", connection: "https://keypress.serveftp.net/KPTycApi"),
+        company: 'TYC', connection: 'https://keypress.serveftp.net/KPTycApi'),
     ApiToSelect(
-        company: "Ayko", connection: "https://keypress.serveftp.net/KPAykoApi"),
+        company: 'Ayko', connection: 'https://keypress.serveftp.net/KPAykoApi'),
     ApiToSelect(
-        company: "GrupoRw",
-        connection: "https://keypress.serveftp.net/KPAykoApi"),
+        company: 'GrupoRw',
+        connection: 'https://keypress.serveftp.net/KPAykoApi'),
   ];
 
 //----------------------- Pantalla -----------------------------
@@ -64,7 +69,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
+                            builder: (context) => const LoadingScreen(),
                           ),
                         );
                       },

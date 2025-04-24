@@ -46,7 +46,21 @@ dependencies:
 
   font_awesome_flutter: ^10.1.0
   animate_do: ^2.1.0
+  intl: ^0.17.0                   # Para ver formato moneda
 
+  camera: ^0.9.4                  # Para acceder a la cámara
+  path_provider: ^2.0.5           # Para acceder a la cámara
+  path: ^1.8.0                    # Para acceder a la cámara
+
+  image_picker: ^0.8.4+2          # Para acceder a la galería de imágenes
+  cached_network_image: ^3.1.0    # Para mejorar el rendimiento de imágenes
+  carousel_slider: ^4.0.0         # Para carousel de imágenes
+  geolocator: ^9.0.2              # Para latitud y longitud
+  geocoding: ^2.0.1               # Para direccion de una latitud y longitud
+  bloc: ^8.0.1
+  equatable: ^2.0.3
+  flutter_bloc: ^8.0.0
+  permission_handler: ^10.2.0
 
 flutter_icons:
   android: "launcher_icon"

@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:keypressapp/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/models.dart';
 
 class ApiHelper {
   static Future<Response> put(
@@ -70,12 +72,38 @@ class ApiHelper {
   }
 
   //---------------------------------------------------------------------------
-  static Future<Response> getEmpresa(int idempresa) async {
+  static Future<Response> getObras(String proyectomodulo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String apiUrl = prefs.getString('connection') ?? '';
+    var url = Uri.parse('$apiUrl/api/Account/GetObras/$proyectomodulo');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
 
-    var url =
-        Uri.parse('$apiUrl/api/Empresas/GetEmpresaByIdEmpresa/$idempresa');
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Obra> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Obra.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
+
+  //---------------------------------------------------------------------------
+  static Future<Response> getObra(String id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+    var url = Uri.parse('$apiUrl/api/Account/GetObra/$id');
     var response = await http.get(
       url,
       headers: {
@@ -90,6 +118,6 @@ class ApiHelper {
     }
 
     var decodedJson = jsonDecode(body);
-    return Response(isSuccess: true, result: Empresa.fromJson(decodedJson));
+    return Response(isSuccess: true, result: Obra.fromJson(decodedJson));
   }
 }

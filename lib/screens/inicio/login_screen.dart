@@ -4,6 +4,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/loader_component.dart';
@@ -25,16 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
   // String _email = '';
   // String _password = '';
 
-  String _email = 'NOUCHE';
-  String _password = 'MN2023';
+  // String _email = 'NOUCHE';
+  // String _password = 'MN2023';
 
-  // String _email = 'GPRIETO';
-  // String _password = 'CELESTE';
+  String _email = 'GPRIETO';
+  String _password = 'CELESTE';
 
   String _emailError = '';
   bool _emailShowError = false;
-
-  late Empresa _empresa;
 
   String _passwordError = '';
   bool _passwordShowError = false;
@@ -50,24 +49,60 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _empresa = Empresa(
-        idEmpresa: 0,
-        nombreempresa: '',
-        direccion: '',
-        telefono: '',
-        carpetaImagenes: '',
-        mensageSSHH: '',
-        activo: false,
-        logoEmpresa: '',
-        logoFullPath: '',
-        conexionServidor: '',
-        nombreBDObra: '',
-        usuarioBDObra: '',
-        passwordBDObra: '',
-        nombreBDInv: '',
-        usuarioBDInv: '',
-        passwordBDInv: '');
+    initPlatformState();
     _getData();
+    setState(() {});
+  }
+
+//--------------------- initPlatformState -------------------------
+//-----------------------------------------------------------------
+
+  Future<void> initPlatformState() async {
+    late String platformVersion,
+        imeiNo = '',
+        modelName = '',
+        manufacturer = '',
+        deviceName = '',
+        productName = '',
+        cpuType = '',
+        hardware = '';
+    var apiLevel;
+    // Platform messages may fail,
+    // so we use a try/catch PlatformException.
+
+    var status = await Permission.phone.status;
+
+    if (status.isDenied) {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              title: const Text('Aviso'),
+              content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Text(
+                        'La App necesita que habilite el Permiso de acceso al teléfono para registrar el IMEI del celular con que se loguea.'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ]),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Ok')),
+              ],
+            );
+          });
+      openAppSettings();
+      //exit(0);
+    }
+
+    if (!mounted) return;
+
     setState(() {});
   }
 
@@ -458,6 +493,24 @@ class _LoginScreenState extends State<LoginScreen> {
         _showLoader = false;
         _passwordShowError = true;
         _passwordError = 'Email o contraseña incorrectos';
+      });
+      return;
+    }
+
+    if (user.habilitaAPP != 1) {
+      setState(() {
+        _showLoader = false;
+        _passwordShowError = true;
+        _passwordError = 'Usuario no habilitado';
+      });
+      return;
+    }
+
+    if (user.estado != 1) {
+      setState(() {
+        _showLoader = false;
+        _passwordShowError = true;
+        _passwordError = 'Usuario desactivado';
       });
       return;
     }

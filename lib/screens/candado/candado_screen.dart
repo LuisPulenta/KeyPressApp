@@ -11,10 +11,10 @@ class CandadoScreen extends StatefulWidget {
 }
 
 class _CandadoScreenState extends State<CandadoScreen> {
-  String numero1 = "0";
-  String numero2 = "0";
-  String numero3 = "0";
-  String numero4 = "0";
+  String numero1 = '0';
+  String numero2 = '0';
+  String numero3 = '0';
+  String numero4 = '0';
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ class _CandadoScreenState extends State<CandadoScreen> {
                   child: Container(
                     width: 250,
                     height: 40,
-                    color: Color.fromARGB(46, 86, 180, 227),
+                    color: const Color.fromARGB(46, 86, 180, 227),
                   ),
                 )
               ],
@@ -128,18 +128,18 @@ class _CandadoScreenState extends State<CandadoScreen> {
             //         fontSize: 28,
             //         fontWeight: FontWeight.bold)),
 
-            numero1 + numero2 + numero3 + numero4 != "2306"
-                ? Container(
+            numero1 + numero2 + numero3 + numero4 != '2306'
+                ? const SizedBox(
                     width: 200,
                     height: 200,
-                    child: const Icon(
+                    child: Icon(
                       Icons.lock,
                       color: Colors.red,
                       size: 150,
                     ),
                   )
                 : Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 200,
                       height: 200,
                       child: IconButton(

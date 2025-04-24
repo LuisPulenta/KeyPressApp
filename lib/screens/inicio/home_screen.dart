@@ -1,10 +1,14 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keypressapp/themes/app_theme.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:keypressapp/models/models.dart';
-import 'package:keypressapp/screens/screens.dart';
-import 'package:keypressapp/widgets/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
+import '../../themes/app_theme.dart';
+import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -19,10 +23,57 @@ class _HomeScreenState extends State<HomeScreen> {
 //----------------------- Variables -----------------------------
   String direccion = '';
 
+  Position _positionUser = const Position(
+    longitude: 0,
+    latitude: 0,
+    timestamp: null,
+    accuracy: 0,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
+    speedAccuracy: 0,
+    altitudeAccuracy: 0,
+    headingAccuracy: 0,
+  );
+
 //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
+    loadPosition;
+  }
+
+//--------------------- loadPosition -----------------------------
+  loadPosition(User user) async {
+    await _getPosition();
+  }
+
+//--------------------- _getPosition ------------------------------
+  Future _getPosition() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        showMyDialog('Aviso', 'El permiso de localización está negado.', 'Ok');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      showMyDialog(
+          'Aviso',
+          'El permiso de localización está negado permanentemente. No se puede requerir este permiso.',
+          'Ok');
+      return;
+    }
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      _positionUser = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    }
   }
 
 //----------------------- Pantalla ------------------------------
@@ -65,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Image.asset(
-                    "assets/logo.png",
+                    'assets/logo.png',
                     height: 100,
                     width: 500,
                   ),
@@ -133,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: ancho * 0.5,
                     child: const Boton(
                       icon: FontAwesomeIcons.car,
-                      texto: "Flota",
+                      texto: 'Flota',
                       color1: Color(0xff6989F5),
                       color2: Color(0xff906EF5),
                     ),
@@ -152,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: ancho * 0.5,
                     child: const Boton(
                       icon: FontAwesomeIcons.users,
-                      texto: "Usuarios",
+                      texto: 'Usuarios',
                       color1: Color.fromARGB(255, 226, 105, 245),
                       color2: Color.fromARGB(255, 228, 177, 201),
                     ),
@@ -175,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: ancho * 0.5,
                     child: const Boton(
                       icon: FontAwesomeIcons.helmetSafety,
-                      texto: "EPP",
+                      texto: 'EPP',
                       color1: Color.fromARGB(255, 247, 88, 20),
                       color2: Color.fromARGB(255, 215, 192, 179),
                     ),
@@ -186,7 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ObrasScreen(),
+                        builder: (context) => ObrasScreen(
+                          user: widget.user,
+                          positionUser: _positionUser,
+                        ),
                       ),
                     );
                   },
@@ -194,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: ancho * 0.5,
                     child: const Boton(
                       icon: FontAwesomeIcons.personDigging,
-                      texto: "Obras",
+                      texto: 'Obras',
                       color1: Color.fromARGB(255, 51, 7, 7),
                       color2: Color.fromARGB(255, 85, 51, 67),
                     ),
@@ -207,24 +261,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 InkWell(
                   onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-
-                    await prefs.setString('userBody', '');
-                    await prefs.setString('empresaBody', '');
-
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
+                    _logOut();
                   },
                   child: SizedBox(
                     width: ancho * 1,
                     child: const Boton(
                       icon: FontAwesomeIcons.doorOpen,
-                      texto: "Cerrar Sesión",
+                      texto: 'Cerrar Sesión',
                       color1: Color.fromARGB(255, 236, 8, 8),
                       color2: Color.fromARGB(255, 211, 116, 113),
                     ),
@@ -236,18 +279,19 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-//---------------------------------------------------------------
 //----------------------- _logOut -------------------------------
-//---------------------------------------------------------------
-
   void _logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRemembered', false);
-    await prefs.setString('userBody', '');
-    await prefs.setString('date', '');
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    await prefs.setString('userBody', '');
+    await prefs.setString('empresaBody', '').then((_) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
+    });
   }
 }
 
