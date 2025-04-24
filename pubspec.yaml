@@ -85,7 +85,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-  
+
+  fonts:
+    - family: PTSansNarrow-Regular
+      fonts:
+        - asset: fonts/PTSansNarrow-Regular.ttf
+        - asset: fonts/PTSansNarrow-Bold.ttf  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

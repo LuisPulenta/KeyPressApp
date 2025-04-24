@@ -1,17 +1,16 @@
 import 'dart:convert';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:keypressapp/helpers/helpers.dart';
-import 'package:keypressapp/models/models.dart';
-import 'package:keypressapp/screens/screens.dart';
-import 'package:keypressapp/themes/app_theme.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:keypressapp/components/loader_component.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../widgets/confirm_dialog.dart';
+import '../../components/loader_component.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
+import '../../themes/app_theme.dart';
+import '../screens.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -23,8 +22,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 //----------------------- Variables -----------------------------
 
-  String _email = '';
-  String _password = '';
+  // String _email = '';
+  // String _password = '';
+
+  String _email = 'NOUCHE';
+  String _password = 'MN2023';
 
   // String _email = 'GPRIETO';
   // String _password = 'CELESTE';
@@ -87,142 +89,152 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xff8c8c94),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 0),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  AppTheme.primary,
-                  AppTheme.secondary,
-                ],
-              ),
-            ),
+    return GestureDetector(
+      onLongPress: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CandadoScreen(),
           ),
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    height: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Image.asset(
-                        "assets/logo.png",
-                        height: 150,
-                        width: 350,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        Constants.version,
-                        style:
-                            const TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    companySelected,
-                    style: const TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 15,
-                    margin: const EdgeInsets.only(
-                        left: 20, right: 20, top: 20, bottom: 20),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          _showEmail(),
-                          _showPassword(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          _showRememberme(),
-                          _showButton(),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  //----------------------------------------------------
-                  TextButton(
-                      onPressed: () async {
-                        bool result = await showConfirmDialog(context,
-                            title: 'Atención!',
-                            content: 'Está seguro de cambiar de empresa?');
-                        if (result) {
-                          await Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CompanyScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('Cambiar de Empresa',
-                          style: TextStyle(color: Colors.white, fontSize: 20))),
-
-                  //----------------------------------------------------
-                  TextButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const UsersExample(),
-                          ),
-                        );
-                      },
-                      child: const Text('Usuarios de Ejemplo',
-                          style: TextStyle(
-                              color: AppTheme.primary, fontSize: 20))),
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                SizedBox(
-                  height: 40,
+        );
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xff8c8c94),
+        body: Stack(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 0),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppTheme.primary,
+                    AppTheme.secondary,
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-          _showLoader
-              ? const LoaderComponent(
-                  text: 'Por favor espere...',
-                )
-              : Container(),
-        ],
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                      ),
+                      height: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Image.asset(
+                          'assets/logo.png',
+                          height: 150,
+                          width: 350,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Constants.version,
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      companySelected,
+                      style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      elevation: 15,
+                      margin: const EdgeInsets.only(
+                          left: 20, right: 20, top: 20, bottom: 20),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 35, vertical: 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            _showEmail(),
+                            _showPassword(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            _showRememberme(),
+                            _showButton(),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    //----------------------------------------------------
+                    // TextButton(
+                    //     onPressed: () async {
+                    //       bool result = await showConfirmDialog(context,
+                    //           title: 'Atención!',
+                    //           content: 'Está seguro de cambiar de empresa?');
+                    //       if (result) {
+                    //         await Navigator.pushReplacement(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => const CompanyScreen(),
+                    //           ),
+                    //         );
+                    //       }
+                    //     },
+                    //     child: const Text('Cambiar de Empresa',
+                    //         style: TextStyle(color: Colors.white, fontSize: 20))),
+
+                    //----------------------------------------------------
+                    // TextButton(
+                    //     onPressed: () async {
+                    //       await Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => const UsersExample(),
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: const Text('Usuarios de Ejemplo',
+                    //         style: TextStyle(
+                    //             color: AppTheme.primary, fontSize: 20))),
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                  SizedBox(
+                    height: 40,
+                  ),
+                ],
+              ),
+            ),
+            _showLoader
+                ? const LoaderComponent(
+                    text: 'Por favor espere...',
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
@@ -234,6 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(0),
             fillColor: Colors.white,
             filled: true,
             hintText: 'Usuario...',
@@ -256,6 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(0),
             fillColor: Colors.white,
             filled: true,
             hintText: 'Contraseña...',
@@ -427,7 +441,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     var body = response.body;
 
-    if (body == "") {
+    if (body == '') {
       setState(() {
         _emailShowError = true;
         _emailError = 'Usuario inexistente';

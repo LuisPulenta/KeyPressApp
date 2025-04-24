@@ -29,7 +29,7 @@ class Boton extends StatelessWidget {
             const SizedBox(height: 120, width: 40),
             FaIcon(
               icon,
-              size: 20,
+              size: 30,
               color: Colors.white,
             ),
             const SizedBox(
@@ -91,10 +91,10 @@ class _BotonGordoBackground extends StatelessWidget {
         child: Stack(children: [
           Positioned(
             right: -10,
-            top: -0,
+            top: 10,
             child: FaIcon(
               icon,
-              size: 100,
+              size: 80,
               color: Colors.white.withOpacity(0.2),
             ),
           ),

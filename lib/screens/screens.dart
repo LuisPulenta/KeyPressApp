@@ -1,3 +1,5 @@
+export 'package:keypressapp/screens/candado/candado_screen.dart';
+
 export 'package:keypressapp/screens/pantallas/users_example.dart';
 
 export 'package:keypressapp/screens/inicio/wait_screen.dart';

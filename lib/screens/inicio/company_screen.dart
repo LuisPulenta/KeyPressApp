@@ -23,6 +23,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
         company: "TYC", connection: "https://keypress.serveftp.net/KPTycApi"),
     ApiToSelect(
         company: "Ayko", connection: "https://keypress.serveftp.net/KPAykoApi"),
+    ApiToSelect(
+        company: "GrupoRw",
+        connection: "https://keypress.serveftp.net/KPAykoApi"),
   ];
 
 //----------------------- Pantalla -----------------------------

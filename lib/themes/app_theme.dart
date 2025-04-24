@@ -7,12 +7,23 @@ class AppTheme {
 //----------------------------- lightTheme -----------------------------
 
   static final ThemeData lightTheme = ThemeData.light().copyWith(
+    useMaterial3: true,
+    textTheme: ThemeData.light().textTheme.apply(
+          fontFamily: 'PTSansNarrow-Regular',
+          bodyColor: Colors.black,
+        ),
+    primaryTextTheme: ThemeData.light().textTheme.apply(
+          fontFamily: 'PTSansNarrow-Regular',
+          bodyColor: Colors.black,
+        ),
+
     //Color primario
     primaryColor: primary,
 
     //AppBar Theme
     appBarTheme: const AppBarTheme(
       color: primary,
+      foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
     ),
@@ -32,7 +43,7 @@ class AppTheme {
     //ElevatedButtons
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: primary,
+        foregroundColor: Colors.white, backgroundColor: primary,
         shape: const StadiumBorder(),
         elevation: 0,
         //minimumSize: Size(170, 50),
