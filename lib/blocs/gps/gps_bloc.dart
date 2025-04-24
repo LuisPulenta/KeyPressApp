@@ -66,6 +66,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
       case PermissionStatus.denied:
       case PermissionStatus.restricted:
       case PermissionStatus.limited:
+      case PermissionStatus.provisional:
       case PermissionStatus.permanentlyDenied:
         add(GpsAndPermissionEvent(
             isGpsEnabled: state.isGpsEnabled,
