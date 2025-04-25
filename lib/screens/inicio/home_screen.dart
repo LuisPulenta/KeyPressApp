@@ -1,10 +1,7 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/widgets.dart';
@@ -23,57 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
 //----------------------- Variables -----------------------------
   String direccion = '';
 
-  Position _positionUser = const Position(
-    longitude: 0,
-    latitude: 0,
-    timestamp: null,
-    accuracy: 0,
-    altitude: 0,
-    heading: 0,
-    speed: 0,
-    speedAccuracy: 0,
-    altitudeAccuracy: 0,
-    headingAccuracy: 0,
-  );
-
 //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
-    loadPosition;
-  }
-
-//--------------------- loadPosition -----------------------------
-  loadPosition(User user) async {
-    await _getPosition();
-  }
-
-//--------------------- _getPosition ------------------------------
-  Future _getPosition() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        showMyDialog('Aviso', 'El permiso de localización está negado.', 'Ok');
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      showMyDialog(
-          'Aviso',
-          'El permiso de localización está negado permanentemente. No se puede requerir este permiso.',
-          'Ok');
-      return;
-    }
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult != ConnectivityResult.none) {
-      _positionUser = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    }
   }
 
 //----------------------- Pantalla ------------------------------
@@ -239,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder: (context) => ObrasScreen(
                           user: widget.user,
-                          positionUser: _positionUser,
                         ),
                       ),
                     );

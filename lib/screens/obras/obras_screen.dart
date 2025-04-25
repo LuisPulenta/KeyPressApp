@@ -1,6 +1,5 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/loader_component.dart';
@@ -13,11 +12,9 @@ import '../widgets/no_content.dart';
 
 class ObrasScreen extends StatefulWidget {
   final User user;
-  final Position positionUser;
   const ObrasScreen({
     Key? key,
     required this.user,
-    required this.positionUser,
   }) : super(key: key);
 
   @override
@@ -421,7 +418,6 @@ class _ObrasScreenState extends State<ObrasScreen> {
         builder: (context) => ObraInfoScreen(
           user: widget.user,
           obra: obra,
-          positionUser: widget.positionUser,
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../helpers/get_position.dart';
 import '../../models/models.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
@@ -17,10 +18,7 @@ class DisplayPictureScreen extends StatefulWidget {
 }
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
-//---------------------------------------------------------------
 //----------------------- Variables -----------------------------
-//---------------------------------------------------------------
-
   String _observaciones = '';
   final String _observacionesError = '';
   final bool _observacionesShowError = false;
@@ -39,10 +37,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     'Proceso de reparación'
   ];
 
-//---------------------------------------------------------------
 //----------------------- Pantalla ------------------------------
-//---------------------------------------------------------------
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,10 +78,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
   }
 
-//---------------------------------------------------------------
 //----------------------- _showOptions --------------------------
-//---------------------------------------------------------------
-
   Widget _showOptions() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -109,10 +101,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
   }
 
-//---------------------------------------------------------------
 //----------------------- _showButtons --------------------------
-//---------------------------------------------------------------
-
   Widget _showButtons() {
     return Container(
         margin: const EdgeInsets.all(10),
@@ -149,10 +138,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ));
   }
 
-//---------------------------------------------------------------
 //----------------------- _showObservaciones --------------------
-//---------------------------------------------------------------
-
   Widget _showObservaciones() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -174,10 +160,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
   }
 
-//---------------------------------------------------------------
 //----------------------- _usePhoto -----------------------------
-//---------------------------------------------------------------
-
   void _usePhoto() async {
     if (_optionId == -1) {
       _optionIdShowError = true;
@@ -193,72 +176,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       return;
     }
 
-    LocationPermission permission;
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                title: const Text('Aviso'),
-                content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      Text('El permiso de localización está negado.'),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ]),
-                actions: <Widget>[
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Ok')),
-                ],
-              );
-            });
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              title: const Text('Aviso'),
-              content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Text(
-                        'El permiso de localización está negado permanentemente. No se puede requerir este permiso.'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ]),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Ok')),
-              ],
-            );
-          });
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position? position = await getPosition();
 
     List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+        await placemarkFromCoordinates(position!.latitude, position.longitude);
 
     Photo photo = Photo(
       image: widget.image,

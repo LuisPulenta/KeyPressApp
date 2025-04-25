@@ -6,7 +6,6 @@ import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -19,13 +18,11 @@ import '../screens.dart';
 class ObraInfoScreen extends StatefulWidget {
   final User user;
   final Obra obra;
-  final Position positionUser;
 
   const ObraInfoScreen({
     Key? key,
     required this.user,
     required this.obra,
-    required this.positionUser,
   }) : super(key: key);
 
   @override
