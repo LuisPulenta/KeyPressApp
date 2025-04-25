@@ -126,17 +126,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const FlotaScreen(),
+                        builder: (context) => ObrasScreen(
+                          user: widget.user,
+                        ),
                       ),
                     );
                   },
                   child: SizedBox(
                     width: ancho * 0.5,
                     child: const Boton(
-                      icon: FontAwesomeIcons.car,
-                      texto: 'Flota',
-                      color1: Color(0xff6989F5),
-                      color2: Color(0xff906EF5),
+                      icon: FontAwesomeIcons.personDigging,
+                      texto: 'Obras',
+                      color1: Color.fromARGB(255, 51, 7, 7),
+                      color2: Color.fromARGB(255, 85, 51, 67),
                     ),
                   ),
                 ),
@@ -187,19 +189,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ObrasScreen(
-                          user: widget.user,
-                        ),
+                        builder: (context) => const FlotaScreen(),
                       ),
                     );
                   },
                   child: SizedBox(
                     width: ancho * 0.5,
                     child: const Boton(
-                      icon: FontAwesomeIcons.personDigging,
-                      texto: 'Obras',
-                      color1: Color.fromARGB(255, 51, 7, 7),
-                      color2: Color.fromARGB(255, 85, 51, 67),
+                      icon: FontAwesomeIcons.car,
+                      texto: 'Flota',
+                      color1: Color(0xff6989F5),
+                      color2: Color(0xff906EF5),
                     ),
                   ),
                 ),

@@ -20,6 +20,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  bool apretado = false;
 
 //---------------------------------------------------------------
 //----------------------- initState -----------------------------
@@ -64,23 +65,31 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        onPressed: apretado == false
+            ? () async {
+                try {
+                  setState(() {
+                    apretado = true;
+                  });
+                  await _initializeControllerFuture;
+                  final image = await _controller.takePicture();
+                  Response? response =
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DisplayPictureScreen(
+                                image: image,
+                              )));
+                  setState(() {
+                    apretado = false;
+                  });
+                  if (response != null) {
+                    Navigator.pop(context, response);
+                  }
+                } catch (e) {
+                  throw Exception('');
+                }
+              }
+            : null,
         child: const Icon(Icons.camera_alt),
-        onPressed: () async {
-          try {
-            await _initializeControllerFuture;
-            final image = await _controller.takePicture();
-            Response? response =
-                await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => DisplayPictureScreen(
-                          image: image,
-                        )));
-            if (response != null) {
-              Navigator.pop(context, response);
-            }
-          } catch (e) {
-            throw Exception('');
-          }
-        },
       ),
     );
   }

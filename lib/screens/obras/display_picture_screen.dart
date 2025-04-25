@@ -27,6 +27,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String _optionIdError = '';
   bool _optionIdShowError = false;
 
+  bool apretado = false;
+
   final List<String> _options = [
     'Relevamiento(Vereda/Calzada/Traza)',
     'Previa al trabajo',
@@ -113,9 +115,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   backgroundColor: const Color(0xFF120E43),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                onPressed: () {
-                  _usePhoto();
-                },
+                onPressed: !apretado
+                    ? () {
+                        setState(() {
+                          apretado = true;
+                        });
+                        _usePhoto();
+                      }
+                    : null,
                 child: const Text('Usar Foto'),
               ),
             ),
@@ -165,7 +172,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     if (_optionId == -1) {
       _optionIdShowError = true;
       _optionIdError = 'Debe seleccionar un Tipo de Foto';
-      setState(() {});
+      setState(() {
+        apretado = false;
+      });
       return;
     } else {
       _optionIdShowError = false;
@@ -173,6 +182,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
 
     if (_optionId == -1) {
+      setState(() {
+        apretado = false;
+      });
       return;
     }
 
@@ -191,6 +203,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     );
 
     Response response = Response(isSuccess: true, result: photo);
+    Future.delayed(const Duration(milliseconds: 100));
     Navigator.pop(context, response);
   }
 

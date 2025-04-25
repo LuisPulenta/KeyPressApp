@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -236,13 +237,14 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 
 //-------------------------- _showPhotosCarousel ------------------------
   Widget _showPhotosCarousel() {
+    final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
           CarouselSlider(
             options: CarouselOptions(
-                height: 460,
+                height: size.height * 0.65,
                 autoPlay: false,
                 initialPage: 0,
                 autoPlayInterval: const Duration(seconds: 0),
@@ -258,33 +260,81 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                 builder: (BuildContext context) {
                   return Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: CachedNetworkImage(
-                                imageUrl: i.imageFullPath == null
-                                    ? ''
-                                    : i.imageFullPath.toString(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.contain,
-                                height: 360,
-                                width: 460,
-                                placeholder: (context, url) => const Image(
-                                  image: AssetImage('assets/loading.gif'),
-                                  fit: BoxFit.contain,
-                                  height: 100,
-                                  width: 100,
-                                ),
-                              ),
-                            )),
-                      ),
                       const SizedBox(
                         height: 5,
                       ),
+
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      // onTap: () {
+                      //     NotificationsService.showImage(
+                      //       context, i.photoFullPath);
+                      // },
+
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return Stack(
+                                    children: [
+                                      InteractiveViewer(
+                                        boundaryMargin: const EdgeInsets.all(
+                                            double.infinity),
+                                        child: SizedBox(
+                                          width: size.width,
+                                          height: size.height,
+                                          child: FadeInImage.assetNetwork(
+                                            placeholder: 'assets/loading.gif',
+                                            image: i.imageFullPath!,
+                                            fit: BoxFit.contain,
+                                            width: size.width,
+                                            height: size.height,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                          top: size.height * 0.08,
+                                          right: 5,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              FontAwesomeIcons.rectangleXmark,
+                                              color: Colors.red,
+                                              size: 36,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ))
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  imageUrl: i.imageFullPath.toString(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit.contain,
+                                  height: 660,
+                                  width: 560,
+                                  placeholder: (context, url) => const Image(
+                                    image: AssetImage('assets/loading.gif'),
+                                    fit: BoxFit.contain,
+                                    height: 100,
+                                    width: 100,
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+
                       Text(
                         i.tipoDeFoto == 0
                             ? 'Relevamiento(Vereda/Calzada/Traza)'
@@ -303,6 +353,9 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                                                     : '',
                         style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 5,
                       ),
                     ],
                   );
