@@ -132,6 +132,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 
 //-------------------------- _getInfoObra -------------------------------
   Widget _getInfoObra() {
+    var f = NumberFormat('#,###', 'es');
     return Card(
       color: Colors.white,
       shadowColor: const Color(0xFFC7C7C8),
@@ -151,7 +152,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                     )),
                 Expanded(
                   flex: 3,
-                  child: Text(_obra.nroObra.toString(),
+                  child: Text(f.format(_obra.nroObra).toString(),
                       style: const TextStyle(
                         fontSize: 12,
                       )),

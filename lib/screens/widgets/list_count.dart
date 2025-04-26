@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../themes/app_theme.dart';
 
 Widget listCount(String title, int count) {
+  var f = NumberFormat('#,###', 'es');
+
   return Container(
     padding: const EdgeInsets.all(10),
     height: 40,
@@ -14,7 +17,7 @@ Widget listCount(String title, int count) {
               color: AppTheme.primary,
               fontWeight: FontWeight.bold,
             )),
-        Text(count.toString(),
+        Text(f.format(count).toString(),
             style: const TextStyle(
               fontSize: 14,
               color: AppTheme.primary,

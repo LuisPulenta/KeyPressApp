@@ -266,15 +266,11 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(0),
-            fillColor: Colors.white,
-            filled: true,
-            hintText: 'Usuario...',
-            labelText: 'Usuario',
-            errorText: _emailShowError ? _emailError : null,
-            prefixIcon: const Icon(Icons.person),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+          hintText: 'Usuario...',
+          labelText: 'Usuario',
+          errorText: _emailShowError ? _emailError : null,
+          prefixIcon: const Icon(Icons.person),
+        ),
         onChanged: (value) {
           _email = value;
         },
@@ -289,25 +285,21 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(0),
-            fillColor: Colors.white,
-            filled: true,
-            hintText: 'Contraseña...',
-            labelText: 'Contraseña',
-            errorText: _passwordShowError ? _passwordError : null,
-            prefixIcon: const Icon(Icons.lock),
-            suffixIcon: IconButton(
-              icon: _passwordShow
-                  ? const Icon(Icons.visibility)
-                  : const Icon(Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  _passwordShow = !_passwordShow;
-                });
-              },
-            ),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+          hintText: 'Contraseña...',
+          labelText: 'Contraseña',
+          errorText: _passwordShowError ? _passwordError : null,
+          prefixIcon: const Icon(Icons.lock),
+          suffixIcon: IconButton(
+            icon: _passwordShow
+                ? const Icon(Icons.visibility)
+                : const Icon(Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _passwordShow = !_passwordShow;
+              });
+            },
+          ),
+        ),
         onChanged: (value) {
           _password = value;
         },

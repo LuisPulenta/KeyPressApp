@@ -185,6 +185,7 @@ class _ObrasScreenState extends State<ObrasScreen> {
 
 //------------------------------ _getListView ---------------------------
   Widget _getListView() {
+    var f = NumberFormat('#,###', 'es');
     return RefreshIndicator(
       onRefresh: _getObras,
       child: ListView(
@@ -231,10 +232,11 @@ class _ObrasScreenState extends State<ObrasScreen> {
                                           )),
                                       Expanded(
                                         flex: 3,
-                                        child: Text(e.nroObra.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
+                                        child:
+                                            Text(f.format(e.nroObra).toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                )),
                                       ),
                                       const Text('Ult.Mov.: ',
                                           style: TextStyle(

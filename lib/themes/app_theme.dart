@@ -51,5 +51,21 @@ class AppTheme {
         //minimumSize: Size(170, 50),
       ),
     ),
+
+    //InputDecoration
+    inputDecorationTheme: const InputDecorationTheme(
+      contentPadding: EdgeInsets.all(0),
+      fillColor: Colors.white,
+      filled: true,
+      enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(color: AppTheme.primary, width: 1)),
+      disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(color: Colors.grey, width: 1)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+    ),
   );
 }
