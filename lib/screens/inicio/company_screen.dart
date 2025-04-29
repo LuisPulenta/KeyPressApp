@@ -1,6 +1,11 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/loader_component.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
 import '../../themes/app_theme.dart';
 import '../screens.dart';
 
@@ -13,25 +18,18 @@ class CompanyScreen extends StatefulWidget {
 
 class _CompanyScreenState extends State<CompanyScreen> {
   //----------------------- Variables -----------------------------
-  List<ApiToSelect> apisToSelect = [
-    // ApiToSelect(
-    //     company: "Rowing",
-    //     connection: "https://keypress.serveftp.net/KPRowingApi"),
 
-    ApiToSelect(
-        company: 'Rowing', connection: 'http://190.111.249.225/RowingAppApi'),
+  bool _showLoader = false;
+  List<Empresa> _empresas = [];
 
-    ApiToSelect(
-        company: 'Fleet',
-        connection: 'https://keypress.serveftp.net/KPFleetApi'),
-    ApiToSelect(
-        company: 'TYC', connection: 'https://keypress.serveftp.net/KPTycApi'),
-    ApiToSelect(
-        company: 'Ayko', connection: 'https://keypress.serveftp.net/KPAykoApi'),
-    ApiToSelect(
-        company: 'GrupoRw',
-        connection: 'https://keypress.serveftp.net/KPAykoApi'),
-  ];
+  List<ApiToSelect> apisToSelect = [];
+
+//----------------------- initState -----------------------------
+  @override
+  void initState() {
+    super.initState();
+    _getEmpresas();
+  }
 
 //----------------------- Pantalla -----------------------------
   @override
@@ -42,67 +40,126 @@ class _CompanyScreenState extends State<CompanyScreen> {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: apisToSelect.length,
-                itemBuilder: (_, index) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 50),
-                          backgroundColor: index % 2 != 0
-                              ? AppTheme.primary
-                              : AppTheme.primary.withOpacity(.5)),
-                      onPressed: () async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setString(
-                            'company', apisToSelect[index].company);
-                        await prefs.setString(
-                            'connection', apisToSelect[index].connection);
-                        await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoadingScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        apisToSelect[index].company,
-                      )),
-                ),
+        child: _showLoader
+            ? const LoaderComponent(text: 'Por favor espere...')
+            : Column(
+                children: [
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: apisToSelect.length,
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 5),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(100, 50),
+                                backgroundColor: index % 2 != 0
+                                    ? AppTheme.primary
+                                    : AppTheme.primary.withOpacity(.5)),
+                            onPressed: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString(
+                                  'company', apisToSelect[index].company);
+                              await prefs.setString(
+                                  'connection', apisToSelect[index].connection);
+                              await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoadingScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              apisToSelect[index].company,
+                            )),
+                      ),
 
-                // ListTile(
-                //   onTap: () async {
-                //     SharedPreferences prefs =
-                //         await SharedPreferences.getInstance();
-                //     await prefs.setString(
-                //         'company', apisToSelect[index].company);
-                //     await prefs.setString(
-                //         'connection', apisToSelect[index].connection);
-                //     await Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => const LoginScreen(),
-                //       ),
-                //     );
-                //   },
-                //   title: Text(
-                //     apisToSelect[index].company,
-                //   ),
-                // ),
+                      // ListTile(
+                      //   onTap: () async {
+                      //     SharedPreferences prefs =
+                      //         await SharedPreferences.getInstance();
+                      //     await prefs.setString(
+                      //         'company', apisToSelect[index].company);
+                      //     await prefs.setString(
+                      //         'connection', apisToSelect[index].connection);
+                      //     await Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const LoginScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   title: Text(
+                      //     apisToSelect[index].company,
+                      //   ),
+                      // ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
+  }
+
+//----------------------- _getEmpresas -----------------------------
+  Future<void> _getEmpresas() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estés conectado a Internet',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+    }
+
+    Response response = Response(isSuccess: false);
+
+    response = await ApiHelper.getEmpresas();
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    setState(() {
+      _empresas = response.result;
+      _empresas.sort((a, b) {
+        return a.nombreEmpresa
+            .toString()
+            .toLowerCase()
+            .compareTo(b.nombreEmpresa.toString().toLowerCase());
+      });
+    });
+
+    for (var empresa in _empresas) {
+      ApiToSelect apiToSelect = ApiToSelect(
+          company: empresa.nombreEmpresa, connection: empresa.linkApi);
+      apisToSelect.add(apiToSelect);
+    }
+
+    setState(() {
+      _showLoader = false;
+    });
   }
 }
 

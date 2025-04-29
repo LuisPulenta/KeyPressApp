@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/models.dart';
+import 'constants.dart';
 
 class ApiHelper {
   static Future<Response> put(
@@ -75,7 +76,7 @@ class ApiHelper {
   static Future<Response> getObras(String proyectomodulo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String apiUrl = prefs.getString('connection') ?? '';
-    var url = Uri.parse('$apiUrl/api/Account/GetObras/$proyectomodulo');
+    var url = Uri.parse('$apiUrl/api/Obras/GetObras/$proyectomodulo');
     var response = await http.post(
       url,
       headers: {
@@ -119,5 +120,52 @@ class ApiHelper {
 
     var decodedJson = jsonDecode(body);
     return Response(isSuccess: true, result: Obra.fromJson(decodedJson));
+  }
+
+  //--------------------------------------------------------------
+  static Future<Response> getEmpresas() async {
+    var url = Uri.parse('${Constants.apiAppParametros}/api/empresa');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Empresa> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Empresa.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
+
+  //---------------------------------------------------------------------------
+  static Future<Response> getEmpresa(String nombre) async {
+    var url = Uri.parse(
+        '${Constants.apiAppParametros}/api/Empresa/GetEmpresa/$nombre');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: Empresa.fromJson(decodedJson));
   }
 }

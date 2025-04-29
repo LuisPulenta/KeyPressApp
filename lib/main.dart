@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/gps/gps_bloc.dart';
+import 'helpers/api_helper.dart';
 import 'models/models.dart';
 import 'screens/screens.dart';
 import 'themes/app_theme.dart';
@@ -37,6 +39,7 @@ class _MyAppState extends State<MyApp> {
   bool _showLoginPage = true;
   bool _showCompanyPage = true;
   late User _user;
+  late Empresa _empresa;
 
   //--------------------------- initState ----------------------------------
   @override
@@ -71,6 +74,7 @@ class _MyAppState extends State<MyApp> {
                   ? const LoadingScreen()
                   : HomeScreen(
                       user: _user,
+                      empresa: _empresa,
                     ),
     );
   }
@@ -105,5 +109,20 @@ class _MyAppState extends State<MyApp> {
 
     _isLoading = false;
     setState(() {});
+    _getEmpresa(companySelected);
+  }
+
+  //------------------------------ _getEmpresa --------------------------
+  Future<void> _getEmpresa(String company) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return;
+    }
+
+    Response response = await ApiHelper.getEmpresa(company);
+    if (!response.isSuccess) {
+      return;
+    }
+    _empresa = response.result;
   }
 }

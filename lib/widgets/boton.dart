@@ -36,12 +36,16 @@ class Boton extends StatelessWidget {
               width: 20,
             ),
             Expanded(
-              child: Text(
-                texto,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+              child: FittedBox(
+                clipBehavior: Clip.none,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  texto,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             const SizedBox(

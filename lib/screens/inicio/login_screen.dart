@@ -41,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String companySelected = '';
   String connectionSelected = '';
+  Empresa? _empresa;
 
 //----------------------- initState -----------------------------
   @override
@@ -52,8 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 //--------------------- initPlatformState -------------------------
-//-----------------------------------------------------------------
-
   Future<void> initPlatformState() async {
     var status = await Permission.phone.status;
 
@@ -103,8 +102,40 @@ class _LoginScreenState extends State<LoginScreen> {
     companySelected = prefs.getString('company') ?? '';
     connectionSelected = prefs.getString('connection') ?? '';
     setState(() {});
+    _getEmpresa();
   }
 
+//------------------------------ _getEmpresa --------------------------
+  Future<void> _getEmpresa() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {});
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    Response response = await ApiHelper.getEmpresa(companySelected);
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Hubo un error al recuperar ls datos',
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+
+      setState(() {});
+      return;
+    }
+    _empresa = response.result;
+  }
 //----------------------- Pantalla ------------------------------
 
   @override
@@ -494,6 +525,7 @@ class _LoginScreenState extends State<LoginScreen> {
       MaterialPageRoute(
         builder: (context) => HomeScreen(
           user: user,
+          empresa: _empresa!,
         ),
       ),
     );

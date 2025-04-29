@@ -9,8 +9,10 @@ import '../screens.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
+  final Empresa empresa;
 
-  const HomeScreen({Key? key, required this.user}) : super(key: key);
+  const HomeScreen({Key? key, required this.user, required this.empresa})
+      : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -121,43 +123,57 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Row(
               children: [
+                //--------------- Obras ---------------
                 InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ObrasScreen(
-                          user: widget.user,
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: widget.empresa.habilitaObras == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ObrasScreen(
+                                user: widget.user,
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
                   child: SizedBox(
                     width: ancho * 0.5,
-                    child: const Boton(
+                    child: Boton(
                       icon: FontAwesomeIcons.personDigging,
                       texto: 'Obras',
-                      color1: Color.fromARGB(255, 51, 7, 7),
-                      color2: Color.fromARGB(255, 85, 51, 67),
+                      color1: widget.empresa.habilitaObras == 1
+                          ? const Color.fromARGB(255, 51, 7, 7)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaObras == 1
+                          ? const Color.fromARGB(255, 85, 51, 67)
+                          : const Color.fromARGB(199, 216, 213, 213),
                     ),
                   ),
                 ),
+                //--------------- Inventarios ---------------
                 InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UsuariosScreen(),
-                      ),
-                    );
-                  },
+                  onTap: widget.empresa.habilitaInventarios == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const InventariosScreen(),
+                            ),
+                          );
+                        }
+                      : null,
                   child: SizedBox(
                     width: ancho * 0.5,
-                    child: const Boton(
-                      icon: FontAwesomeIcons.users,
-                      texto: 'Usuarios',
-                      color1: Color.fromARGB(255, 226, 105, 245),
-                      color2: Color.fromARGB(255, 228, 177, 201),
+                    child: Boton(
+                      icon: FontAwesomeIcons.boxesStacked,
+                      texto: 'Inventarios',
+                      color1: widget.empresa.habilitaInventarios == 1
+                          ? const Color.fromARGB(255, 226, 105, 245)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaInventarios == 1
+                          ? const Color.fromARGB(255, 228, 177, 201)
+                          : const Color.fromARGB(199, 216, 213, 213),
                     ),
                   ),
                 ),
@@ -165,41 +181,111 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Row(
               children: [
+                //--------------- Instalaciones ---------------
                 InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EppScreen(),
-                      ),
-                    );
-                  },
+                  onTap: widget.empresa.habilitaInstalaciones == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const InstalacionesScreen(),
+                            ),
+                          );
+                        }
+                      : null,
                   child: SizedBox(
                     width: ancho * 0.5,
-                    child: const Boton(
-                      icon: FontAwesomeIcons.helmetSafety,
-                      texto: 'EPP',
-                      color1: Color.fromARGB(255, 247, 88, 20),
-                      color2: Color.fromARGB(255, 215, 192, 179),
+                    child: Boton(
+                      icon: FontAwesomeIcons.towerBroadcast,
+                      texto: 'Instalaciones',
+                      color1: widget.empresa.habilitaInstalaciones == 1
+                          ? const Color.fromARGB(255, 8, 115, 44)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaInstalaciones == 1
+                          ? const Color.fromARGB(255, 112, 227, 74)
+                          : const Color.fromARGB(199, 216, 213, 213),
                     ),
                   ),
                 ),
+                //--------------- FLota ---------------
                 InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FlotaScreen(),
-                      ),
-                    );
-                  },
+                  onTap: widget.empresa.habilitaFlotas == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FlotaScreen(),
+                            ),
+                          );
+                        }
+                      : null,
                   child: SizedBox(
                     width: ancho * 0.5,
-                    child: const Boton(
+                    child: Boton(
                       icon: FontAwesomeIcons.car,
                       texto: 'Flota',
-                      color1: Color(0xff6989F5),
-                      color2: Color(0xff906EF5),
+                      color1: widget.empresa.habilitaFlotas == 1
+                          ? const Color(0xff6989F5)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaFlotas == 1
+                          ? const Color(0xff906EF5)
+                          : const Color.fromARGB(199, 216, 213, 213),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                //--------------- RRHH ---------------
+                InkWell(
+                  onTap: widget.empresa.habilitaRRHH == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RrhhScreen(),
+                            ),
+                          );
+                        }
+                      : null,
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: Boton(
+                      icon: FontAwesomeIcons.peopleArrows,
+                      texto: 'RR.HH.',
+                      color1: widget.empresa.habilitaRRHH == 1
+                          ? const Color.fromARGB(255, 9, 238, 185)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaRRHH == 1
+                          ? const Color.fromARGB(255, 141, 231, 192)
+                          : const Color.fromARGB(199, 216, 213, 213),
+                    ),
+                  ),
+                ),
+                //--------------- FLota ---------------
+                InkWell(
+                  onTap: widget.empresa.habilitaReciboSueldos == 1
+                      ? () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RecibosSueldoScreen(),
+                            ),
+                          );
+                        }
+                      : null,
+                  child: SizedBox(
+                    width: ancho * 0.5,
+                    child: Boton(
+                      icon: FontAwesomeIcons.fileInvoiceDollar,
+                      texto: 'Recibos Sueldo',
+                      color1: widget.empresa.habilitaReciboSueldos == 1
+                          ? const Color.fromARGB(255, 228, 101, 10)
+                          : const Color.fromARGB(200, 104, 101, 101),
+                      color2: widget.empresa.habilitaReciboSueldos == 1
+                          ? const Color.fromARGB(255, 221, 159, 101)
+                          : const Color.fromARGB(199, 216, 213, 213),
                     ),
                   ),
                 ),
