@@ -59,8 +59,6 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
       fechaCierreElectrico: '',
       fechaUltimoMovimiento: '',
       photos: 0,
-      audios: 0,
-      videos: 0,
       posx: '',
       posy: '',
       direccion: '',
@@ -571,7 +569,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 
     Map<String, dynamic> request = {
       'imagearray': base64Image,
-      'fecha': DateTime.now().toString(),
+      'fecha': DateTime.now().toString().substring(0, 10),
       'nroobra': _obra.nroObra,
       'observacion': _photo.observaciones,
       'estante': 'App',
@@ -583,7 +581,6 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
       'longitud': _photo.longitud,
       'tipodefoto': _photo.tipofoto,
       'direccionfoto': _photo.direccion,
-      'fechaHsFoto': DateTime.now().toString(),
       'obra': _obra,
     };
 

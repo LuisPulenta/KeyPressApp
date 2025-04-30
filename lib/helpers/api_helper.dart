@@ -7,6 +7,7 @@ import '../models/models.dart';
 import 'constants.dart';
 
 class ApiHelper {
+  //---------------------------------------------------------------------------
   static Future<Response> put(
       String controller, String id, Map<String, dynamic> request) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -104,7 +105,7 @@ class ApiHelper {
   static Future<Response> getObra(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String apiUrl = prefs.getString('connection') ?? '';
-    var url = Uri.parse('$apiUrl/api/Account/GetObra/$id');
+    var url = Uri.parse('$apiUrl/api/Obras/GetObra/$id');
     var response = await http.get(
       url,
       headers: {

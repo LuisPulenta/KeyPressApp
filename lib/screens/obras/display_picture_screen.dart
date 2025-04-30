@@ -93,6 +93,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           },
           items: _getOptions(),
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 15),
             hintText: 'Seleccione un Tipo de Foto...',
             labelText: '',
             fillColor: Colors.white,

@@ -45,8 +45,6 @@ class _ObrasScreenState extends State<ObrasScreen> {
       fechaCierreElectrico: '',
       fechaUltimoMovimiento: '',
       photos: 0,
-      audios: 0,
-      videos: 0,
       posx: '',
       posy: '',
       direccion: '',

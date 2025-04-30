@@ -18,8 +18,6 @@ class Obra {
   String? fechaCierreElectrico = '';
   String? fechaUltimoMovimiento = '';
   int photos = 0;
-  int audios = 0;
-  int videos = 0;
   String? posx = '';
   String? posy = '';
   String? direccion = '';
@@ -50,8 +48,6 @@ class Obra {
       required this.fechaCierreElectrico,
       required this.fechaUltimoMovimiento,
       required this.photos,
-      required this.audios,
-      required this.videos,
       required this.posx,
       required this.posy,
       required this.direccion,
@@ -87,8 +83,6 @@ class Obra {
     fechaCierreElectrico = json['fechaCierreElectrico'];
     fechaUltimoMovimiento = json['fechaUltimoMovimiento'];
     photos = json['photos'];
-    audios = json['audios'];
-    videos = json['videos'];
     posx = json['posx'];
     posy = json['posy'];
     direccion = json['direccion'];
@@ -121,8 +115,6 @@ class Obra {
     data['fechaCierreElectrico'] = fechaCierreElectrico;
     data['fechaUltimoMovimiento'] = fechaUltimoMovimiento;
     data['photos'] = photos;
-    data['audios'] = audios;
-    data['videos'] = videos;
     data['posx'] = posx;
     data['posy'] = posy;
     data['direccion'] = direccion;
