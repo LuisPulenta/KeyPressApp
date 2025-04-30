@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.keypressapp">
+    package="com.keypress.keypressapp">
    <application
         android:label="KeyPress App"
         android:name="${applicationName}"

@@ -1,4 +1,4 @@
-package com.example.keypressapp
+package com.keypress.keypressapp
 
 import io.flutter.embedding.android.FlutterActivity
 
