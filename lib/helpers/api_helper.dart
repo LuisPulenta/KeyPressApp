@@ -169,4 +169,28 @@ class ApiHelper {
     var decodedJson = jsonDecode(body);
     return Response(isSuccess: true, result: Empresa.fromJson(decodedJson));
   }
+
+  //---------------------------------------------------------------------------
+  static Future<Response> putWebSesion(int nroConexion) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String apiUrl = prefs.getString('connection') ?? '';
+
+    var url = Uri.parse('$apiUrl/api/WebSesions/$nroConexion');
+
+    var response = await http.put(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(isSuccess: true, result: decodedJson);
+  }
 }

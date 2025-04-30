@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,11 +26,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 //----------------------- Variables -----------------------------
 
-  String _email = '';
-  String _password = '';
+  // String _email = '';
+  // String _password = '';
 
-  // String _email = 'GPRIETO';
-  // String _password = 'CELESTE';
+  String _email = 'GPRIETO';
+  String _password = 'CELESTE';
 
   String _emailError = '';
   bool _emailShowError = false;
@@ -43,6 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
   String connectionSelected = '';
   Empresa? _empresa;
 
+  String _imeiNo = '';
+  bool _hayPermiso = false;
+
 //----------------------- initState -----------------------------
   @override
   void initState() {
@@ -52,11 +58,40 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
+//--------------------- hayPermiso -------------------------
+  Future<bool> hayPermiso() async {
+    var status = await Permission.phone.status;
+    if (status.isDenied) {
+      return false;
+    }
+    return true;
+  }
+
+//--------------------- hayImei -------------------------
+  bool hayImei() {
+    return _imeiNo != '';
+  }
+
+//--------------------- recuperarImei -------------------------
+  Future<void> recuperarImei() async {
+    late String imeiNo = '';
+    try {
+      imeiNo = await DeviceInformation.deviceIMEINumber;
+    } on PlatformException {
+      imeiNo = 'Sin Imei';
+    }
+    if (!mounted) return;
+    _imeiNo = imeiNo;
+    setState(() {});
+  }
+
 //--------------------- initPlatformState -------------------------
   Future<void> initPlatformState() async {
-    var status = await Permission.phone.status;
+    _hayPermiso = await hayPermiso();
 
-    if (status.isDenied) {
+    if (_hayPermiso) {
+      await recuperarImei();
+    } else {
       await showDialog(
           context: context,
           builder: (context) {
@@ -68,8 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
               content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: const <Widget>[
-                    Text(
-                        'La App necesita que habilite los Permisos de Ubicación, Cámara y Teléfono.'),
+                    Text('''
+La App necesita que habilite los Permisos de 
+  - Cámara
+  - Teléfono
+  - Ubicación
+'''),
                     SizedBox(
                       height: 10,
                     ),
@@ -82,12 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           });
       openAppSettings();
-      //exit(0);
     }
-
-    if (!mounted) return;
-
-    setState(() {});
   }
 
 //----------------------- dispose ------------------------------
@@ -424,6 +458,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     FocusScope.of(context).unfocus(); //Oculta el teclado
 
+    if (!hayImei()) {
+      initPlatformState();
+      return;
+    }
+
     setState(() {
       _passwordShow = false;
     });
@@ -520,6 +559,34 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    // Agregar registro a  websesion
+
+    Random r = Random();
+    int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
+    double hora = (DateTime.now().hour * 3600 +
+            DateTime.now().minute * 60 +
+            DateTime.now().second +
+            DateTime.now().millisecond * 0.001) *
+        100;
+
+    WebSesion webSesion = WebSesion(
+        nroConexion: resultado,
+        usuario: user.idUsuario.toString(),
+        iP: _imeiNo,
+        loginDate: DateTime.now().toString().substring(0, 10),
+        loginTime: hora.round(),
+        modulo: 'App-${user.codigoCausante}',
+        logoutDate: null,
+        logoutTime: 0,
+        conectAverage: 0,
+        id_ws: 0,
+        versionsistema: Constants.version);
+
+    await _postWebSesion(webSesion);
+
+    await prefs.setInt('nroConexion', resultado);
+
+    //---------- Va a la página Home ----------
     await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -529,5 +596,25 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  //--------------------- _postWebSesion ----------------------------
+  Future<void> _postWebSesion(WebSesion webSesion) async {
+    Map<String, dynamic> requestWebSesion = {
+      'nroConexion': webSesion.nroConexion,
+      'usuario': webSesion.usuario,
+      'iP': webSesion.iP,
+      'loginDate': webSesion.loginDate,
+      'loginTime': webSesion.loginTime,
+      'modulo': webSesion.modulo,
+      'logoutDate': webSesion.logoutDate,
+      'logoutTime': webSesion.logoutTime,
+      'conectAverage': webSesion.conectAverage,
+      'id_ws': webSesion.id_ws,
+      'versionsistema': webSesion.versionsistema,
+    };
+
+    Response response =
+        await ApiHelper.post('/api/WebSesions/', requestWebSesion);
   }
 }

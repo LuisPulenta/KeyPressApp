@@ -1,7 +1,9 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/api_helper.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/widgets.dart';
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 //----------------------- Variables -----------------------------
   String direccion = '';
+  int? _nroConexion = 0;
 
 //----------------------- initState -----------------------------
   @override
@@ -317,6 +320,14 @@ class _HomeScreenState extends State<HomeScreen> {
 //----------------------- _logOut -------------------------------
   void _logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    //------------ Guarda en WebSesion la fecha y hora de salida ----------
+    _nroConexion = prefs.getInt('nroConexion');
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      await ApiHelper.putWebSesion(_nroConexion!);
+    }
 
     await prefs.setString('userBody', '');
     await prefs.setString('empresaBody', '').then((_) {

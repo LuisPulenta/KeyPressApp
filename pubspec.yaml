@@ -63,6 +63,7 @@ dependencies:
   equatable: ^2.0.3
   flutter_bloc: ^8.0.0
   permission_handler: ^10.2.0
+  device_information: ^0.0.4
   
 
 flutter_icons:
