@@ -47,7 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Empresa? _empresa;
 
   String _imeiNo = '';
-  bool _hayPermiso = false;
+  bool _hayPermisoPhone = false;
+  bool _hayPermisoCamera = false;
+  bool _hayPermisoLocation = false;
 
 //----------------------- initState -----------------------------
   @override
@@ -58,10 +60,28 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
-//--------------------- hayPermiso -------------------------
-  Future<bool> hayPermiso() async {
-    var status = await Permission.phone.status;
-    if (status.isDenied) {
+//--------------------- hayPermisoPhone -------------------------
+  Future<bool> hayPermisoPhone() async {
+    var statusPhone = await Permission.phone.status;
+    if (statusPhone.isDenied) {
+      return false;
+    }
+    return true;
+  }
+
+//--------------------- hayPermisoCamera -------------------------
+  Future<bool> hayPermisoCamera() async {
+    var statusCamera = await Permission.camera.status;
+    if (statusCamera.isDenied) {
+      return false;
+    }
+    return true;
+  }
+
+  //--------------------- hayPermisoLocation -------------------------
+  Future<bool> hayPermisoLocation() async {
+    var statusLocation = await Permission.location.status;
+    if (statusLocation.isDenied) {
       return false;
     }
     return true;
@@ -87,11 +107,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
 //--------------------- initPlatformState -------------------------
   Future<void> initPlatformState() async {
-    _hayPermiso = await hayPermiso();
+    _hayPermisoCamera = await hayPermisoCamera();
+    _hayPermisoPhone = await hayPermisoPhone();
+    _hayPermisoLocation = await hayPermisoLocation();
 
-    if (_hayPermiso) {
+    if (_hayPermisoPhone) {
       await recuperarImei();
-    } else {
+    }
+
+    if (!_hayPermisoCamera || !_hayPermisoPhone || !_hayPermisoLocation) {
       await showDialog(
           context: context,
           builder: (context) {
@@ -101,15 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               title: const Text('Aviso'),
               content: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Text('''
-La App necesita que habilite los Permisos de 
-  - Cámara
-  - Teléfono
-  - Ubicación
-'''),
-                    SizedBox(
+                  children: <Widget>[
+                    const Text('La App necesita que habilite los Permisos de:'),
+                    !_hayPermisoCamera ? const Text('- Cámara') : Container(),
+                    !_hayPermisoPhone ? const Text('- Teléfono') : Container(),
+                    !_hayPermisoLocation
+                        ? const Text('- Ubicación')
+                        : Container(),
+                    const SizedBox(
                       height: 10,
                     ),
                   ]),
@@ -537,6 +562,17 @@ La App necesita que habilite los Permisos de
         _showLoader = false;
         _passwordShowError = true;
         _passwordError = 'Email o contraseña incorrectos';
+      });
+      return;
+    }
+
+    if (_empresa!.habilitaEmpresa == 0) {
+      setState(() {
+        _showLoader = false;
+        _emailShowError = true;
+        _emailError = 'Usuario de Empresa no habilitada';
+        _passwordShowError = true;
+        _passwordError = 'Usuario de Empresa no habilitada';
       });
       return;
     }

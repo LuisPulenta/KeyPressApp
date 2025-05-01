@@ -152,9 +152,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
     });
 
     for (var empresa in _empresas) {
-      ApiToSelect apiToSelect = ApiToSelect(
-          company: empresa.nombreEmpresa, connection: empresa.linkApi);
-      apisToSelect.add(apiToSelect);
+      if (empresa.habilitaEmpresa == 1) {
+        ApiToSelect apiToSelect = ApiToSelect(
+            company: empresa.nombreEmpresa, connection: empresa.linkApi);
+        apisToSelect.add(apiToSelect);
+      }
     }
 
     setState(() {
