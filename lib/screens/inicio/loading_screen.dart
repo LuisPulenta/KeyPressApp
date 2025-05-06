@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/gps/gps_bloc.dart';
-import '../../themes/app_theme.dart';
 import '../screens.dart';
 
 class LoadingScreen extends StatelessWidget {
@@ -18,18 +17,19 @@ class LoadingScreen extends StatelessWidget {
                   ? const LoginScreen()
                   : const GpsAccessScreen()
               : Container(
+                  color: Colors.white,
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 0),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        AppTheme.primary,
-                        AppTheme.secondary,
-                      ],
-                    ),
-                  ),
+                  // decoration: const BoxDecoration(
+                  //   gradient: LinearGradient(
+                  //     begin: Alignment.topCenter,
+                  //     end: Alignment.bottomCenter,
+                  //     colors: [
+                  //       AppTheme.primary,
+                  //       AppTheme.secondary,
+                  //     ],
+                  //   ),
+                  // ),
                 );
         },
       ),

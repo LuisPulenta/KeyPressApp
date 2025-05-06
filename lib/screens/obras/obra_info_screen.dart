@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -10,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../../components/loader_component.dart';
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
@@ -86,7 +85,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Obra ${widget.obra.nroObra}'),
         centerTitle: true,
@@ -132,7 +131,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
   Widget _getInfoObra() {
     var f = NumberFormat('#,###', 'es');
     return Card(
-      color: Colors.white,
+      color: const Color.fromARGB(255, 203, 222, 241),
       shadowColor: const Color(0xFFC7C7C8),
       elevation: 10,
       margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -172,19 +171,19 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
                           ))
                       : Container(),
                 ),
-                const Text('Módulo: ',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    )),
-                Expanded(
-                  flex: 4,
-                  child: Text(_obra.modulo.toString(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                      )),
-                ),
+                // const Text('Módulo: ',
+                //     style: TextStyle(
+                //       fontSize: 12,
+                //       color: AppTheme.primary,
+                //       fontWeight: FontWeight.bold,
+                //     )),
+                // Expanded(
+                //   flex: 4,
+                //   child: Text(_obra.modulo.toString(),
+                //       style: const TextStyle(
+                //         fontSize: 12,
+                //       )),
+                // ),
               ],
             ),
             const SizedBox(
@@ -441,36 +440,52 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 //-------------------------- _goAddPhoto --------------------------
   void _goAddPhoto() async {
     if (widget.user.habilitaFotos != 1) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Su usuario no está habilitado para agregar Fotos.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(context, 'Error',
+          'Su usuario no está habilitado para agregar Fotos.');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Su usuario no está habilitado para agregar Fotos.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
     if (widget.obra.finalizada == 1) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Obra Terminada. No se puede agregar fotos.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Obra Terminada. No se puede agregar fotos.');
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Obra Terminada. No se puede agregar fotos.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
-    var response = await showAlertDialog(
-        context: context,
-        title: 'Confirmación',
-        message: '¿De donde deseas obtener la imagen?',
-        actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
-          const AlertDialogAction(key: 'camera', label: 'Cámara'),
-          const AlertDialogAction(key: 'gallery', label: 'Galería'),
-        ]);
+    // var response = await showAlertDialog(
+    //     context: context,
+    //     title: 'Confirmación',
+    //     message: '¿De donde deseas obtener la imagen?',
+    //     actions: <AlertDialogAction>[
+    //       const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
+    //       const AlertDialogAction(key: 'camera', label: 'Cámara'),
+    //       const AlertDialogAction(key: 'gallery', label: 'Galería'),
+    //     ]);
+
+    //await customErrorDialog(context, 'Error', 'Usted es un desubicado!!');
+    //await customWarningDialog(context, 'Atención', 'Algo no está bien!!');
+    //await customSuccessDialog(context, 'Perfecto!!', 'Guardado sin problemas!!');
+
+    var response = await customQuestionDialog(context,
+        content: 'Desde dónde desea sacar la foto?',
+        title1: 'Cámara',
+        title2: 'Galería',
+        option1: 'camera',
+        option2: 'gallery');
 
     if (response == 'cancel') {
       return;
@@ -484,6 +499,8 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
 
     if (_photoChanged) {
       _addPicture();
+    } else {
+      _photoChanged = false;
     }
   }
 
@@ -492,15 +509,14 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
     var firstCamera = cameras.first;
-    var response1 = await showAlertDialog(
-        context: context,
-        title: 'Seleccionar cámara',
-        message: '¿Qué cámara desea utilizar?',
-        actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'no', label: 'Trasera'),
-          const AlertDialogAction(key: 'yes', label: 'Delantera'),
-          const AlertDialogAction(key: 'cancel', label: 'Cancelar'),
-        ]);
+
+    var response1 = await customQuestionDialog(context,
+        content: '¿Qué cámara desea utilizar?',
+        title1: 'Trasera',
+        title2: 'Delantera',
+        option1: 'no',
+        option2: 'yes');
+
     if (response1 == 'yes') {
       firstCamera = cameras.first;
     }
@@ -531,7 +547,7 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     final XFile? image2 = await picker.pickImage(source: ImageSource.gallery);
 
     if (image2 != null) {
-      _photoChanged = true;
+      //_photoChanged = true;
       Response? response = await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => DisplayPictureScreen(
                 image: image2,
@@ -553,13 +569,16 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estes conectado a internet.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Verifica que estes conectado a internet.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
@@ -590,13 +609,15 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     setState(() {});
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(context, 'Error', response.message);
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: response.message,
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
@@ -612,47 +633,59 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     }
 
     if (widget.obra.finalizada == 1) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Obra Terminada. No se puede eliminar fotos.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Obra Terminada. No se puede eliminar fotos.');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Obra Terminada. No se puede eliminar fotos.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
     if (widget.user.habilitaFotos != 1) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Su usuario no está habilitado para eliminar Fotos.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(context, 'Error',
+          'Su usuario no está habilitado para eliminar Fotos.');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Su usuario no está habilitado para eliminar Fotos.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
     if (widget.user.login != _obra.obrasDocumentos[_current].generadoPor) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              'Esta foto (NROREGISTRO ${_obra.obrasDocumentos[_current].nroregistro}) sólo puede ser eliminada por el Usuario que la cargó (${_obra.obrasDocumentos[_current].generadoPor}). De ser necesario borrarla comuníquese con el administrador del Sistema.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(context, 'Error',
+          'Esta foto (NROREGISTRO ${_obra.obrasDocumentos[_current].nroregistro}) sólo puede ser eliminada por el Usuario que la cargó (${_obra.obrasDocumentos[_current].generadoPor}). De ser necesario borrarla comuníquese con el administrador del Sistema.');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message:
+      //         'Esta foto (NROREGISTRO ${_obra.obrasDocumentos[_current].nroregistro}) sólo puede ser eliminada por el Usuario que la cargó (${_obra.obrasDocumentos[_current].generadoPor}). De ser necesario borrarla comuníquese con el administrador del Sistema.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
-    var response = await showAlertDialog(
-        context: context,
-        title: 'Confirmación',
-        message: '¿Estas seguro de querer borrar esta foto?',
-        actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'no', label: 'No'),
-          const AlertDialogAction(key: 'yes', label: 'Sí'),
-        ]);
+    var response = await customYesNoQuestionDialog(context,
+        content: '¿Estas seguro de querer borrar esta foto?');
+
+    // await showAlertDialog(
+    //     context: context,
+    //     title: 'Confirmación',
+    //     message: '¿Estas seguro de querer borrar esta foto?',
+    //     actions: <AlertDialogAction>[
+    //       const AlertDialogAction(key: 'no', label: 'No'),
+    //       const AlertDialogAction(key: 'yes', label: 'Sí'),
+    //     ]);
 
     if (response == 'yes') {
       await _deletePhoto();
@@ -666,13 +699,17 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estes conectado a internet.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Verifica que estes conectado a internet.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
@@ -682,13 +719,15 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     setState(() {});
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(context, 'Error', 'response.message');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: response.message,
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 

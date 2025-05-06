@@ -13,6 +13,9 @@ export 'package:keypressapp/screens/pantallas/inventarios_screen.dart';
 export 'package:keypressapp/screens/pantallas/recibos_sueldo_screen.dart';
 export 'package:keypressapp/screens/pantallas/rrhh_screen.dart';
 export 'package:keypressapp/screens/pantallas/users_example.dart';
+export 'package:keypressapp/screens/varios/defensa_consumidor_screen.dart';
+export 'package:keypressapp/screens/varios/privacidad_screen.dart';
+export 'package:keypressapp/screens/varios/terminos_screen.dart';
 
 export 'inicio/gps_access_screen.dart';
 export 'inicio/loading_screen.dart';

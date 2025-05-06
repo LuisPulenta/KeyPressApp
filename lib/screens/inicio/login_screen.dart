@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/loader_component.dart';
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
@@ -169,26 +168,31 @@ class _LoginScreenState extends State<LoginScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estes conectado a internet.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Verifica que estes conectado a internet.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 
     Response response = await ApiHelper.getEmpresa(companySelected);
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Hubo un error al recuperar ls datos',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Hubo un error al recuperar los datos');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Hubo un error al recuperar ls datos',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
 
       setState(() {});
       return;
@@ -201,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () async {
-        await Navigator.push(
+        await Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const CandadoScreen(),
@@ -209,22 +213,23 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
       child: Scaffold(
-        backgroundColor: const Color(0xff8c8c94),
+        backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 0),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppTheme.primary,
-                    AppTheme.secondary,
-                  ],
-                ),
-              ),
+              color: Colors.white,
+              // decoration: const BoxDecoration(
+              //   gradient: LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [
+              //       AppTheme.primary,
+              //       AppTheme.secondary,
+              //     ],
+              //   ),
+              // ),
             ),
             Center(
               child: SingleChildScrollView(
@@ -254,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           Constants.version,
                           style: const TextStyle(
-                              fontSize: 20, color: Colors.white),
+                              fontSize: 20, color: Colors.black),
                         ),
                       ],
                     ),
@@ -265,13 +270,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       companySelected,
                       style: const TextStyle(
                           fontSize: 24,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold),
                     ),
                     Card(
+                      color: const Color.fromARGB(255, 203, 222, 241),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      elevation: 15,
+                      elevation: 10,
                       margin: const EdgeInsets.only(
                           left: 20, right: 20, top: 20, bottom: 20),
                       child: Padding(
@@ -506,13 +512,16 @@ class _LoginScreenState extends State<LoginScreen> {
         _showLoader = false;
       });
 
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estes conectado a internet.',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Verifica que estes conectado a internet.',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 

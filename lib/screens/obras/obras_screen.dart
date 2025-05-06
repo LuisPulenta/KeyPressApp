@@ -68,7 +68,7 @@ class _ObrasScreenState extends State<ObrasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Obras'),
         centerTitle: true,
@@ -190,7 +190,7 @@ class _ObrasScreenState extends State<ObrasScreen> {
         children: _obras.map((e) {
           return Card(
             color: e.finalizada == 0
-                ? Colors.white
+                ? const Color.fromARGB(255, 203, 222, 241)
                 : const Color.fromARGB(255, 240, 202, 151),
             shadowColor: Colors.white,
             elevation: 10,
@@ -255,19 +255,19 @@ class _ObrasScreenState extends State<ObrasScreen> {
                                                 ))
                                             : Container(),
                                       ),
-                                      const Text('Módulo: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Text(e.modulo.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
-                                      ),
+                                      // const Text('Módulo: ',
+                                      //     style: TextStyle(
+                                      //       fontSize: 12,
+                                      //       color: AppTheme.primary,
+                                      //       fontWeight: FontWeight.bold,
+                                      //     )),
+                                      // Expanded(
+                                      //   flex: 4,
+                                      //   child: Text(e.modulo.toString(),
+                                      //       style: const TextStyle(
+                                      //         fontSize: 12,
+                                      //       )),
+                                      // ),
                                     ],
                                   ),
                                   const SizedBox(
@@ -309,19 +309,27 @@ class _ObrasScreenState extends State<ObrasScreen> {
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                      const Text('Fotos: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                      Expanded(
-                                        child: Text(
-                                            e.obrasDocumentos.length.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
-                                      ),
+
+                                      e.obrasDocumentos.isNotEmpty
+                                          ? _IconInfo(
+                                              icon: Icons.camera_alt,
+                                              text: e.obrasDocumentos.length
+                                                  .toString())
+                                          : Container(),
+
+                                      // const Text('Fotos: ',
+                                      //     style: TextStyle(
+                                      //       fontSize: 12,
+                                      //       color: AppTheme.primary,
+                                      //       fontWeight: FontWeight.bold,
+                                      //     )),
+                                      // Expanded(
+                                      //   child: Text(
+                                      //       e.obrasDocumentos.length.toString(),
+                                      //       style: const TextStyle(
+                                      //         fontSize: 12,
+                                      //       )),
+                                      // ),
                                     ],
                                   ),
                                   SizedBox(
@@ -425,5 +433,52 @@ class _ObrasScreenState extends State<ObrasScreen> {
       _getObras();
       setState(() {});
     }
+  }
+}
+
+//-------------------------- _IconInfo ------------------------------------
+class _IconInfo extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _IconInfo({
+    Key? key,
+    required this.icon,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30,
+      height: 30,
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Icon(
+              icon,
+              color: AppTheme.primary,
+            ),
+          ),
+          Positioned(
+              top: 0,
+              right: 0,
+              child: SizedBox(
+                width: 15,
+                height: 15,
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                  child: Text(
+                    text,
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ),
+              )),
+        ],
+      ),
+    );
   }
 }

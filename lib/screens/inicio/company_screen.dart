@@ -1,9 +1,8 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/loader_component.dart';
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
@@ -58,7 +57,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 minimumSize: const Size(100, 50),
                                 backgroundColor: index % 2 != 0
                                     ? AppTheme.primary
-                                    : AppTheme.primary.withOpacity(.5)),
+                                    : AppTheme.primary.withOpacity(0.5)),
                             onPressed: () async {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
@@ -117,13 +116,17 @@ class _CompanyScreenState extends State<CompanyScreen> {
       setState(() {
         _showLoader = false;
       });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      return;
+
+      // showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: 'Verifica que estés conectado a Internet',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
     }
 
     Response response = Response(isSuccess: false);
@@ -131,13 +134,15 @@ class _CompanyScreenState extends State<CompanyScreen> {
     response = await ApiHelper.getEmpresas();
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
+      customErrorDialog(context, 'Error', response.message);
+
+      // await showAlertDialog(
+      //     context: context,
+      //     title: 'Error',
+      //     message: response.message,
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
       return;
     }
 

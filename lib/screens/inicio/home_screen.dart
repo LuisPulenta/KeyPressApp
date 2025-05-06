@@ -35,10 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Keypress App'),
-      //   centerTitle: true,
-      // ),
+      appBar: AppBar(
+        //title: const Text('Keypress App'),
+        centerTitle: true,
+      ),
+      drawer: _getMenu(),
       body: _getBody(),
     );
   }
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double ancho = MediaQuery.of(context).size.width;
     return Container(
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(0, 60, 0, 5),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -79,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             const Divider(
               color: AppTheme.primary,
               thickness: 2,
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -338,6 +339,177 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     });
+  }
+
+//----------------------- _getMenu -------------------------------
+  Widget _getMenu() {
+    return Drawer(
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xff004f95),
+              Color(0xff004f95),
+            ],
+          ),
+        ),
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.white,
+                  ],
+                ),
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Image(
+                    image: AssetImage('assets/logo.png'),
+                    width: 200,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        'Usuario: ',
+                        style: (TextStyle(
+                            color: Color(0xff004f95),
+                            fontWeight: FontWeight.bold)),
+                      ),
+                      Text(
+                        '${widget.user.nombre} ${widget.user.apellido}',
+                        style: (const TextStyle(color: AppTheme.primary)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              color: Colors.white,
+              height: 1,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ExpansionTile(
+                    collapsedIconColor: Colors.white,
+                    iconColor: Colors.white,
+                    leading: const Icon(
+                      Icons.info_outline_rounded,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Acerca de',
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.only(left: 15.0),
+                          dense: true,
+                          leading: const Icon(
+                            FontAwesomeIcons.fileContract,
+                            color: Colors.white,
+                          ),
+                          tileColor: const Color(0xff8c8c94),
+                          title: const Text('Términos y Condiciones',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TerminosScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.only(left: 15.0),
+                          dense: true,
+                          leading: const Icon(
+                            Icons.do_not_disturb_alt_outlined,
+                            color: Colors.white,
+                          ),
+                          tileColor: const Color(0xff8c8c94),
+                          title: const Text('Cómo cuidamos tu privacidad',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PrivacidadScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.only(left: 15.0),
+                          dense: true,
+                          leading: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.white,
+                          ),
+                          tileColor: const Color(0xff8c8c94),
+                          title: const Text('Defensa del consumidor',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const DefensaConsumidorScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              color: Colors.white,
+              height: 1,
+            ),
+            ListTile(
+              dense: true,
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              tileColor: const Color(0xff8c8c94),
+              title: const Text('Cerrar Sesión',
+                  style: TextStyle(fontSize: 15, color: Colors.white)),
+              onTap: () {
+                _logOut();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
