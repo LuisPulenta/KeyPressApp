@@ -431,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const TerminosScreen(),
+                                builder: (context) => TerminosScreen(),
                               ),
                             );
                           },
