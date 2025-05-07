@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/constants.dart';
+import 'terminos_text.dart';
 
 class TerminosScreen extends StatelessWidget {
   const TerminosScreen({super.key});
@@ -25,14 +25,42 @@ class TerminosScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                color: Colors.white,
+                width: double.infinity,
+                child: RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Fecha de última modificación: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'PTSansNarrow-Regular',
+                          fontSize: 16,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' 6 de Mayo de 2025. ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'PTSansNarrow-Regular',
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   color: Colors.white,
                   child: ListView.builder(
-                    itemCount: Constants.terms.length,
+                    itemCount: TerminosText.terms.length,
                     itemBuilder: (context, index) {
-                      final item = Constants.terms[index];
+                      final item = TerminosText.terms[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: RichText(
