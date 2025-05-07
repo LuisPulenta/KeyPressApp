@@ -25,34 +25,6 @@ class TerminosScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                color: Colors.white,
-                width: double.infinity,
-                child: RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Fecha de última modificación: ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontFamily: 'PTSansNarrow-Regular',
-                          fontSize: 16,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' 6 de Mayo de 2025. ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'PTSansNarrow-Regular',
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -61,26 +33,50 @@ class TerminosScreen extends StatelessWidget {
                     itemCount: TerminosText.terms.length,
                     itemBuilder: (context, index) {
                       final item = TerminosText.terms[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .copyWith(fontSize: 16),
+                      if (index > 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context)
+                                  .style
+                                  .copyWith(fontSize: 16),
+                              children: [
+                                TextSpan(
+                                  text: '${item['title']}\n',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text: item['content'],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          height: 50,
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              TextSpan(
-                                text: '${item['title']}\n',
+                              Text('${item['title']}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  )),
+                              Text(
+                                '${item['content']}',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: item['content'],
+                                  fontSize: 16,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   ),
                 ),
@@ -118,3 +114,14 @@ class TerminosScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+//  style: const TextStyle(
+//                                 fontWeight: FontWeight.bold,
+//                                 fontStyle: FontStyle.normal,
+//                                 color: Colors.black,
+//                                 fontFamily: 'PTSansNarrow-Regular',
+//                                 fontSize: 16,
+//                               )

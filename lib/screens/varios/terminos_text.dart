@@ -1,6 +1,10 @@
 class TerminosText {
   static List<Map<String, String>> terms = [
     {
+      'title': 'Fecha de última modificación: ',
+      'content': '6 de Mayo de 2025.'
+    },
+    {
       'title': '1. Alcance',
       'content': '''
 Las presentes cláusulas (en adelante, los “TÉRMINOS Y CONDICIONES”) regulan las condiciones generales de uso de la aplicación para dispositivos móviles del KEYPRESS SAS- (en adelante, “KEYPRESS_APP”). A su vez, rigen la relación entre el KEYPRESS SAS (en adelante, “EL ADMINISTRADOR”) y los/as usuarios/as de GAOS APP (en adelante, los/as “USUARIOS/AS”).
