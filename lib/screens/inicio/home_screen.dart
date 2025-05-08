@@ -155,14 +155,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                //--------------- Inventarios ---------------
+                //--------------- Compras ---------------
                 InkWell(
-                  onTap: widget.empresa.habilitaInventarios == 1
+                  onTap: widget.empresa.habilitaCompras == 1 &&
+                          widget.user.estadoInv &&
+                          widget.user.compras
                       ? () async {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const InventariosScreen(),
+                              builder: (context) => ComprasScreen(
+                                user: widget.user,
+                              ),
                             ),
                           );
                         }
@@ -170,12 +174,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     width: ancho * 0.5,
                     child: Boton(
-                      icon: FontAwesomeIcons.boxesStacked,
-                      texto: 'Inventarios',
-                      color1: widget.empresa.habilitaInventarios == 1
+                      icon: FontAwesomeIcons.cartShopping,
+                      texto: 'Compras',
+                      color1: widget.empresa.habilitaCompras == 1 &&
+                              widget.user.estadoInv &&
+                              widget.user.compras
                           ? const Color.fromARGB(255, 226, 105, 245)
                           : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaInventarios == 1
+                      color2: widget.empresa.habilitaCompras == 1 &&
+                              widget.user.estadoInv &&
+                              widget.user.compras
                           ? const Color.fromARGB(255, 228, 177, 201)
                           : const Color.fromARGB(199, 216, 213, 213),
                     ),
@@ -431,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TerminosScreen(),
+                                builder: (context) => const TerminosScreen(),
                               ),
                             );
                           },

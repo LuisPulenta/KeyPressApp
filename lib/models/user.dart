@@ -9,6 +9,8 @@ class User {
   int? habilitaFotos = 0;
   String modulo = '';
   String codigoCausante = '';
+  bool estadoInv = false;
+  bool compras = true;
 
   User({
     required this.idUsuario,
@@ -21,6 +23,8 @@ class User {
     required this.habilitaFotos,
     required this.modulo,
     required this.codigoCausante,
+    required this.estadoInv,
+    required this.compras,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class User {
     habilitaFotos = json['habilitaFotos'];
     modulo = json['modulo'];
     codigoCausante = json['codigoCausante'];
+    estadoInv = json['estadoInv'];
+    compras = json['compras'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +54,8 @@ class User {
     data['habilitaFotos'] = habilitaFotos;
     data['modulo'] = modulo;
     data['codigoCausante'] = codigoCausante;
+    data['estadoInv'] = estadoInv;
+    data['compras'] = compras;
 
     return data;
   }

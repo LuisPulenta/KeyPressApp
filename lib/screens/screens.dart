@@ -1,4 +1,5 @@
 export 'package:keypressapp/screens/candado/candado_screen.dart';
+export 'package:keypressapp/screens/compras/compras_screen.dart';
 export 'package:keypressapp/screens/inicio/company_screen.dart';
 export 'package:keypressapp/screens/inicio/home_screen.dart';
 export 'package:keypressapp/screens/inicio/login_screen.dart';
