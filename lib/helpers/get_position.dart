@@ -1,24 +1,24 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'helpers.dart';
+import '../components/components.dart';
 
-Future<Position?> getPosition() async {
+Future<Position?> getPosition(BuildContext context) async {
   LocationPermission permission;
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      showMyDialog('Aviso', 'El permiso de localización está negado.', 'Ok');
-      return null;
+      await customErrorDialog(
+          context, 'Aviso', 'El permiso de localización está negado.');
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    showMyDialog(
-        'Aviso',
-        'El permiso de localización está negado permanentemente. No se puede requerir este permiso.',
-        'Ok');
+    await customErrorDialog(context, 'Aviso',
+        'El permiso de localización está negado permanentemente. No se puede requerir este permiso.');
+
     return null;
   }
 

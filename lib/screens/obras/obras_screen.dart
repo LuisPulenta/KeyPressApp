@@ -2,7 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../components/loader_component.dart';
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
@@ -389,8 +389,9 @@ class _ObrasScreenState extends State<ObrasScreen> {
       setState(() {
         _showLoader = false;
       });
-      showMyDialog(
-          'Error', 'Verifica que estés conectado a Internet', 'Aceptar');
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      return;
     }
 
     Response response = Response(isSuccess: false);
@@ -399,7 +400,8 @@ class _ObrasScreenState extends State<ObrasScreen> {
 
     if (!response.isSuccess) {
       if (mounted) {
-        showMyDialog('Error', response.message, 'Aceptar');
+        await customErrorDialog(context, 'Error', response.message);
+
         return;
       }
     }

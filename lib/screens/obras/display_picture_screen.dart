@@ -189,7 +189,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       return;
     }
 
-    Position? position = await getPosition();
+    Position? position = await getPosition(context);
 
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position!.latitude, position.longitude);

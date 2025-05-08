@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/custom_error_dialog.dart';
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
@@ -306,8 +307,9 @@ class _ComprasScreenState extends State<ComprasScreen> {
       setState(() {
         _showLoader = false;
       });
-      showMyDialog(
-          'Error', 'Verifica que estés conectado a Internet', 'Aceptar');
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      return;
     }
 
     Response response = Response(isSuccess: false);
@@ -316,7 +318,7 @@ class _ComprasScreenState extends State<ComprasScreen> {
 
     if (!response.isSuccess) {
       if (mounted) {
-        showMyDialog('Error', response.message, 'Aceptar');
+        await customErrorDialog(context, 'Error', response.message);
         return;
       }
     }

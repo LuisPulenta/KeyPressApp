@@ -745,15 +745,18 @@ class _ObraInfoScreenState extends State<ObraInfoScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
-      showMyDialog(
-          'Error', 'Verifica que estés conectado a Internet', 'Aceptar');
+
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+
       return;
     }
 
     Response response = await ApiHelper.getObra(_obra.nroObra.toString());
 
     if (!response.isSuccess) {
-      showMyDialog('Error', 'N° de Obra no válido', 'Aceptar');
+      await customErrorDialog(context, 'Error', 'N° de Obra no válido');
+
       setState(() {});
       return;
     }
