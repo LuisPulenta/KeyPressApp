@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ObrasScreen(
+                              builder: (context) => ObrasMenuScreen(
                                 user: widget.user,
                               ),
                             ),

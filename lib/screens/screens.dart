@@ -6,6 +6,8 @@ export 'package:keypressapp/screens/inicio/login_screen.dart';
 export 'package:keypressapp/screens/inicio/wait_screen.dart';
 export 'package:keypressapp/screens/obras/display_picture_screen.dart';
 export 'package:keypressapp/screens/obras/obra_info_screen.dart';
+export 'package:keypressapp/screens/obras/obras_menu_screen.dart';
+export 'package:keypressapp/screens/obras/obras_relevamientos_screen.dart';
 export 'package:keypressapp/screens/obras/obras_screen.dart';
 export 'package:keypressapp/screens/obras/take_picture.dart';
 export 'package:keypressapp/screens/pantallas/flota_screen.dart';

@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/custom_error_dialog.dart';
@@ -7,6 +8,7 @@ import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/app_theme.dart';
+import '../../widgets/confirm_dialog.dart';
 import '../widgets/list_count.dart';
 import '../widgets/no_content.dart';
 
@@ -18,12 +20,13 @@ class ComprasScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ComprasScreenState createState() => _ComprasScreenState();
+  ComprasScreenState createState() => ComprasScreenState();
 }
 
-class _ComprasScreenState extends State<ComprasScreen> {
+class ComprasScreenState extends State<ComprasScreen> {
 //----------------------- Variables -----------------------------
   List<PEPedido> _compras = [];
+  List<PEPedido> _comprasByNroPedido = [];
   bool _showLoader = false;
   bool _isFiltered = false;
   String _search = '';
@@ -33,7 +36,9 @@ class _ComprasScreenState extends State<ComprasScreen> {
       estado: '',
       nroPedidoObra: '',
       totalItemAprobados: 0,
-      importeAprobados: 0.0);
+      importeAprobados: 0.0,
+      idusuario: 0,
+      idfirma: 0);
 
 //----------------------- initState -----------------------------
   @override
@@ -210,15 +215,14 @@ class _ComprasScreenState extends State<ComprasScreen> {
                                           )),
                                       Expanded(
                                         flex: 4,
-                                        child: e.fecha != null
-                                            ? Text(
-                                                DateFormat('dd/MM/yyyy').format(
-                                                    DateTime.parse(
-                                                        e.fecha.toString())),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ))
-                                            : Container(),
+                                        child: Text(
+                                          DateFormat('dd/MM/yyyy').format(
+                                              DateTime.parse(
+                                                  e.fecha.toString())),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -227,13 +231,17 @@ class _ComprasScreenState extends State<ComprasScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      const Text('N° Pedido de Obra: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                      const Expanded(
+                                        flex: 1,
+                                        child: Text('N° Pedido de Obra: ',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppTheme.primary,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
                                       Expanded(
+                                        flex: 2,
                                         child: Text(e.nroPedidoObra,
                                             style: const TextStyle(
                                               fontSize: 12,
@@ -253,6 +261,7 @@ class _ComprasScreenState extends State<ComprasScreen> {
                                             fontWeight: FontWeight.bold,
                                           )),
                                       Expanded(
+                                        flex: 1,
                                         child: Text(
                                             e.totalItemAprobados.toString(),
                                             style: const TextStyle(
@@ -262,18 +271,20 @@ class _ComprasScreenState extends State<ComprasScreen> {
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                      const Text('Importe Aprobados: ',
+                                      const Text('Importe Aprob.: ',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: AppTheme.primary,
                                             fontWeight: FontWeight.bold,
                                           )),
                                       Expanded(
-                                        child:
-                                            Text(e.importeAprobados.toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                )),
+                                        flex: 2,
+                                        child: Text(
+                                            NumberFormat.currency(symbol: '\$')
+                                                .format(e.importeAprobados),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            )),
                                       ),
                                     ],
                                   ),
@@ -284,7 +295,26 @@ class _ComprasScreenState extends State<ComprasScreen> {
                         ),
                       ),
                     ),
-                    const Icon(Icons.arrow_forward_ios),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            bool result = await showConfirmDialog(context,
+                                title: 'Atención!',
+                                content:
+                                    'Está seguro de firmar el Pedido N° ${e.nroPedido} de ${NumberFormat.currency(symbol: '\$').format(e.importeAprobados)}?');
+                            if (result) {
+                              _firmarPedido(e.idfirma, e.nroPedido);
+                            }
+                          },
+                          icon: const FaIcon(
+                            FontAwesomeIcons.signature,
+                            color: Colors.white,
+                          )),
+                    ),
                   ],
                 ),
               ),
@@ -314,7 +344,7 @@ class _ComprasScreenState extends State<ComprasScreen> {
 
     Response response = Response(isSuccess: false);
 
-    response = await ApiHelper.getPEPedidos();
+    response = await ApiHelper.getPEPedidos(widget.user.idUsuario);
 
     if (!response.isSuccess) {
       if (mounted) {
@@ -335,6 +365,124 @@ class _ComprasScreenState extends State<ComprasScreen> {
         });
       });
     }
+  }
+
+  //----------------------- getPEPedidosByNroPedido -----------------------------
+  Future<void> _getPEPedidosByNroPedido(int nroPedido) async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      return;
+    }
+
+    Response response = Response(isSuccess: false);
+
+    response = await ApiHelper.getPEPedidosByNroPedido(nroPedido);
+
+    if (!response.isSuccess) {
+      if (mounted) {
+        await customErrorDialog(context, 'Error', response.message);
+        return;
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _showLoader = false;
+        _comprasByNroPedido = response.result;
+        _comprasByNroPedido.sort((a, b) {
+          return a.nroPedido
+              .toString()
+              .toLowerCase()
+              .compareTo(b.nroPedido.toString().toLowerCase());
+        });
+      });
+    }
+
+    if (_comprasByNroPedido.isEmpty) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      var connectivityResult = await Connectivity().checkConnectivity();
+
+      if (connectivityResult == ConnectivityResult.none) {
+        setState(() {
+          _showLoader = false;
+        });
+        await customErrorDialog(
+            context, 'Error', 'Verifica que estés conectado a Internet');
+        return;
+      }
+
+      Response response = Response(isSuccess: false);
+
+      Map<String, dynamic> request = {
+        'NroPedido': nroPedido,
+      };
+
+      response = await ApiHelper.put(
+          '/api/PEPedidos/PutPEPPedido/', nroPedido.toString(), request);
+
+      if (!response.isSuccess) {
+        if (mounted) {
+          await customErrorDialog(context, 'Error', response.message);
+          setState(() {
+            _showLoader = false;
+          });
+          return;
+        }
+      }
+      setState(() {
+        _showLoader = false;
+      });
+    }
+  }
+
+//----------------------- _firmarPedido ---------------------------
+  void _firmarPedido(int idfirma, int nroPedido) async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await customErrorDialog(
+          context, 'Error', 'Verifica que estés conectado a Internet');
+      return;
+    }
+
+    Response response = Response(isSuccess: false);
+
+    Map<String, dynamic> request = {
+      'IDFIRMA': idfirma,
+    };
+
+    response = await ApiHelper.put(
+        '/api/PEPedidos/PutPedidosFirma/', idfirma.toString(), request);
+
+    if (!response.isSuccess) {
+      if (mounted) {
+        await customErrorDialog(context, 'Error', response.message);
+        return;
+      }
+    }
+
+    _getCompras();
+    _getPEPedidosByNroPedido(nroPedido);
   }
 
 //----------------------- _goInfoObra ---------------------------

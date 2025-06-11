@@ -5,6 +5,8 @@ class PEPedido {
   String nroPedidoObra = '';
   int totalItemAprobados = 0;
   double importeAprobados = 0.0;
+  int idusuario = 0;
+  int idfirma = 0;
 
   PEPedido({
     required this.nroPedido,
@@ -13,6 +15,8 @@ class PEPedido {
     required this.nroPedidoObra,
     required this.totalItemAprobados,
     required this.importeAprobados,
+    required this.idusuario,
+    required this.idfirma,
   });
 
   PEPedido.fromJson(Map<String, dynamic> json) {
@@ -22,6 +26,8 @@ class PEPedido {
     nroPedidoObra = json['nroPedidoObra'] ?? '';
     totalItemAprobados = json['totalItemAprobados'] ?? '';
     importeAprobados = json['importeAprobados'];
+    idusuario = json['idusuario'];
+    idfirma = json['idfirma'];
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +38,8 @@ class PEPedido {
     data['nroPedidoObra'] = nroPedidoObra;
     data['totalItemAprobados'] = totalItemAprobados;
     data['importeAprobados'] = importeAprobados;
+    data['idusuario'] = idusuario;
+    data['idfirma'] = idfirma;
 
     return data;
   }
