@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import '../../blocs/gps/gps_bloc.dart';
+import '../../providers/providers.dart';
 import '../screens.dart';
 
 class LoadingScreen extends StatelessWidget {
@@ -9,29 +9,19 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gpsProvider = Provider.of<PermissionsProvider>(context);
+
     return Scaffold(
-      body: BlocBuilder<GpsBloc, GpsState>(
-        builder: (context, state) {
-          return state.isReady
-              ? state.isAllGranted
-                  ? const LoginScreen()
-                  : const GpsAccessScreen()
-              : Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  // decoration: const BoxDecoration(
-                  //   gradient: LinearGradient(
-                  //     begin: Alignment.topCenter,
-                  //     end: Alignment.bottomCenter,
-                  //     colors: [
-                  //       AppTheme.primary,
-                  //       AppTheme.secondary,
-                  //     ],
-                  //   ),
-                  // ),
-                );
-        },
+      body: Center(
+        child: gpsProvider.isReady
+            ? (gpsProvider.isAllGranted)
+                ? const LoginScreen()
+                : const PermissionsAccessScreen()
+            : Container(
+                color: Colors.white,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 0),
+              ),
       ),
     );
   }

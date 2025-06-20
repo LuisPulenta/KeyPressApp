@@ -20,5 +20,5 @@ export 'package:keypressapp/screens/varios/defensa_consumidor_screen.dart';
 export 'package:keypressapp/screens/varios/privacidad_screen.dart';
 export 'package:keypressapp/screens/varios/terminos_screen.dart';
 
-export 'inicio/gps_access_screen.dart';
 export 'inicio/loading_screen.dart';
+export 'inicio/permissions_access_screen.dart';

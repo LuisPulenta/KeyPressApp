@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'blocs/gps/gps_bloc.dart';
 import 'helpers/api_helper.dart';
 import 'models/models.dart';
+import 'providers/providers.dart';
 import 'screens/screens.dart';
 import 'themes/app_theme.dart';
 
@@ -20,8 +20,8 @@ void main() {
   //Estas líneas son para que funcione el http con las direcciones https
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider(create: (context) => GpsBloc()),
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => PermissionsProvider(), lazy: false),
   ], child: const MyApp()));
 }
 
