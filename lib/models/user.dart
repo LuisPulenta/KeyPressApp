@@ -9,8 +9,8 @@ class User {
   int? habilitaFotos = 0;
   String modulo = '';
   String codigoCausante = '';
-  bool estadoInv = false;
-  bool compras = true;
+  bool? estadoInv = false;
+  bool? compras = true;
 
   User({
     required this.idUsuario,
@@ -38,8 +38,8 @@ class User {
     habilitaFotos = json['habilitaFotos'];
     modulo = json['modulo'];
     codigoCausante = json['codigoCausante'];
-    estadoInv = json['estadoInv'];
-    compras = json['compras'];
+    estadoInv = json['estadoInv'] ?? false;
+    compras = json['compras'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

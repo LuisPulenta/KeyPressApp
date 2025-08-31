@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,63 +20,61 @@ class ObraInfoScreen extends StatefulWidget {
   final User user;
   final Obra obra;
 
-  const ObraInfoScreen({
-    Key? key,
-    required this.user,
-    required this.obra,
-  }) : super(key: key);
+  const ObraInfoScreen({super.key, required this.user, required this.obra});
 
   @override
   ObraInfoScreenState createState() => ObraInfoScreenState();
 }
 
 class ObraInfoScreenState extends State<ObraInfoScreen> {
-//----------------------- Variables -----------------------------
+  //----------------------- Variables -----------------------------
   bool _photoChanged = false;
   late XFile _image;
 
   late Photo _photo;
   int _current = 0;
-  final CarouselController _carouselController = CarouselController();
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
 
   final bool _showLoader = false;
 
   Obra _obra = Obra(
-      nroObra: 0,
-      nombreObra: '',
-      nroOE: '',
-      defProy: '',
-      central: '',
-      elempep: '',
-      observaciones: '',
-      finalizada: 0,
-      supervisore: '',
-      codigoEstado: '',
-      codigoSubEstado: '',
-      modulo: '',
-      grupoAlmacen: '',
-      obrasDocumentos: [],
-      fechaCierreElectrico: '',
-      fechaUltimoMovimiento: '',
-      photos: 0,
-      posx: '',
-      posy: '',
-      direccion: '',
-      textoLocalizacion: '',
-      textoClase: '',
-      textoTipo: '',
-      textoComponente: '',
-      codigoDiametro: '',
-      motivo: '',
-      planos: '',
-      grupoCausante: '');
+    nroObra: 0,
+    nombreObra: '',
+    nroOE: '',
+    defProy: '',
+    central: '',
+    elempep: '',
+    observaciones: '',
+    finalizada: 0,
+    supervisore: '',
+    codigoEstado: '',
+    codigoSubEstado: '',
+    modulo: '',
+    grupoAlmacen: '',
+    obrasDocumentos: [],
+    fechaCierreElectrico: '',
+    fechaUltimoMovimiento: '',
+    photos: 0,
+    posx: '',
+    posy: '',
+    direccion: '',
+    textoLocalizacion: '',
+    textoClase: '',
+    textoTipo: '',
+    textoComponente: '',
+    codigoDiametro: '',
+    motivo: '',
+    planos: '',
+    grupoCausante: '',
+  );
 
   List<ObrasDocumento> _obrasDocumentos = [];
   List<ObrasDocumento> _obrasDocumentosFotos = [];
 
   final List<bool> _isSelected = [true, false];
 
-//----------------------- initState -----------------------------
+  //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
@@ -83,7 +82,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     _getObra();
   }
 
-//----------------------- Pantalla -----------------------------
+  //----------------------- Pantalla -----------------------------
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -125,15 +124,17 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                     children: const <Widget>[
                       Padding(
                         padding: EdgeInsets.all(2.0),
-                        child: Text(' Carousel ',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        child: Text(
+                          ' Carousel ',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(2.0),
-                        child: Text('   Grilla   ',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        child: Text(
+                          '   Grilla   ',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -173,50 +174,53 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                     itemCount: _obrasDocumentos.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // 3 columnas
-                      crossAxisSpacing: 8.0,
-                      mainAxisSpacing: 8.0,
-                    ),
+                          crossAxisCount: 2, // 3 columnas
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                        ),
                     itemBuilder: (context, index) {
                       final obra = _obrasDocumentos[index];
                       return GestureDetector(
                         onTap: () {
                           showDialog(
-                              context: context,
-                              builder: (_) {
-                                return Stack(
-                                  children: [
-                                    InteractiveViewer(
-                                      boundaryMargin:
-                                          const EdgeInsets.all(double.infinity),
-                                      child: SizedBox(
+                            context: context,
+                            builder: (_) {
+                              return Stack(
+                                children: [
+                                  InteractiveViewer(
+                                    boundaryMargin: const EdgeInsets.all(
+                                      double.infinity,
+                                    ),
+                                    child: SizedBox(
+                                      width: size.width,
+                                      height: size.height,
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder: 'assets/loading.gif',
+                                        image: obra.imageFullPath!,
+                                        fit: BoxFit.contain,
                                         width: size.width,
                                         height: size.height,
-                                        child: FadeInImage.assetNetwork(
-                                          placeholder: 'assets/loading.gif',
-                                          image: obra.imageFullPath!,
-                                          fit: BoxFit.contain,
-                                          width: size.width,
-                                          height: size.height,
-                                        ),
                                       ),
                                     ),
-                                    Positioned(
-                                        top: size.height * 0.08,
-                                        right: 5,
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            FontAwesomeIcons.rectangleXmark,
-                                            color: Colors.red,
-                                            size: 36,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ))
-                                  ],
-                                );
-                              });
+                                  ),
+                                  Positioned(
+                                    top: size.height * 0.08,
+                                    right: 5,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        FontAwesomeIcons.rectangleXmark,
+                                        color: Colors.red,
+                                        size: 36,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         child: Stack(
                           children: [
@@ -240,20 +244,22 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                                 obra.tipoDeFoto == 0
                                     ? 'Relevamiento(Vereda/Calzada/Traza)'
                                     : obra.tipoDeFoto == 1
-                                        ? 'Previa al trabajo'
-                                        : obra.tipoDeFoto == 2
-                                            ? 'Durante el trabajo'
-                                            : obra.tipoDeFoto == 3
-                                                ? 'Vereda conforme'
-                                                : obra.tipoDeFoto == 4
-                                                    ? 'Finalización del Trabajo'
-                                                    : obra.tipoDeFoto == 5
-                                                        ? 'Proceso de geofonía'
-                                                        : obra.tipoDeFoto == 6
-                                                            ? 'Proceso de reparación'
-                                                            : '',
+                                    ? 'Previa al trabajo'
+                                    : obra.tipoDeFoto == 2
+                                    ? 'Durante el trabajo'
+                                    : obra.tipoDeFoto == 3
+                                    ? 'Vereda conforme'
+                                    : obra.tipoDeFoto == 4
+                                    ? 'Finalización del Trabajo'
+                                    : obra.tipoDeFoto == 5
+                                    ? 'Proceso de geofonía'
+                                    : obra.tipoDeFoto == 6
+                                    ? 'Proceso de reparación'
+                                    : '',
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 12),
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ],
@@ -263,9 +269,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                   ),
                 ),
               _showImageButtons(),
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
             ],
           ),
           _showLoader
@@ -276,7 +280,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     );
   }
 
-//-------------------------- _getInfoObra -------------------------------
+  //-------------------------- _getInfoObra -------------------------------
   Widget _getInfoObra() {
     var f = NumberFormat('#,###', 'es');
     return Card(
@@ -290,86 +294,90 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
           children: [
             Row(
               children: [
-                const Text('N° Obra: ',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    )),
+                const Text(
+                  'N° Obra: ',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Expanded(
                   flex: 3,
-                  child: Text(f.format(_obra.nroObra).toString(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                      )),
+                  child: Text(
+                    f.format(_obra.nroObra).toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
-                const Text('Ult.Mov.: ',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    )),
+                const Text(
+                  'Ult.Mov.: ',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Expanded(
                   flex: 4,
                   child: _obra.fechaUltimoMovimiento != null
                       ? Text(
-                          DateFormat('dd/MM/yyyy').format(DateTime.parse(
-                              _obra.fechaUltimoMovimiento.toString())),
-                          style: const TextStyle(
-                            fontSize: 12,
-                          ))
+                          DateFormat('dd/MM/yyyy').format(
+                            DateTime.parse(
+                              _obra.fechaUltimoMovimiento.toString(),
+                            ),
+                          ),
+                          style: const TextStyle(fontSize: 12),
+                        )
                       : Container(),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             Row(
               children: [
-                const Text('Nombre: ',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    )),
+                const Text(
+                  'Nombre: ',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Expanded(
-                  child: Text(_obra.nombreObra,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      )),
+                  child: Text(
+                    _obra.nombreObra,
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             Row(
               children: [
-                const Text('OP/N° Fuga: ',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    )),
+                const Text(
+                  'OP/N° Fuga: ',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Expanded(
-                  child: Text(_obra.elempep,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      )),
+                  child: Text(
+                    _obra.elempep,
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
           ],
         ),
       ),
     );
   }
 
-//-------------------------- _showPhotosCarousel ------------------------
+  //-------------------------- _showPhotosCarousel ------------------------
   Widget _showPhotosCarousel() {
     final size = MediaQuery.of(context).size;
     return Container(
@@ -378,94 +386,95 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
         children: [
           CarouselSlider(
             options: CarouselOptions(
-                height: size.height * 0.60,
-                autoPlay: false,
-                initialPage: 0,
-                autoPlayInterval: const Duration(seconds: 0),
-                enlargeCenterPage: true,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _current = index;
-                  });
-                }),
+              height: size.height * 0.60,
+              autoPlay: false,
+              initialPage: 0,
+              autoPlayInterval: const Duration(seconds: 0),
+              enlargeCenterPage: true,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              },
+            ),
             carouselController: _carouselController,
             items: _obrasDocumentosFotos.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Column(
                     children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      const SizedBox(height: 5),
 
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      const SizedBox(height: 5),
+
                       // onTap: () {
                       //     NotificationsService.showImage(
                       //       context, i.photoFullPath);
                       // },
-
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
                             showDialog(
-                                context: context,
-                                builder: (_) {
-                                  return Stack(
-                                    children: [
-                                      InteractiveViewer(
-                                        boundaryMargin: const EdgeInsets.all(
-                                            double.infinity),
-                                        child: SizedBox(
+                              context: context,
+                              builder: (_) {
+                                return Stack(
+                                  children: [
+                                    InteractiveViewer(
+                                      boundaryMargin: const EdgeInsets.all(
+                                        double.infinity,
+                                      ),
+                                      child: SizedBox(
+                                        width: size.width,
+                                        height: size.height,
+                                        child: FadeInImage.assetNetwork(
+                                          placeholder: 'assets/loading.gif',
+                                          image: i.imageFullPath!,
+                                          fit: BoxFit.contain,
                                           width: size.width,
                                           height: size.height,
-                                          child: FadeInImage.assetNetwork(
-                                            placeholder: 'assets/loading.gif',
-                                            image: i.imageFullPath!,
-                                            fit: BoxFit.contain,
-                                            width: size.width,
-                                            height: size.height,
-                                          ),
                                         ),
                                       ),
-                                      Positioned(
-                                          top: size.height * 0.08,
-                                          right: 5,
-                                          child: IconButton(
-                                            icon: const Icon(
-                                              FontAwesomeIcons.rectangleXmark,
-                                              color: Colors.red,
-                                              size: 36,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ))
-                                    ],
-                                  );
-                                });
+                                    ),
+                                    Positioned(
+                                      top: size.height * 0.08,
+                                      right: 5,
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          FontAwesomeIcons.rectangleXmark,
+                                          color: Colors.red,
+                                          size: 36,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.symmetric(horizontal: 5),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: CachedNetworkImage(
-                                  imageUrl: i.imageFullPath.toString(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: CachedNetworkImage(
+                                imageUrl: i.imageFullPath.toString(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                fit: BoxFit.contain,
+                                height: 660,
+                                width: 560,
+                                placeholder: (context, url) => const Image(
+                                  image: AssetImage('assets/loading.gif'),
                                   fit: BoxFit.contain,
-                                  height: 660,
-                                  width: 560,
-                                  placeholder: (context, url) => const Image(
-                                    image: AssetImage('assets/loading.gif'),
-                                    fit: BoxFit.contain,
-                                    height: 100,
-                                    width: 100,
-                                  ),
+                                  height: 100,
+                                  width: 100,
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
 
@@ -473,24 +482,24 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                         i.tipoDeFoto == 0
                             ? 'Relevamiento(Vereda/Calzada/Traza)'
                             : i.tipoDeFoto == 1
-                                ? 'Previa al trabajo'
-                                : i.tipoDeFoto == 2
-                                    ? 'Durante el trabajo'
-                                    : i.tipoDeFoto == 3
-                                        ? 'Vereda conforme'
-                                        : i.tipoDeFoto == 4
-                                            ? 'Finalización del Trabajo'
-                                            : i.tipoDeFoto == 5
-                                                ? 'Proceso de geofonía'
-                                                : i.tipoDeFoto == 6
-                                                    ? 'Proceso de reparación'
-                                                    : '',
+                            ? 'Previa al trabajo'
+                            : i.tipoDeFoto == 2
+                            ? 'Durante el trabajo'
+                            : i.tipoDeFoto == 3
+                            ? 'Vereda conforme'
+                            : i.tipoDeFoto == 4
+                            ? 'Finalización del Trabajo'
+                            : i.tipoDeFoto == 5
+                            ? 'Proceso de geofonía'
+                            : i.tipoDeFoto == 6
+                            ? 'Proceso de reparación'
+                            : '',
                         style: const TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      const SizedBox(height: 5),
                     ],
                   );
                 },
@@ -507,28 +516,21 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                     _carouselController.previousPage();
                   },
                 ),
-                const SizedBox(
-                  width: 50,
+                const SizedBox(width: 50),
+                Text(
+                  '${_current + 1} / ${_obrasDocumentosFotos.length}',
+                  style: const TextStyle(fontSize: 26),
                 ),
-                Text('${_current + 1} / ${_obrasDocumentosFotos.length}',
-                    style: const TextStyle(fontSize: 26)),
-                const SizedBox(
-                  width: 50,
-                ),
+                const SizedBox(width: 50),
                 IconButton(
-                  icon: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 26,
-                  ),
+                  icon: const Icon(Icons.arrow_forward_ios, size: 26),
                   onPressed: () {
                     _carouselController.nextPage();
                   },
                 ),
               ],
             ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           if (_obrasDocumentosFotos.length <= 12)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -539,13 +541,17 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                     width: 12.0,
                     height: 12.0,
                     margin: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 4.0),
+                      vertical: 8.0,
+                      horizontal: 4.0,
+                    ),
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+                      shape: BoxShape.circle,
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black)
+                              .withOpacity(_current == entry.key ? 0.9 : 0.4),
+                    ),
                   ),
                 );
               }).toList(),
@@ -555,12 +561,13 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     );
   }
 
-//-------------------------- _showImageButtons --------------------------
+  //-------------------------- _showImageButtons --------------------------
   Widget _showImageButtons() {
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
-      child: Column(children: [
-        Row(
+      child: Column(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Expanded(
@@ -579,9 +586,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
+              const SizedBox(width: 5),
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -591,26 +596,26 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
                   onPressed: () => _confirmDeletePhoto(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Icon(Icons.delete),
-                      Text('Elim. Foto'),
-                    ],
+                    children: const [Icon(Icons.delete), Text('Elim. Foto')],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 0,
-              ),
-            ]),
-      ]),
+              const SizedBox(height: 0),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-//-------------------------- _goAddPhoto --------------------------
+  //-------------------------- _goAddPhoto --------------------------
   void _goAddPhoto() async {
     if (widget.user.habilitaFotos != 1) {
-      await customErrorDialog(context, 'Error',
-          'Su usuario no está habilitado para agregar Fotos.');
+      await customErrorDialog(
+        context,
+        'Error',
+        'Su usuario no está habilitado para agregar Fotos.',
+      );
 
       // await showAlertDialog(
       //     context: context,
@@ -624,7 +629,10 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
 
     if (widget.obra.finalizada == 1) {
       await customErrorDialog(
-          context, 'Error', 'Obra Terminada. No se puede agregar fotos.');
+        context,
+        'Error',
+        'Obra Terminada. No se puede agregar fotos.',
+      );
       // await showAlertDialog(
       //     context: context,
       //     title: 'Error',
@@ -649,12 +657,14 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     //await customWarningDialog(context, 'Atención', 'Algo no está bien!!');
     //await customSuccessDialog(context, 'Perfecto!!', 'Guardado sin problemas!!');
 
-    var response = await customQuestionDialog(context,
-        content: 'Desde dónde desea sacar la foto?',
-        title1: 'Cámara',
-        title2: 'Galería',
-        option1: 'camera',
-        option2: 'gallery');
+    var response = await customQuestionDialog(
+      context,
+      content: 'Desde dónde desea sacar la foto?',
+      title1: 'Cámara',
+      title2: 'Galería',
+      option1: 'camera',
+      option2: 'gallery',
+    );
 
     if (response == 'cancel') {
       return;
@@ -673,18 +683,20 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     }
   }
 
-//------------------------------ _takePicture ---------------------------------
+  //------------------------------ _takePicture ---------------------------------
   Future _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
     var firstCamera = cameras.first;
 
-    var response1 = await customQuestionDialog(context,
-        content: '¿Qué cámara desea utilizar?',
-        title1: 'Trasera',
-        title2: 'Delantera',
-        option1: 'no',
-        option2: 'yes');
+    var response1 = await customQuestionDialog(
+      context,
+      content: '¿Qué cámara desea utilizar?',
+      title1: 'Trasera',
+      title2: 'Delantera',
+      option1: 'no',
+      option2: 'yes',
+    );
 
     if (response1 == 'yes') {
       firstCamera = cameras.first;
@@ -695,11 +707,11 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
 
     if (response1 != 'cancel') {
       Response? response = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TakePictureScreen(
-                    camera: firstCamera,
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => TakePictureScreen(camera: firstCamera),
+        ),
+      );
       if (response != null) {
         setState(() {
           _photoChanged = true;
@@ -710,17 +722,18 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     }
   }
 
-//------------------------------ _selectPicture -------------------------------
+  //------------------------------ _selectPicture -------------------------------
   Future<void> _selectPicture() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image2 = await picker.pickImage(source: ImageSource.gallery);
 
     if (image2 != null) {
       //_photoChanged = true;
-      Response? response = await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => DisplayPictureScreen(
-                image: image2,
-              )));
+      Response? response = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DisplayPictureScreen(image: image2),
+        ),
+      );
       if (response != null) {
         setState(() {
           _photoChanged = true;
@@ -731,7 +744,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     }
   }
 
-//------------------------------ _addPicture ----------------------------------
+  //------------------------------ _addPicture ----------------------------------
   void _addPicture() async {
     setState(() {});
 
@@ -740,7 +753,10 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       setState(() {});
 
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
       // await showAlertDialog(
       //     context: context,
       //     title: 'Error',
@@ -751,9 +767,13 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       return;
     }
 
-    List<int> imageBytes = await _image.readAsBytes();
+    String base64Image = '';
 
-    String base64Image = base64Encode(imageBytes);
+    Uint8List imageBytes = await _image.readAsBytes();
+    int maxWidth = 800; // Ancho máximo
+    int maxHeight = 600; // Alto máximo
+    Uint8List resizedBytes = await resizeImage(imageBytes, maxWidth, maxHeight);
+    base64Image = base64Encode(resizedBytes);
 
     Map<String, dynamic> request = {
       'imagearray': base64Image,
@@ -772,21 +792,15 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       'obra': _obra,
     };
 
-    Response response =
-        await ApiHelper.post('/api/ObrasDocuments/ObrasDocument', request);
+    Response response = await ApiHelper.post(
+      '/api/ObrasDocuments/ObrasDocument',
+      request,
+    );
 
     setState(() {});
 
     if (!response.isSuccess) {
       await customErrorDialog(context, 'Error', response.message);
-
-      // await showAlertDialog(
-      //     context: context,
-      //     title: 'Error',
-      //     message: response.message,
-      //     actions: <AlertDialogAction>[
-      //       const AlertDialogAction(key: null, label: 'Aceptar'),
-      //     ]);
       return;
     }
 
@@ -795,7 +809,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     });
   }
 
-//------------------------------ _confirmDeletePhoto --------------------------
+  //------------------------------ _confirmDeletePhoto --------------------------
   void _confirmDeletePhoto() async {
     if (_obrasDocumentosFotos.isEmpty) {
       return;
@@ -803,34 +817,45 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
 
     if (widget.obra.finalizada == 1) {
       await customErrorDialog(
-          context, 'Error', 'Obra Terminada. No se puede eliminar fotos.');
+        context,
+        'Error',
+        'Obra Terminada. No se puede eliminar fotos.',
+      );
 
       return;
     }
 
     if (widget.user.habilitaFotos != 1) {
-      await customErrorDialog(context, 'Error',
-          'Su usuario no está habilitado para eliminar Fotos.');
+      await customErrorDialog(
+        context,
+        'Error',
+        'Su usuario no está habilitado para eliminar Fotos.',
+      );
 
       return;
     }
 
     if (widget.user.login != _obra.obrasDocumentos[_current].generadoPor) {
-      await customErrorDialog(context, 'Error',
-          'Esta foto (NROREGISTRO ${_obra.obrasDocumentos[_current].nroregistro}) sólo puede ser eliminada por el Usuario que la cargó (${_obra.obrasDocumentos[_current].generadoPor}). De ser necesario borrarla comuníquese con el administrador del Sistema.');
+      await customErrorDialog(
+        context,
+        'Error',
+        'Esta foto (NROREGISTRO ${_obra.obrasDocumentos[_current].nroregistro}) sólo puede ser eliminada por el Usuario que la cargó (${_obra.obrasDocumentos[_current].generadoPor}). De ser necesario borrarla comuníquese con el administrador del Sistema.',
+      );
 
       return;
     }
 
-    var response = await customYesNoQuestionDialog(context,
-        content: '¿Estas seguro de querer borrar esta foto?');
+    var response = await customYesNoQuestionDialog(
+      context,
+      content: '¿Estas seguro de querer borrar esta foto?',
+    );
 
     if (response == 'yes') {
       await _deletePhoto();
     }
   }
 
-//------------------------------ _deletePhoto --------------------------
+  //------------------------------ _deletePhoto --------------------------
   Future<void> _deletePhoto() async {
     setState(() {});
 
@@ -839,13 +864,18 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       setState(() {});
 
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
 
       return;
     }
 
-    Response response = await ApiHelper.delete('/api/ObrasDocuments/',
-        _obra.obrasDocumentos[_current].nroregistro.toString());
+    Response response = await ApiHelper.delete(
+      '/api/ObrasDocuments/',
+      _obra.obrasDocumentos[_current].nroregistro.toString(),
+    );
 
     setState(() {});
 
@@ -860,7 +890,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     });
   }
 
-//------------------------------ _getObra --------------------------
+  //------------------------------ _getObra --------------------------
 
   Future<void> _getObra() async {
     _obrasDocumentos = [];
@@ -871,7 +901,10 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       setState(() {});
 
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
 
       return;
     }
@@ -900,10 +933,9 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     }
 
     _obrasDocumentosFotos.sort((a, b) {
-      return a.tipoDeFoto
-          .toString()
-          .toLowerCase()
-          .compareTo(b.tipoDeFoto.toString().toLowerCase());
+      return a.tipoDeFoto.toString().toLowerCase().compareTo(
+        b.tipoDeFoto.toString().toLowerCase(),
+      );
     });
     _current = 0;
 
@@ -914,7 +946,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     });
   }
 
-//-------------------- _showSnackbar --------------------------
+  //-------------------- _showSnackbar --------------------------
   void _showSnackbar(String text) {
     SnackBar snackbar = SnackBar(
       content: Text(text),

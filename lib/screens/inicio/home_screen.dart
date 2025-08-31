@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,25 +13,24 @@ class HomeScreen extends StatefulWidget {
   final User user;
   final Empresa empresa;
 
-  const HomeScreen({Key? key, required this.user, required this.empresa})
-      : super(key: key);
+  const HomeScreen({super.key, required this.user, required this.empresa});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-//----------------------- Variables -----------------------------
+  //----------------------- Variables -----------------------------
   String direccion = '';
   int? _nroConexion = 0;
 
-//----------------------- initState -----------------------------
+  //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
   }
 
-//----------------------- Pantalla ------------------------------
+  //----------------------- Pantalla ------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,289 +43,275 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-//----------------------- _getBody ------------------------------
+  //----------------------- _getBody ------------------------------
   Widget _getBody() {
     double ancho = MediaQuery.of(context).size.width;
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              Colors.white,
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.white, Colors.white],
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Image.asset('assets/logo.png', height: 100, width: 500),
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          const Divider(color: AppTheme.primary, thickness: 2),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text(
+                      'Bienvenido/a',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Center(
+                    child: Text(
+                      "${widget.user.nombre!.replaceAll("  ", "")} ${widget.user.apellido!.replaceAll("  ", "")}",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              //--------------- Obras ---------------
+              InkWell(
+                onTap: widget.empresa.habilitaObras == 1
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ObrasMenuScreen(user: widget.user),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.personDigging,
+                    texto: 'Obras',
+                    color1: widget.empresa.habilitaObras == 1
+                        ? const Color.fromARGB(255, 51, 7, 7)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2: widget.empresa.habilitaObras == 1
+                        ? const Color.fromARGB(255, 85, 51, 67)
+                        : const Color.fromARGB(199, 216, 213, 213),
+                  ),
+                ),
+              ),
+              //--------------- Compras ---------------
+              InkWell(
+                onTap:
+                    widget.empresa.habilitaCompras == 1 &&
+                        widget.user.estadoInv == true &&
+                        widget.user.compras == true
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ComprasScreen(user: widget.user),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.cartShopping,
+                    texto: 'Compras',
+                    color1:
+                        widget.empresa.habilitaCompras == 1 &&
+                            widget.user.estadoInv == true &&
+                            widget.user.compras == true
+                        ? const Color.fromARGB(255, 226, 105, 245)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2:
+                        widget.empresa.habilitaCompras == 1 &&
+                            widget.user.estadoInv == true &&
+                            widget.user.compras == true
+                        ? const Color.fromARGB(255, 228, 177, 201)
+                        : const Color.fromARGB(199, 216, 213, 213),
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Image.asset(
-                    'assets/logo.png',
-                    height: 100,
-                    width: 500,
+          Row(
+            children: [
+              //--------------- Instalaciones ---------------
+              InkWell(
+                onTap: widget.empresa.habilitaInstalaciones == 1
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InstalacionesScreen(),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.towerBroadcast,
+                    texto: 'Instalaciones',
+                    color1: widget.empresa.habilitaInstalaciones == 1
+                        ? const Color.fromARGB(255, 8, 115, 44)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2: widget.empresa.habilitaInstalaciones == 1
+                        ? const Color.fromARGB(255, 112, 227, 74)
+                        : const Color.fromARGB(199, 216, 213, 213),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Divider(
-              color: AppTheme.primary,
-              thickness: 2,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  children: [
-                    const Center(
-                      child: Text(
-                        'Bienvenido/a',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primary),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                      child: Text(
-                        "${widget.user.nombre!.replaceAll("  ", "")} ${widget.user.apellido!.replaceAll("  ", "")}",
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primary),
-                      ),
-                    ),
-                  ],
+              //--------------- FLota ---------------
+              InkWell(
+                onTap: widget.empresa.habilitaFlotas == 1
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FlotaScreen(),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.car,
+                    texto: 'Flota',
+                    color1: widget.empresa.habilitaFlotas == 1
+                        ? const Color(0xff6989F5)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2: widget.empresa.habilitaFlotas == 1
+                        ? const Color(0xff906EF5)
+                        : const Color.fromARGB(199, 216, 213, 213),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                //--------------- Obras ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaObras == 1
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ObrasMenuScreen(
-                                user: widget.user,
-                              ),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.personDigging,
-                      texto: 'Obras',
-                      color1: widget.empresa.habilitaObras == 1
-                          ? const Color.fromARGB(255, 51, 7, 7)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaObras == 1
-                          ? const Color.fromARGB(255, 85, 51, 67)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
+            ],
+          ),
+          Row(
+            children: [
+              //--------------- RRHH ---------------
+              InkWell(
+                onTap: widget.empresa.habilitaRRHH == 1
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RrhhScreen(),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.peopleArrows,
+                    texto: 'RR.HH.',
+                    color1: widget.empresa.habilitaRRHH == 1
+                        ? const Color.fromARGB(255, 9, 238, 185)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2: widget.empresa.habilitaRRHH == 1
+                        ? const Color.fromARGB(255, 141, 231, 192)
+                        : const Color.fromARGB(199, 216, 213, 213),
                   ),
                 ),
-                //--------------- Compras ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaCompras == 1 &&
-                          widget.user.estadoInv &&
-                          widget.user.compras
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ComprasScreen(
-                                user: widget.user,
-                              ),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.cartShopping,
-                      texto: 'Compras',
-                      color1: widget.empresa.habilitaCompras == 1 &&
-                              widget.user.estadoInv &&
-                              widget.user.compras
-                          ? const Color.fromARGB(255, 226, 105, 245)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaCompras == 1 &&
-                              widget.user.estadoInv &&
-                              widget.user.compras
-                          ? const Color.fromARGB(255, 228, 177, 201)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
+              ),
+              //--------------- FLota ---------------
+              InkWell(
+                onTap: widget.empresa.habilitaReciboSueldos == 1
+                    ? () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RecibosSueldoScreen(),
+                          ),
+                        );
+                      }
+                    : null,
+                child: SizedBox(
+                  width: ancho * 0.5,
+                  child: Boton(
+                    icon: FontAwesomeIcons.fileInvoiceDollar,
+                    texto: 'Recibos Sueldo',
+                    color1: widget.empresa.habilitaReciboSueldos == 1
+                        ? const Color.fromARGB(255, 228, 101, 10)
+                        : const Color.fromARGB(200, 104, 101, 101),
+                    color2: widget.empresa.habilitaReciboSueldos == 1
+                        ? const Color.fromARGB(255, 221, 159, 101)
+                        : const Color.fromARGB(199, 216, 213, 213),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: [
-                //--------------- Instalaciones ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaInstalaciones == 1
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const InstalacionesScreen(),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.towerBroadcast,
-                      texto: 'Instalaciones',
-                      color1: widget.empresa.habilitaInstalaciones == 1
-                          ? const Color.fromARGB(255, 8, 115, 44)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaInstalaciones == 1
-                          ? const Color.fromARGB(255, 112, 227, 74)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              InkWell(
+                onTap: () async {
+                  _logOut();
+                },
+                child: SizedBox(
+                  width: ancho * 1,
+                  child: const Boton(
+                    icon: FontAwesomeIcons.doorOpen,
+                    texto: 'Cerrar Sesión',
+                    color1: Color.fromARGB(255, 236, 8, 8),
+                    color2: Color.fromARGB(255, 211, 116, 113),
                   ),
                 ),
-                //--------------- FLota ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaFlotas == 1
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FlotaScreen(),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.car,
-                      texto: 'Flota',
-                      color1: widget.empresa.habilitaFlotas == 1
-                          ? const Color(0xff6989F5)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaFlotas == 1
-                          ? const Color(0xff906EF5)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                //--------------- RRHH ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaRRHH == 1
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RrhhScreen(),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.peopleArrows,
-                      texto: 'RR.HH.',
-                      color1: widget.empresa.habilitaRRHH == 1
-                          ? const Color.fromARGB(255, 9, 238, 185)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaRRHH == 1
-                          ? const Color.fromARGB(255, 141, 231, 192)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
-                  ),
-                ),
-                //--------------- FLota ---------------
-                InkWell(
-                  onTap: widget.empresa.habilitaReciboSueldos == 1
-                      ? () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RecibosSueldoScreen(),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: SizedBox(
-                    width: ancho * 0.5,
-                    child: Boton(
-                      icon: FontAwesomeIcons.fileInvoiceDollar,
-                      texto: 'Recibos Sueldo',
-                      color1: widget.empresa.habilitaReciboSueldos == 1
-                          ? const Color.fromARGB(255, 228, 101, 10)
-                          : const Color.fromARGB(200, 104, 101, 101),
-                      color2: widget.empresa.habilitaReciboSueldos == 1
-                          ? const Color.fromARGB(255, 221, 159, 101)
-                          : const Color.fromARGB(199, 216, 213, 213),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () async {
-                    _logOut();
-                  },
-                  child: SizedBox(
-                    width: ancho * 1,
-                    child: const Boton(
-                      icon: FontAwesomeIcons.doorOpen,
-                      texto: 'Cerrar Sesión',
-                      color1: Color.fromARGB(255, 236, 8, 8),
-                      color2: Color.fromARGB(255, 211, 116, 113),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ));
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-//----------------------- _logOut -------------------------------
+  //----------------------- _logOut -------------------------------
   void _logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -342,14 +327,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setString('empresaBody', '').then((_) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     });
   }
 
-//----------------------- _getMenu -------------------------------
+  //----------------------- _getMenu -------------------------------
   Widget _getMenu() {
     return Drawer(
       child: Container(
@@ -357,10 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff004f95),
-              Color(0xff004f95),
-            ],
+            colors: [Color(0xff004f95), Color(0xff004f95)],
           ),
         ),
         child: ListView(
@@ -370,31 +350,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white,
-                    Colors.white,
-                  ],
+                  colors: [Colors.white, Colors.white],
                 ),
               ),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Image(
-                    image: AssetImage('assets/logo.png'),
-                    width: 200,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 20),
+                  const Image(image: AssetImage('assets/logo.png'), width: 200),
+                  const SizedBox(height: 40),
                   Row(
                     children: [
                       const Text(
                         'Usuario: ',
                         style: (TextStyle(
-                            color: Color(0xff004f95),
-                            fontWeight: FontWeight.bold)),
+                          color: Color(0xff004f95),
+                          fontWeight: FontWeight.bold,
+                        )),
                       ),
                       Text(
                         '${widget.user.nombre} ${widget.user.apellido}',
@@ -405,10 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const Divider(
-              color: Colors.white,
-              height: 1,
-            ),
+            const Divider(color: Colors.white, height: 1),
             Row(
               children: [
                 Expanded(
@@ -419,8 +387,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.info_outline_rounded,
                       color: Colors.white,
                     ),
-                    title: const Text('Acerca de',
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    title: const Text(
+                      'Acerca de',
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(left: 15.0),
@@ -432,9 +402,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.white,
                           ),
                           tileColor: const Color(0xff8c8c94),
-                          title: const Text('Términos y Condiciones',
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          title: const Text(
+                            'Términos y Condiciones',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
                           onTap: () async {
                             await Navigator.push(
                               context,
@@ -455,9 +426,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.white,
                           ),
                           tileColor: const Color(0xff8c8c94),
-                          title: const Text('Cómo cuidamos tu privacidad',
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          title: const Text(
+                            'Cómo cuidamos tu privacidad',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
                           onTap: () async {
                             await Navigator.push(
                               context,
@@ -478,9 +450,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.white,
                           ),
                           tileColor: const Color(0xff8c8c94),
-                          title: const Text('Defensa del consumidor',
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
+                          title: const Text(
+                            'Defensa del consumidor',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
                           onTap: () async {
                             await Navigator.push(
                               context,
@@ -497,19 +470,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const Divider(
-              color: Colors.white,
-              height: 1,
-            ),
+            const Divider(color: Colors.white, height: 1),
             ListTile(
               dense: true,
-              leading: const Icon(
-                Icons.logout,
-                color: Colors.white,
-              ),
+              leading: const Icon(Icons.logout, color: Colors.white),
               tileColor: const Color(0xff8c8c94),
-              title: const Text('Cerrar Sesión',
-                  style: TextStyle(fontSize: 15, color: Colors.white)),
+              title: const Text(
+                'Cerrar Sesión',
+                style: TextStyle(fontSize: 15, color: Colors.white),
+              ),
               onTap: () {
                 _logOut();
               },

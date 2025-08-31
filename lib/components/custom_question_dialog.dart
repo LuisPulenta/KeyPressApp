@@ -17,11 +17,7 @@ Future<String?> customQuestionDialog(
       return AlertDialog(
         title: Column(
           children: const [
-            Icon(
-              Icons.question_mark_outlined,
-              size: 40,
-              color: Colors.red,
-            ),
+            Icon(Icons.question_mark_outlined, size: 40, color: Colors.red),
           ],
         ),
         content: SizedBox(height: 30, child: Center(child: Text(content))),
@@ -31,10 +27,7 @@ Future<String?> customQuestionDialog(
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(
-                    context,
-                    option1,
-                  );
+                  Navigator.pop(context, option1);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
@@ -42,12 +35,10 @@ Future<String?> customQuestionDialog(
                 ),
                 child: Text(
                   title1,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 5),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, option2);
@@ -58,12 +49,10 @@ Future<String?> customQuestionDialog(
                 ),
                 child: Text(
                   title2,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 5),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, 'cancel');
@@ -74,11 +63,11 @@ Future<String?> customQuestionDialog(
                 ),
                 child: const Text(
                   'Cancelar',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
             ],
-          )
+          ),
         ],
       );
     },

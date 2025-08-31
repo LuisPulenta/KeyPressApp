@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:connectivity/connectivity.dart';
-import 'package:device_information/device_information.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:device_information/device_information.dart';
+import 'package:flutter_device_imei/flutter_device_imei.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,20 +17,20 @@ import '../../themes/app_theme.dart';
 import '../screens.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-//----------------------- Variables -----------------------------
+  //----------------------- Variables -----------------------------
 
-  // String _email = '';
-  // String _password = '';
+  String _email = '';
+  String _password = '';
 
-  String _email = 'GPRIETO';
-  String _password = 'CELESTE';
+  // String _email = 'GPRIETO';
+  // String _password = 'CELESTE';
 
   String _emailError = '';
   bool _emailShowError = false;
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _hayPermisoCamera = false;
   bool _hayPermisoLocation = false;
 
-//----------------------- initState -----------------------------
+  //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
-//--------------------- hayPermisoPhone -------------------------
+  //--------------------- hayPermisoPhone -------------------------
   Future<bool> hayPermisoPhone() async {
     var statusPhone = await Permission.phone.status;
     if (statusPhone.isDenied) {
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return true;
   }
 
-//--------------------- hayPermisoCamera -------------------------
+  //--------------------- hayPermisoCamera -------------------------
   Future<bool> hayPermisoCamera() async {
     var statusCamera = await Permission.camera.status;
     if (statusCamera.isDenied) {
@@ -86,16 +87,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return true;
   }
 
-//--------------------- hayImei -------------------------
+  //--------------------- hayImei -------------------------
   bool hayImei() {
     return _imeiNo != '';
   }
 
-//--------------------- recuperarImei -------------------------
+  //--------------------- recuperarImei -------------------------
   Future<void> recuperarImei() async {
     late String imeiNo = '';
     try {
-      imeiNo = await DeviceInformation.deviceIMEINumber;
+      imeiNo = await FlutterDeviceImei.instance.getIMEI() ?? '';
     } on PlatformException {
       imeiNo = 'Sin Imei';
     }
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
-//--------------------- initPlatformState -------------------------
+  //--------------------- initPlatformState -------------------------
   Future<void> initPlatformState() async {
     _hayPermisoCamera = await hayPermisoCamera();
     _hayPermisoPhone = await hayPermisoPhone();
@@ -116,45 +117,44 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!_hayPermisoCamera || !_hayPermisoPhone || !_hayPermisoLocation) {
       await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              title: const Text('Aviso'),
-              content: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const Text('La App necesita que habilite los Permisos de:'),
-                    !_hayPermisoCamera ? const Text('- Cámara') : Container(),
-                    !_hayPermisoPhone ? const Text('- Teléfono') : Container(),
-                    !_hayPermisoLocation
-                        ? const Text('- Ubicación')
-                        : Container(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ]),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Ok')),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: const Text('Aviso'),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text('La App necesita que habilite los Permisos de:'),
+                !_hayPermisoCamera ? const Text('- Cámara') : Container(),
+                !_hayPermisoPhone ? const Text('- Teléfono') : Container(),
+                !_hayPermisoLocation ? const Text('- Ubicación') : Container(),
+                const SizedBox(height: 10),
               ],
-            );
-          });
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Ok'),
+              ),
+            ],
+          );
+        },
+      );
       openAppSettings();
     }
   }
 
-//----------------------- dispose ------------------------------
+  //----------------------- dispose ------------------------------
   @override
   void dispose() {
     super.dispose();
   }
 
-//----------------------- _getData ------------------------------
+  //----------------------- _getData ------------------------------
   void _getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     companySelected = prefs.getString('company') ?? '';
@@ -163,13 +163,16 @@ class _LoginScreenState extends State<LoginScreen> {
     _getEmpresa();
   }
 
-//------------------------------ _getEmpresa --------------------------
+  //------------------------------ _getEmpresa --------------------------
   Future<void> _getEmpresa() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
       // await showAlertDialog(
       //     context: context,
       //     title: 'Error',
@@ -184,7 +187,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!response.isSuccess) {
       await customErrorDialog(
-          context, 'Error', 'Hubo un error al recuperar los datos');
+        context,
+        'Error',
+        'Hubo un error al recuperar los datos',
+      );
 
       // await showAlertDialog(
       //     context: context,
@@ -199,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _empresa = response.result;
   }
-//----------------------- Pantalla ------------------------------
+  //----------------------- Pantalla ------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -207,9 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onLongPress: () async {
         await Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const CandadoScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const CandadoScreen()),
         );
       },
       child: Scaffold(
@@ -250,48 +254,52 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           Constants.version,
                           style: const TextStyle(
-                              fontSize: 20, color: Colors.black),
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Text(
                       companySelected,
                       style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 24,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Card(
                       color: const Color.fromARGB(255, 203, 222, 241),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       elevation: 10,
                       margin: const EdgeInsets.only(
-                          left: 20, right: 20, top: 20, bottom: 20),
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: 20,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 35, vertical: 20),
+                          horizontal: 35,
+                          vertical: 20,
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             _showEmail(),
                             _showPassword(),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
                             _showRememberme(),
                             _showButton(),
                           ],
@@ -337,17 +345,11 @@ class _LoginScreenState extends State<LoginScreen> {
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  SizedBox(
-                    height: 40,
-                  ),
-                ],
+                children: const <Widget>[SizedBox(height: 40)],
               ),
             ),
             _showLoader
-                ? const LoaderComponent(
-                    text: 'Por favor espere...',
-                  )
+                ? const LoaderComponent(text: 'Por favor espere...')
                 : Container(),
           ],
         ),
@@ -355,7 +357,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//--------------------- _showEmail --------------------------------
+  //--------------------- _showEmail --------------------------------
   Widget _showEmail() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -374,7 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//--------------------- _showPassword -----------------------------
+  //--------------------- _showPassword -----------------------------
   Widget _showPassword() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -403,8 +405,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//--------------------- _showRememberme ---------------------------
-  _showRememberme() {
+  //--------------------- _showRememberme ---------------------------
+  CheckboxListTile _showRememberme() {
     return CheckboxListTile(
       title: const Text('Recordarme:'),
       value: _rememberme,
@@ -417,7 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//--------------------- _showButton -------------------------------
+  //--------------------- _showButton -------------------------------
   Widget _showButton() {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20),
@@ -434,9 +436,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Icon(Icons.login),
-                  SizedBox(
-                    width: 20,
-                  ),
+                  SizedBox(width: 20),
                   Text('Iniciar Sesión'),
                 ],
               ),
@@ -447,7 +447,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//--------------------- validateFields ----------------------------
+  //--------------------- validateFields ----------------------------
   bool validateFields() {
     bool isValid = true;
 
@@ -476,7 +476,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-//--------------------- _storeUser --------------------------------
+  //--------------------- _storeUser --------------------------------
   void _storeUser(String body, String body2) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRemembered', true);
@@ -485,7 +485,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('date', DateTime.now().toString());
   }
 
-//--------------------- _login ------------------------------------
+  //--------------------- _login ------------------------------------
   void _login() async {
     FocusScope.of(context).unfocus(); //Oculta el teclado
 
@@ -513,7 +513,10 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
 
       // await showAlertDialog(
       //     context: context,
@@ -525,10 +528,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Map<String, dynamic> request = {
-      'Email': _email,
-      'Password': _password,
-    };
+    Map<String, dynamic> request = {'Email': _email, 'Password': _password};
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String apiUrl = prefs.getString('connection') ?? '';
@@ -608,24 +608,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Random r = Random();
     int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
-    double hora = (DateTime.now().hour * 3600 +
+    double hora =
+        (DateTime.now().hour * 3600 +
             DateTime.now().minute * 60 +
             DateTime.now().second +
             DateTime.now().millisecond * 0.001) *
         100;
 
     WebSesion webSesion = WebSesion(
-        nroConexion: resultado,
-        usuario: user.idUsuario.toString(),
-        iP: _imeiNo,
-        loginDate: DateTime.now().toString().substring(0, 10),
-        loginTime: hora.round(),
-        modulo: 'App-${user.codigoCausante}',
-        logoutDate: null,
-        logoutTime: 0,
-        conectAverage: 0,
-        id_ws: 0,
-        versionsistema: Constants.version);
+      nroConexion: resultado,
+      usuario: user.idUsuario.toString(),
+      iP: _imeiNo,
+      loginDate: DateTime.now().toString().substring(0, 10),
+      loginTime: hora.round(),
+      modulo: 'App-${user.codigoCausante}',
+      logoutDate: null,
+      logoutTime: 0,
+      conectAverage: 0,
+      id_ws: 0,
+      versionsistema: Constants.version,
+    );
 
     await _postWebSesion(webSesion);
 
@@ -635,10 +637,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeScreen(
-          user: user,
-          empresa: _empresa!,
-        ),
+        builder: (context) => HomeScreen(user: user, empresa: _empresa!),
       ),
     );
   }
@@ -659,7 +658,9 @@ class _LoginScreenState extends State<LoginScreen> {
       'versionsistema': webSesion.versionsistema,
     };
 
-    Response response =
-        await ApiHelper.post('/api/WebSesions/', requestWebSesion);
+    Response response = await ApiHelper.post(
+      '/api/WebSesions/',
+      requestWebSesion,
+    );
   }
 }
