@@ -8,7 +8,7 @@ import '../../utils/colors.dart';
 import '../widgets/buttons/custom_outlined_button.dart';
 
 class PermissionsAccessScreen extends StatelessWidget {
-  const PermissionsAccessScreen({Key? key}) : super(key: key);
+  const PermissionsAccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +27,7 @@ class PermissionsAccessScreen extends StatelessWidget {
 
 //------------------------------------------------------------------------
 class _AccessButton extends StatelessWidget {
-  const _AccessButton({
-    Key? key,
-  }) : super(key: key);
+  const _AccessButton();
 
   @override
   Widget build(BuildContext context) {

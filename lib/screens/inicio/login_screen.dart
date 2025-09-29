@@ -476,15 +476,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  //--------------------- _storeUser --------------------------------
-  void _storeUser(String body, String body2) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRemembered', true);
-    await prefs.setString('userBody', body);
-    await prefs.setString('empresaBody', body2);
-    await prefs.setString('date', DateTime.now().toString());
-  }
-
   //--------------------- _login ------------------------------------
   void _login() async {
     FocusScope.of(context).unfocus(); //Oculta el teclado
