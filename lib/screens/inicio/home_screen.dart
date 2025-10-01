@@ -210,7 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const FlotaScreen(),
+                            builder: (context) =>
+                                FlotaMenuScreen(user: widget.user),
                           ),
                         );
                       }

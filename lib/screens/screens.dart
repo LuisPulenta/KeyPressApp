@@ -1,5 +1,9 @@
 export 'package:keypressapp/screens/candado/candado_screen.dart';
 export 'package:keypressapp/screens/compras/compras_screen.dart';
+export 'package:keypressapp/screens/flotas/flota_check_list_screen.dart';
+export 'package:keypressapp/screens/flotas/flota_km_preventivo_screen.dart';
+export 'package:keypressapp/screens/flotas/flota_menu_screen.dart';
+export 'package:keypressapp/screens/flotas/flota_turnos_taller_screen.dart';
 export 'package:keypressapp/screens/inicio/company_screen.dart';
 export 'package:keypressapp/screens/inicio/home_screen.dart';
 export 'package:keypressapp/screens/inicio/login_screen.dart';
@@ -10,7 +14,6 @@ export 'package:keypressapp/screens/obras/obras_menu_screen.dart';
 export 'package:keypressapp/screens/obras/obras_relevamientos_screen.dart';
 export 'package:keypressapp/screens/obras/obras_screen.dart';
 export 'package:keypressapp/screens/obras/take_picture.dart';
-export 'package:keypressapp/screens/pantallas/flota_screen.dart';
 export 'package:keypressapp/screens/pantallas/instalaciones_screen.dart';
 export 'package:keypressapp/screens/pantallas/inventarios_screen.dart';
 export 'package:keypressapp/screens/pantallas/recibos_sueldo_screen.dart';
