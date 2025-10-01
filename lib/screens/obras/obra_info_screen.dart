@@ -945,13 +945,4 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
       }
     });
   }
-
-  //-------------------- _showSnackbar --------------------------
-  void _showSnackbar(String text) {
-    SnackBar snackbar = SnackBar(
-      content: Text(text),
-      backgroundColor: Colors.lightGreen,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
 }

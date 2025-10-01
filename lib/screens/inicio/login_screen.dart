@@ -649,9 +649,6 @@ class _LoginScreenState extends State<LoginScreen> {
       'versionsistema': webSesion.versionsistema,
     };
 
-    Response response = await ApiHelper.post(
-      '/api/WebSesions/',
-      requestWebSesion,
-    );
+    await ApiHelper.post('/api/WebSesions/', requestWebSesion);
   }
 }
