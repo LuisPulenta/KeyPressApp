@@ -7,10 +7,12 @@ class User {
   int? estado = 0;
   int? habilitaAPP = 0;
   int? habilitaFotos = 0;
+  String habilitaFlotas = '';
   String modulo = '';
   String codigoCausante = '';
   bool? estadoInv = false;
   bool? compras = true;
+  String? codigogrupo = '';
 
   User({
     required this.idUsuario,
@@ -21,10 +23,12 @@ class User {
     required this.estado,
     required this.habilitaAPP,
     required this.habilitaFotos,
+    required this.habilitaFlotas,
     required this.modulo,
     required this.codigoCausante,
     required this.estadoInv,
     required this.compras,
+    required this.codigogrupo,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -36,10 +40,12 @@ class User {
     estado = json['estado'];
     habilitaAPP = json['habilitaAPP'];
     habilitaFotos = json['habilitaFotos'];
+    habilitaFlotas = json['habilitaFlotas'] ?? '';
     modulo = json['modulo'];
     codigoCausante = json['codigoCausante'];
     estadoInv = json['estadoInv'] ?? false;
     compras = json['compras'] ?? false;
+    codigogrupo = json['codigogrupo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,10 +58,12 @@ class User {
     data['estado'] = estado;
     data['habilitaAPP'] = habilitaAPP;
     data['habilitaFotos'] = habilitaFotos;
+    data['habilitaFlotas'] = habilitaFlotas;
     data['modulo'] = modulo;
     data['codigoCausante'] = codigoCausante;
     data['estadoInv'] = estadoInv;
     data['compras'] = compras;
+    data['codigogrupo'] = codigogrupo;
 
     return data;
   }

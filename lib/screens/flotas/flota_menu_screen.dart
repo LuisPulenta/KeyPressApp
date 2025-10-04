@@ -54,7 +54,7 @@ class FlotaMenuScreen extends StatelessWidget {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FlotaKmPreventivoScreen(),
+                  builder: (context) => FlotaKmPreventivoScreen(user: user),
                 ),
               );
             },
@@ -73,7 +73,9 @@ class FlotaMenuScreen extends StatelessWidget {
             onTap: () async {
               await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => FlotaCheckListScreen()),
+                MaterialPageRoute(
+                  builder: (context) => FlotaCheckListScreen(user: user),
+                ),
               );
             },
             child: SizedBox(
@@ -92,7 +94,7 @@ class FlotaMenuScreen extends StatelessWidget {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FlotaTurnosTallerScreen(),
+                  builder: (context) => FlotaTurnosTallerScreen(user: user),
                 ),
               );
             },
