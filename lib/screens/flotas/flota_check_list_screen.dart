@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/utils/colors.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
@@ -122,11 +123,11 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF484848),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Check List'),
         centerTitle: true,
-        backgroundColor: const Color(0xff242424),
+        backgroundColor: primaryColor,
       ),
       body: Stack(
         children: [
@@ -146,7 +147,7 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         heroTag: 2,
-        backgroundColor: const Color(0xFF781f1e),
+        backgroundColor: primaryColor,
         onPressed: () async {
           String? result = await Navigator.push(
             context,
@@ -199,7 +200,7 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
                       _checkLists.length.toString(),
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF781f1e),
+                        color: primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -517,7 +518,7 @@ class _RowCustom extends StatelessWidget {
               titulo,
               style: const TextStyle(
                 fontSize: 12,
-                color: Color(0xFF781f1e),
+                color: primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),

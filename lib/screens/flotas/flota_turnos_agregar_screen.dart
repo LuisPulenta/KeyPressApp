@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:keypressapp/screens/widgets/customrow.dart';
+import 'package:keypressapp/utils/colors.dart';
 
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
@@ -82,7 +83,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: const Color(0xFF484848),
-      backgroundColor: const Color(0xff8c8c94),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Nuevo Turno Taller'),
         centerTitle: true,
@@ -172,7 +173,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF781f1e),
+                backgroundColor: primaryColor,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -442,7 +443,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF781f1e),
+                backgroundColor: primaryColor,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),

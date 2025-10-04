@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:keypressapp/screens/widgets/customrow.dart';
+import 'package:keypressapp/utils/colors.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
@@ -221,7 +222,7 @@ class _FlotaCheckListAgregarScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff8c8c94),
+      backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('Nuevo Check List'), centerTitle: true),
       body: Stack(
         children: [
@@ -281,7 +282,7 @@ class _FlotaCheckListAgregarScreenState
                         TableRow(
                           children: [
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -290,23 +291,25 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'SI',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -314,18 +317,20 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Fecha Venc.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -522,7 +527,7 @@ class _FlotaCheckListAgregarScreenState
                         TableRow(
                           children: [
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -531,23 +536,25 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Bien',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -555,29 +562,32 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Malo',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'No Aplica',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -1517,7 +1527,7 @@ class _FlotaCheckListAgregarScreenState
                         TableRow(
                           children: [
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -1526,23 +1536,25 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Bien',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -1550,29 +1562,32 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Malo',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'No Aplica',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -2101,7 +2116,7 @@ class _FlotaCheckListAgregarScreenState
                         TableRow(
                           children: [
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -2110,23 +2125,25 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Bien',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
                                 child: Text(
@@ -2134,29 +2151,32 @@ class _FlotaCheckListAgregarScreenState
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'Malo',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                             Container(
-                              color: const Color.fromARGB(255, 33, 172, 236),
+                              color: primaryColor,
                               child: const Text(
                                 'No Aplica',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -2987,7 +3007,7 @@ class _FlotaCheckListAgregarScreenState
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF781f1e),
+                backgroundColor: primaryColor,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -3740,7 +3760,7 @@ class _FlotaCheckListAgregarScreenState
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF781f1e),
+                backgroundColor: primaryColor,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -4041,10 +4061,10 @@ class _FlotaCheckListAgregarScreenState
       child: TextField(
         controller: _codigo2Controller,
         decoration: InputDecoration(
-          iconColor: const Color(0xFF781f1e),
-          prefixIconColor: const Color(0xFF781f1e),
-          hoverColor: const Color(0xFF781f1e),
-          focusColor: const Color(0xFF781f1e),
+          iconColor: primaryColor,
+          prefixIconColor: primaryColor,
+          hoverColor: primaryColor,
+          focusColor: primaryColor,
           fillColor: Colors.white,
           filled: true,
           hintText: 'Ingrese Legajo o Documento del empleado...',
@@ -4052,7 +4072,7 @@ class _FlotaCheckListAgregarScreenState
           errorText: _codigo2ShowError ? _codigo2Error : null,
           prefixIcon: const Icon(Icons.badge),
           border: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFF781f1e)),
+            borderSide: const BorderSide(color: primaryColor),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
@@ -4076,7 +4096,7 @@ class _FlotaCheckListAgregarScreenState
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF781f1e),
+                backgroundColor: primaryColor,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),

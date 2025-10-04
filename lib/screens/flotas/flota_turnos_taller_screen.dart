@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/utils/colors.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
@@ -34,7 +35,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF484848),
+      backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('Turnos Taller'), centerTitle: true),
       body: Center(
         child: _showLoader
@@ -42,7 +43,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
             : _getContent(),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF781f1e),
+        backgroundColor: primaryColor,
         child: const Icon(Icons.add),
         onPressed: () async {
           String? result = await Navigator.push(
@@ -81,7 +82,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
             'Cantidad de Turnos: ',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white,
+              color: primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -89,7 +90,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
             _turnos.length.toString(),
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.white,
+              color: primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -105,7 +106,11 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
       child: const Center(
         child: Text(
           'No hay Turnos registrados',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: primaryColor,
+          ),
         ),
       ),
     );
@@ -145,7 +150,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Turno: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -166,7 +171,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Patente: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -187,7 +192,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Asignado a: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -208,7 +213,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Taller: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -221,7 +226,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                     ),
                                   ],
                                 ),
-                                const Divider(color: Color(0xFF781f1e)),
+                                const Divider(color: primaryColor),
                                 Row(
                                   children: const [
                                     Text(
@@ -243,7 +248,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Fecha: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -267,7 +272,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                       'Hora: ',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Color(0xFF781f1e),
+                                        color: primaryColor,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -280,7 +285,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                     ),
                                   ],
                                 ),
-                                const Divider(color: Color(0xFF781f1e)),
+                                const Divider(color: primaryColor),
                                 Row(
                                   children: const [
                                     Text(
@@ -302,7 +307,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                         'Fecha: ',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF781f1e),
+                                          color: primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -327,7 +332,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
                                       'Hora: ',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Color(0xFF781f1e),
+                                        color: primaryColor,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
