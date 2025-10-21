@@ -11,6 +11,7 @@ import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'config/local_notifications/local_notifications.dart';
 import 'helpers/api_helper.dart';
 import 'models/models.dart';
 import 'providers/providers.dart';
@@ -27,10 +28,19 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   await NotificationsBloc.initializeFCM();
+  await LocalNotifications.initializeLocalNotifications();
 
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => NotificationsBloc())],
+      providers: [
+        BlocProvider(
+          create: (_) => NotificationsBloc(
+            requestLocalNotificationPermissions:
+                LocalNotifications.requestPermissionLocalNotification,
+            showLocalNotification: LocalNotifications.showLocalNotification,
+          ),
+        ),
+      ],
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(

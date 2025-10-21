@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keypressapp/config/local_notifications/local_notifications.dart';
 import 'package:keypressapp/firebase_options.dart';
 import 'package:keypressapp/models/models.dart';
 
@@ -15,15 +16,30 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
+  // print("Handling a background message: ${message.messageId}");
 }
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  int pushNumberId = 0;
 
-  NotificationsBloc() : super(const NotificationsState()) {
+  final Future<void> Function()? requestLocalNotificationPermissions;
+  final void Function({
+    required int id,
+    String? title,
+    String? body,
+    String? data,
+  })?
+  showLocalNotification;
+
+  NotificationsBloc({
+    this.requestLocalNotificationPermissions,
+    this.showLocalNotification,
+  }) : super(const NotificationsState()) {
     on<NotificationStatusChanged>(_notificationStatusChanged);
     on<NotificationReceiver>(_onPushMessageReceived);
+    on<NotificationRemove>(_onNotificationRemove);
+
     initialStatusCheck();
     //Listener para notificaciones en Foreground
     _onForegroundMessage();
@@ -66,6 +82,22 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           : message.notification!.apple?.imageUrl,
     );
 
+    LocalNotifications.showLocalNotification(
+      id: ++pushNumberId,
+      body: notification.body,
+      data: notification.user,
+      title: notification.title,
+    );
+
+    if (showLocalNotification != null) {
+      showLocalNotification!(
+        id: ++pushNumberId,
+        body: notification.body,
+        data: notification.messageId,
+        title: notification.title,
+      );
+    }
+
     add(NotificationReceiver(notification));
   }
 
@@ -95,6 +127,19 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   //----------------------------------------------------------------------------------
+  void _onNotificationRemove(
+    NotificationRemove event,
+    Emitter<NotificationsState> emit,
+  ) {
+    // Crea una nueva lista eliminando el mensaje
+    List<PushMessage> updatedMessages = List.from(state.notifications);
+    updatedMessages.remove(event.removeMessage);
+
+    // Emitir el nuevo estado con la lista actualizada
+    emit(state.copyWith(notifications: updatedMessages));
+  }
+
+  //----------------------------------------------------------------------------------
   void requestPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -105,6 +150,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       provisional: false,
       sound: true,
     );
+
+    // Solicitar permiso a las local notifications
+    if (requestLocalNotificationPermissions != null) {
+      await requestLocalNotificationPermissions!();
+      // await LocalNotifications.requestPermissionLocalNotifications();
+    }
 
     add(NotificationStatusChanged(settings.authorizationStatus));
     getFCMToken();
@@ -119,5 +170,17 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     return state.notifications.firstWhere(
       (element) => element.messageId == pushMessageId,
     );
+  }
+
+  //----------------------------------------------------------------------------------
+  void removeMessageBy(String pushMessageId) {
+    final exist = state.notifications.any(
+      (element) => element.messageId == pushMessageId,
+    );
+    if (!exist) return;
+    PushMessage message = state.notifications.firstWhere(
+      (element) => element.messageId == pushMessageId,
+    );
+    add(NotificationRemove(message));
   }
 }

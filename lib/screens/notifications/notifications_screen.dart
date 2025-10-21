@@ -10,20 +10,17 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: context.select(
-          (NotificationsBloc bloc) =>
-              Text('${bloc.state.status}', style: TextStyle(fontSize: 16)),
-        ),
+        title: Text('Notificaciones'),
 
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<NotificationsBloc>().requestPermission();
-            },
-            icon: Icon(Icons.settings),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       context.read<NotificationsBloc>().requestPermission();
+        //     },
+        //     icon: Icon(Icons.settings),
+        //   ),
+        // ],
       ),
       body: _NotificationsView(context),
     );
@@ -42,26 +39,54 @@ class _NotificationsView extends StatelessWidget {
         .state
         .notifications;
 
-    return ListView.builder(
+    return ListView.separated(
       itemCount: notifications.length,
+      separatorBuilder: (_, __) =>
+          const Divider(color: Colors.black26, height: 2),
       itemBuilder: (context2, index) {
         final notification = notifications[index];
-        return ListTile(
-          title: Text(notification.title),
-          subtitle: Text(notification.body),
-          leading: notification.imageUrl != null
-              ? Image.network(notification.imageUrl!)
-              : null,
-          onTap: () async {
-            await Navigator.of(context2).push(
-              MaterialPageRoute(
-                builder: (context2) =>
-                    DetailsScreen(pushMessageId: notification.messageId),
-              ),
-            );
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.startToEnd,
+          background: Container(
+            color: Colors.red[400],
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 10),
+            child: const Icon(
+              Icons.delete_outline_rounded,
+              color: Colors.white,
+            ),
+          ),
+          onDismissed: (direction) {
+            if (direction == DismissDirection.startToEnd) {
+              onDeleteNotification(notification.messageId);
+            }
           },
+          child: ListTile(
+            title: Text(notification.title),
+            subtitle: Text(notification.body),
+            leading: notification.imageUrl != null
+                ? Image.network(notification.imageUrl!)
+                : null,
+            onTap: () async {
+              await Navigator.of(context2).push(
+                MaterialPageRoute(
+                  builder: (context2) =>
+                      DetailsScreen(pushMessageId: notification.messageId),
+                ),
+              );
+            },
+          ),
         );
       },
     );
+  }
+
+  //---------------------- onDeleteContact ----------------------------
+  //-------------------------------------------------------------------
+
+  void onDeleteNotification(String messageId) {
+    final notificationBloc = context2.read<NotificationsBloc>();
+    notificationBloc.removeMessageBy(messageId);
   }
 }

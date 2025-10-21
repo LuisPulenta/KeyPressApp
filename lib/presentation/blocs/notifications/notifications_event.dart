@@ -15,3 +15,9 @@ class NotificationReceiver extends NotificationsEvent {
 
   NotificationReceiver(this.pushMessage);
 }
+
+class NotificationRemove extends NotificationsEvent {
+  final PushMessage removeMessage;
+
+  NotificationRemove(this.removeMessage);
+}

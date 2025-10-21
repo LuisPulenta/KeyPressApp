@@ -26,7 +26,21 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode.toInt()
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+
+        // Activar el desugaring para Java 8
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    dependencies {
+        add("coreLibraryDesugaring", "com.android.tools:desugar_jdk_libs:2.1.4")
+    }
+
 
     signingConfigs {
         create("release") {
@@ -62,4 +76,3 @@ kotlin {
 flutter {
     source = "../.."
 }
-

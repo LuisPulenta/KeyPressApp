@@ -37,19 +37,16 @@ class _AccessButton extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(
-              FontAwesomeIcons.earthAmericas,
-              color: Colors.red,
-              size: 30,
+            Icon(FontAwesomeIcons.earthAmericas, color: Colors.red, size: 30),
+            SizedBox(width: 10),
+            Text(
+              'Debe habilitar los Permisos:',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text('Debe habilitar los Permisos:',
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500)),
           ],
         ),
         SizedBox(
@@ -58,54 +55,74 @@ class _AccessButton extends StatelessWidget {
             children: const [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Gps/Ubicación',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500)),
+                child: Text(
+                  'Gps/Ubicación',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Cámara',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500)),
+                child: Text(
+                  'Cámara',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Teléfono',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500)),
+                child: Text(
+                  'Teléfono',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Notificaciones',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        const SizedBox(
-          height: 50,
-        ),
+        const SizedBox(height: 50),
         CustomOutlinedButton(
           isFilled: true,
           backGroundColor: primaryColor.withOpacity(0.3),
           text: 'Solicitar Permiso',
           onPressed: () {
-            final gpsProvider =
-                Provider.of<PermissionsProvider>(context, listen: false);
+            final gpsProvider = Provider.of<PermissionsProvider>(
+              context,
+              listen: false,
+            );
             gpsProvider.askPermissionsAccess();
           },
         ),
-        const SizedBox(
-          height: 15,
-        ),
+        const SizedBox(height: 15),
         SizedBox(
-            width: 250,
-            height: 250,
-            child: SvgPicture.asset('assets/lost.svg')),
+          width: 250,
+          height: 250,
+          child: SvgPicture.asset('assets/lost.svg'),
+        ),
       ],
     );
   }
@@ -120,19 +137,21 @@ class _EnableGpsMessage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Debe habilitar la Ubicación',
-            style: TextStyle(
-                color: Colors.red, fontSize: 25, fontWeight: FontWeight.w500)),
-        const SizedBox(
-          height: 15,
+        const Text(
+          'Debe habilitar la Ubicación',
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 25,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        const SizedBox(
-          height: 50,
-        ),
+        const SizedBox(height: 15),
+        const SizedBox(height: 50),
         SizedBox(
-            width: 250,
-            height: 250,
-            child: SvgPicture.asset('assets/confirm.svg')),
+          width: 250,
+          height: 250,
+          child: SvgPicture.asset('assets/confirm.svg'),
+        ),
       ],
     );
   }
