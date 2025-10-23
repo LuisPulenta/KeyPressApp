@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.dart';
-import 'package:keypressapp/screens/screens.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -69,12 +69,7 @@ class _NotificationsView extends StatelessWidget {
                 ? Image.network(notification.imageUrl!)
                 : null,
             onTap: () async {
-              await Navigator.of(context2).push(
-                MaterialPageRoute(
-                  builder: (context2) =>
-                      DetailsScreen(pushMessageId: notification.messageId),
-                ),
-              );
+              await appRouter.push('/push-details/${notification.messageId}');
             },
           ),
         );

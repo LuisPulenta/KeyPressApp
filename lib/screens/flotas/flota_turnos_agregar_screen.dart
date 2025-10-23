@@ -1,15 +1,16 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:keypressapp/providers/providers.dart';
 import 'package:keypressapp/screens/widgets/customrow.dart';
 import 'package:keypressapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 
 class FlotaTurnosAgregarScreen extends StatefulWidget {
-  final User user;
-  const FlotaTurnosAgregarScreen({super.key, required this.user});
+  const FlotaTurnosAgregarScreen({super.key});
 
   @override
   State<FlotaTurnosAgregarScreen> createState() =>
@@ -627,6 +628,8 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
   //--------------------------------------------------------------------------
 
   void _addRecord() async {
+    final appStateProvider = context.read<AppStateProvider>();
+    User user = appStateProvider.user;
     setState(() {
       _showLoader = true;
     });
@@ -648,7 +651,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
 
     Map<String, dynamic> request = {
       'IDTurno': 0,
-      'IdUser': widget.user.idUsuario,
+      'IdUser': user.idUsuario,
       'FechaCarga': ahora,
       'Numcha': _codigo.toUpperCase(),
       'CodVehiculo': _vehiculo.codProducto,

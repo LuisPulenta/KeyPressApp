@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../themes/app_theme.dart';
+import 'package:keypressapp/config/theme/app_theme.dart';
 
 class LoaderComponent extends StatelessWidget {
   final String text;
@@ -14,20 +13,15 @@ class LoaderComponent extends StatelessWidget {
         width: 200,
         height: 100,
         decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: AppTheme.primary,
-            )),
+          color: const Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.primary),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(
-              color: AppTheme.primary,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            const CircularProgressIndicator(color: AppTheme.primary),
+            const SizedBox(height: 20),
             Text(text, style: const TextStyle(fontSize: 15)),
           ],
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:keypressapp/config/router/app_router.dart';
 
 class LocalNotifications {
-  //------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------
   static Future<void> requestPermissionLocalNotification() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -12,7 +13,7 @@ class LocalNotifications {
         ?.requestNotificationsPermission();
   }
 
-  //------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------
   static Future<void> initializeLocalNotifications() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -26,12 +27,11 @@ class LocalNotifications {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
   }
 
-  //------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------
   static void showLocalNotification({
     required int id,
     String? title,
@@ -42,6 +42,7 @@ class LocalNotifications {
       'channelId',
       'channelName',
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('notification'),
       importance: Importance.max,
       priority: Priority.max,
     );
@@ -58,16 +59,8 @@ class LocalNotifications {
     );
   }
 
-  static void onDidReceiveNotificationResponse(
-    NotificationResponse response,
-  ) async {
-    // appRouter.push('/push-details/${ response.payload }');
-
-    //   await Navigator.of(context).push(
-    //           MaterialPageRoute(
-    //             builder: (context2) =>
-    //                 DetailsScreen(pushMessageId: response.payload!),
-    //           ),
-    //         );
+  //---------------------------------------------------------------------------------------
+  static void onDidReceiveNotificationResponse(NotificationResponse response) {
+    appRouter.push('/push-details/${response.payload}');
   }
 }

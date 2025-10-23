@@ -3,16 +3,17 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/providers/providers.dart';
 import 'package:keypressapp/screens/widgets/customrow.dart';
 import 'package:keypressapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 
 class FlotaKmPreventivoScreen extends StatefulWidget {
-  final User user;
-  const FlotaKmPreventivoScreen({super.key, required this.user});
+  const FlotaKmPreventivoScreen({super.key});
 
   @override
   _FlotaKmPreventivoScreenState createState() =>
@@ -461,6 +462,8 @@ class _FlotaKmPreventivoScreenState extends State<FlotaKmPreventivoScreen>
 
   //--------------------- _search -----------------------------
   Future<void> _search() async {
+    final appStateProvider = context.read<AppStateProvider>();
+    User user = appStateProvider.user;
     FocusScope.of(context).unfocus();
     _codigoController.text = _codigo.toUpperCase();
     if (_codigo.isEmpty) {
@@ -475,7 +478,7 @@ class _FlotaKmPreventivoScreenState extends State<FlotaKmPreventivoScreen>
       return;
     }
 
-    if (widget.user.habilitaFlotas == 'SI') {
+    if (user.habilitaFlotas == 'SI') {
       await _getUsuarioChapa();
     } else {
       await _getVehiculo();
@@ -685,6 +688,8 @@ class _FlotaKmPreventivoScreenState extends State<FlotaKmPreventivoScreen>
 
   //--------------------- _getUsuarioChapa ---------------------
   Future<void> _getUsuarioChapa() async {
+    final appStateProvider = context.read<AppStateProvider>();
+    User user = appStateProvider.user;
     setState(() {
       _showLoader = true;
     });
@@ -727,8 +732,8 @@ class _FlotaKmPreventivoScreenState extends State<FlotaKmPreventivoScreen>
       _vFlota = response.result;
     });
 
-    if (_vFlota.grupoV == widget.user.codigogrupo &&
-        _vFlota.causanteV == widget.user.codigoCausante) {
+    if (_vFlota.grupoV == user.codigogrupo &&
+        _vFlota.causanteV == user.codigoCausante) {
       _getVehiculo();
     } else {
       await showAlertDialog(

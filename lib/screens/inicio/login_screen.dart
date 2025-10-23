@@ -8,15 +8,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'package:device_information/device_information.dart';
 import 'package:flutter_device_imei/flutter_device_imei.dart';
 import 'package:http/http.dart' as http;
+import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.dart';
+import 'package:keypressapp/providers/app_state_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/components.dart';
+import '../../config/theme/app_theme.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../../themes/app_theme.dart';
-import '../screens.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -178,13 +179,6 @@ class _LoginScreenState extends State<LoginScreen> {
         'Error',
         'Verifica que estés conectado a Internet',
       );
-      // await showAlertDialog(
-      //     context: context,
-      //     title: 'Error',
-      //     message: 'Verifica que estes conectado a internet.',
-      //     actions: <AlertDialogAction>[
-      //       const AlertDialogAction(key: null, label: 'Aceptar'),
-      //     ]);
       return;
     }
 
@@ -197,29 +191,21 @@ class _LoginScreenState extends State<LoginScreen> {
         'Hubo un error al recuperar los datos',
       );
 
-      // await showAlertDialog(
-      //     context: context,
-      //     title: 'Error',
-      //     message: 'Hubo un error al recuperar ls datos',
-      //     actions: <AlertDialogAction>[
-      //       const AlertDialogAction(key: null, label: 'Aceptar'),
-      //     ]);
-
       setState(() {});
       return;
     }
     _empresa = response.result;
+
+    final appStateProvider = context.read<AppStateProvider>();
+    appStateProvider.setEmpresa(_empresa!);
   }
   //----------------------- Pantalla ------------------------------
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () async {
-        await Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CandadoScreen()),
-        );
+      onLongPress: () {
+        appRouter.pushReplacement('/candado');
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -229,16 +215,6 @@ class _LoginScreenState extends State<LoginScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 0),
               color: Colors.white,
-              // decoration: const BoxDecoration(
-              //   gradient: LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [
-              //       AppTheme.primary,
-              //       AppTheme.secondary,
-              //     ],
-              //   ),
-              // ),
             ),
             Center(
               child: SingleChildScrollView(
@@ -311,38 +287,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
-                    //----------------------------------------------------
-                    // TextButton(
-                    //     onPressed: () async {
-                    //       bool result = await showConfirmDialog(context,
-                    //           title: 'Atención!',
-                    //           content: 'Está seguro de cambiar de empresa?');
-                    //       if (result) {
-                    //         await Navigator.pushReplacement(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => const CompanyScreen(),
-                    //           ),
-                    //         );
-                    //       }
-                    //     },
-                    //     child: const Text('Cambiar de Empresa',
-                    //         style: TextStyle(color: Colors.white, fontSize: 20))),
-
-                    //----------------------------------------------------
-                    // TextButton(
-                    //     onPressed: () async {
-                    //       await Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => const UsersExample(),
-                    //         ),
-                    //       );
-                    //     },
-                    //     child: const Text('Usuarios de Ejemplo',
-                    //         style: TextStyle(
-                    //             color: AppTheme.primary, fontSize: 20))),
                   ],
                 ),
               ),
@@ -514,14 +458,6 @@ class _LoginScreenState extends State<LoginScreen> {
         'Error',
         'Verifica que estés conectado a Internet',
       );
-
-      // await showAlertDialog(
-      //     context: context,
-      //     title: 'Error',
-      //     message: 'Verifica que estes conectado a internet.',
-      //     actions: <AlertDialogAction>[
-      //       const AlertDialogAction(key: null, label: 'Aceptar'),
-      //     ]);
       return;
     }
 
@@ -601,6 +537,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    final appStateProvider = context.read<AppStateProvider>();
+    appStateProvider.setUser(user);
+
     // Agregar registro a  websesion
 
     Random r = Random();
@@ -648,12 +587,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     //---------- Va a la página Home ----------
-    await Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(user: user, empresa: _empresa!),
-      ),
-    );
+    appRouter.pushReplacement('/home');
   }
 
   //--------------------- _postWebSesion ----------------------------

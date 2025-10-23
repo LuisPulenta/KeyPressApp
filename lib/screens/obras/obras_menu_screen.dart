@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keypressapp/config/router/app_router.dart';
+import 'package:keypressapp/providers/providers.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
 import '../../widgets/widgets.dart';
-import '../screens.dart';
 
 class ObrasMenuScreen extends StatelessWidget {
-  final User user;
-
-  const ObrasMenuScreen({Key? key, required this.user}) : super(key: key);
+  const ObrasMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Obras Menú'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Obras Menú'), centerTitle: true),
       body: _getBody(context),
     );
   }
 
   //----------------------- _getBody ------------------------------
   Widget _getBody(BuildContext context) {
+    final appStateProvider = context.watch<AppStateProvider>();
+    User user = appStateProvider.user;
     double ancho = MediaQuery.of(context).size.width;
     return Container(
       width: double.infinity,
@@ -31,10 +30,7 @@ class ObrasMenuScreen extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.white,
-            Colors.white,
-          ],
+          colors: [Colors.white, Colors.white],
         ),
       ),
       child: Column(
@@ -47,26 +43,17 @@ class ObrasMenuScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: 40,
-                  width: 500,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
                 ),
+                child: Image.asset('assets/logo.png', height: 40, width: 500),
               ),
             ),
           ),
           InkWell(
-            onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ObrasScreen(
-                    user: user,
-                  ),
-                ),
-              );
+            onTap: () {
+              appRouter.push('/obrasmenu');
             },
             child: SizedBox(
               width: ancho,
@@ -78,19 +65,10 @@ class ObrasMenuScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          const SizedBox(height: 5),
           InkWell(
             onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ObrasRelevamientosScreen(
-                    user: user,
-                  ),
-                ),
-              );
+              appRouter.push('/obrasrelevamientos');
             },
             child: SizedBox(
               width: ancho,

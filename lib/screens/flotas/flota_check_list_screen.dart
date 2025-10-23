@@ -2,7 +2,9 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/providers/providers.dart';
 import 'package:keypressapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
@@ -10,8 +12,7 @@ import '../../models/models.dart';
 import '../screens.dart';
 
 class FlotaCheckListScreen extends StatefulWidget {
-  final User user;
-  const FlotaCheckListScreen({super.key, required this.user});
+  const FlotaCheckListScreen({super.key});
 
   @override
   State<FlotaCheckListScreen> createState() => _FlotaCheckListScreenState();
@@ -90,28 +91,11 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
 
   late VehiculosCheckList _checkListVacio;
 
-  User _user = User(
-    idUsuario: 0,
-    codigoCausante: '',
-    login: '',
-    contrasena: '',
-    nombre: '',
-    apellido: '',
-    estado: 0,
-    habilitaAPP: 0,
-    habilitaFotos: 0,
-    modulo: '',
-    habilitaFlotas: '',
-    codigogrupo: '',
-    estadoInv: false,
-    compras: false,
-  );
-
   //----------------------------- Init State ------------------------------------
   @override
   void initState() {
     super.initState();
-    _user = widget.user;
+
     _checkListVacio = _checkListSeleccionada;
     _getCheckLists();
   }
@@ -119,6 +103,8 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
   //----------------------------- Pantalla --------------------------------------
   @override
   Widget build(BuildContext context) {
+    final appStateProvider = context.watch<AppStateProvider>();
+    User user = appStateProvider.user;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -150,7 +136,7 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => FlotaCheckListAgregarScreen(
-                user: widget.user,
+                user: user,
                 editMode: false,
                 checkList: _checkListVacio,
               ),
@@ -228,6 +214,8 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
 
   //-------------------------- _getListView ---------------------------
   Widget _getListView() {
+    final appStateProvider = context.watch<AppStateProvider>();
+    User user = appStateProvider.user;
     double ancho = MediaQuery.of(context).size.width;
     double anchoTitulo = ancho * 0.2;
     return ListView(
@@ -313,7 +301,7 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FlotaCheckListAgregarScreen(
-                              user: widget.user,
+                              user: user,
                               editMode: true,
                               checkList: e,
                             ),
@@ -350,11 +338,13 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
 
   //-------------------------- _goFotos -----------------------------
   void _goFotos(VehiculosCheckList e) async {
+    final appStateProvider = context.read<AppStateProvider>();
+    User user = appStateProvider.user;
     String? result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            FlotaCheckListFotosScreen(user: _user, vehiculosCheckList: e),
+            FlotaCheckListFotosScreen(user: user, vehiculosCheckList: e),
       ),
     );
     if (result == 'yes' || result != 'yes') {
@@ -364,6 +354,8 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
 
   //------------------------------- _getCheckLists ------------------------------
   Future<void> _getCheckLists() async {
+    final appStateProvider = context.watch<AppStateProvider>();
+    User user = appStateProvider.user;
     setState(() {
       _showLoader = true;
     });
@@ -384,7 +376,7 @@ class _FlotaCheckListScreenState extends State<FlotaCheckListScreen> {
     Response response = Response(isSuccess: false);
 
     response = await ApiHelper.getVehiculosCheckLists(
-      widget.user.idUsuario.toString(),
+      user.idUsuario.toString(),
     );
 
     setState(() {

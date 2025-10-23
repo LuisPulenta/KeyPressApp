@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:keypressapp/config/router/app_router.dart';
 
 import '../../widgets/confirm_dialog.dart';
-import '../inicio/company_screen.dart';
 
 class CandadoScreen extends StatefulWidget {
-  const CandadoScreen({Key? key}) : super(key: key);
+  const CandadoScreen({super.key});
 
   @override
   State<CandadoScreen> createState() => _CandadoScreenState();
@@ -19,11 +19,12 @@ class _CandadoScreenState extends State<CandadoScreen> {
   @override
   Widget build(BuildContext context) {
     const style = TextStyle(
-        fontSize: 32.0,
-        color: Colors.black,
-        fontWeight: FontWeight.normal,
-        fontStyle: FontStyle.normal,
-        decoration: TextDecoration.none);
+      fontSize: 32.0,
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontStyle: FontStyle.normal,
+      decoration: TextDecoration.none,
+    );
 
     return Scaffold(
       appBar: AppBar(),
@@ -37,8 +38,9 @@ class _CandadoScreenState extends State<CandadoScreen> {
                   width: 250,
                   height: 180,
                   decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20)),
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   //color: Colors.yellow,
                   child: Row(
                     children: [
@@ -116,27 +118,21 @@ class _CandadoScreenState extends State<CandadoScreen> {
                     height: 40,
                     color: const Color.fromARGB(46, 86, 180, 227),
                   ),
-                )
+                ),
               ],
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
+
             // Text(numero1 + numero2 + numero3 + numero4,
             //     style: const TextStyle(
             //         color: Colors.black,
             //         fontSize: 28,
             //         fontWeight: FontWeight.bold)),
-
             numero1 + numero2 + numero3 + numero4 != '2306'
                 ? const SizedBox(
                     width: 200,
                     height: 200,
-                    child: Icon(
-                      Icons.lock,
-                      color: Colors.red,
-                      size: 150,
-                    ),
+                    child: Icon(Icons.lock, color: Colors.red, size: 150),
                   )
                 : Center(
                     child: SizedBox(
@@ -144,16 +140,13 @@ class _CandadoScreenState extends State<CandadoScreen> {
                       height: 200,
                       child: IconButton(
                         onPressed: () async {
-                          bool result = await showConfirmDialog(context,
-                              title: 'Atención!',
-                              content: 'Está seguro de cambiar de empresa?');
+                          bool result = await showConfirmDialog(
+                            context,
+                            title: 'Atención!',
+                            content: 'Está seguro de cambiar de empresa?',
+                          );
                           if (result) {
-                            await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CompanyScreen(),
-                              ),
-                            );
+                            appRouter.pushReplacement('/company');
                           }
                         },
                         icon: const Icon(
@@ -163,7 +156,7 @@ class _CandadoScreenState extends State<CandadoScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
           ],
         ),
       ),

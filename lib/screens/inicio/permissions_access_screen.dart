@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/providers.dart';
+import '../../providers/permissions_provider.dart';
 import '../../utils/colors.dart';
 import '../widgets/buttons/custom_outlined_button.dart';
 

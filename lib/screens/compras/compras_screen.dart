@@ -2,52 +2,51 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/providers/providers.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/custom_error_dialog.dart';
 import '../../components/loader_component.dart';
+import '../../config/theme/app_theme.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../../themes/app_theme.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../widgets/list_count.dart';
 import '../widgets/no_content.dart';
 
 class ComprasScreen extends StatefulWidget {
-  final User user;
-  const ComprasScreen({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const ComprasScreen({super.key});
 
   @override
   ComprasScreenState createState() => ComprasScreenState();
 }
 
 class ComprasScreenState extends State<ComprasScreen> {
-//----------------------- Variables -----------------------------
+  //----------------------- Variables -----------------------------
   List<PEPedido> _compras = [];
   List<PEPedido> _comprasByNroPedido = [];
   bool _showLoader = false;
   bool _isFiltered = false;
   String _search = '';
   PEPedido compraSelected = PEPedido(
-      nroPedido: 0,
-      fecha: '',
-      estado: '',
-      nroPedidoObra: '',
-      totalItemAprobados: 0,
-      importeAprobados: 0.0,
-      idusuario: 0,
-      idfirma: 0);
+    nroPedido: 0,
+    fecha: '',
+    estado: '',
+    nroPedidoObra: '',
+    totalItemAprobados: 0,
+    importeAprobados: 0.0,
+    idusuario: 0,
+    idfirma: 0,
+  );
 
-//----------------------- initState -----------------------------
+  //----------------------- initState -----------------------------
   @override
   void initState() {
     super.initState();
     _getCompras();
   }
 
-//----------------------- Pantalla -----------------------------
+  //----------------------- Pantalla -----------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +57,13 @@ class ComprasScreenState extends State<ComprasScreen> {
         actions: <Widget>[
           _isFiltered
               ? IconButton(
-                  onPressed: _removeFilter, icon: const Icon(Icons.filter_none))
+                  onPressed: _removeFilter,
+                  icon: const Icon(Icons.filter_none),
+                )
               : IconButton(
-                  onPressed: _showFilter, icon: const Icon(Icons.filter_alt)),
+                  onPressed: _showFilter,
+                  icon: const Icon(Icons.filter_alt),
+                ),
         ],
       ),
       body: Center(
@@ -71,16 +74,14 @@ class ComprasScreenState extends State<ComprasScreen> {
     );
   }
 
-//------------------------------ _filter --------------------------
-  _filter() {
+  //------------------------------ _filter --------------------------
+  void _filter() {
     if (_search.isEmpty) {
       return;
     }
     List<PEPedido> filteredList = [];
     for (var compra in _compras) {
-      if (compra.nroPedidoObra.toLowerCase().contains(
-            _search.toLowerCase(),
-          )) {
+      if (compra.nroPedidoObra.toLowerCase().contains(_search.toLowerCase())) {
         filteredList.add(compra);
       }
     }
@@ -93,7 +94,7 @@ class ComprasScreenState extends State<ComprasScreen> {
     Navigator.of(context).pop();
   }
 
-//------------------------------ _removeFilter --------------------------
+  //------------------------------ _removeFilter --------------------------
   void _removeFilter() {
     setState(() {
       _isFiltered = false;
@@ -101,49 +102,56 @@ class ComprasScreenState extends State<ComprasScreen> {
     _getCompras();
   }
 
-//------------------------------ _showFilter --------------------------
+  //------------------------------ _showFilter --------------------------
   void _showFilter() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            title: const Text('Filtrar Obras'),
-            content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: const Text('Filtrar Obras'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
               const Text(
                 'Escriba texto o números a buscar en Nombre o N° de Pedido de Obra: ',
                 style: TextStyle(fontSize: 12),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               TextField(
                 autofocus: true,
                 decoration: InputDecoration(
-                    hintText: 'Criterio de búsqueda...',
-                    labelText: 'Buscar',
-                    suffixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+                  hintText: 'Criterio de búsqueda...',
+                  labelText: 'Buscar',
+                  suffixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onChanged: (value) {
                   _search = value;
                 },
               ),
-            ]),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancelar')),
-              TextButton(
-                  onPressed: () => _filter(), child: const Text('Filtrar')),
             ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => _filter(),
+              child: const Text('Filtrar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-//------------------------------ _getContent --------------------------
+  //------------------------------ _getContent --------------------------
   Widget _getContent() {
     return Column(
       children: <Widget>[
@@ -153,14 +161,15 @@ class ComprasScreenState extends State<ComprasScreen> {
               ? noContent(
                   _isFiltered,
                   'No hay Compras con ese criterio de búsqueda',
-                  'No hay Compras registradas')
+                  'No hay Compras registradas',
+                )
               : _getListView(),
-        )
+        ),
       ],
     );
   }
 
-//------------------------------ _getListView ---------------------------
+  //------------------------------ _getListView ---------------------------
   Widget _getListView() {
     var f = NumberFormat('#,###', 'es');
     return RefreshIndicator(
@@ -193,98 +202,98 @@ class ComprasScreenState extends State<ComprasScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      const Text('N° Pedido: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                      const Text(
+                                        'N° Pedido: ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                            f.format(e.nroPedido).toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
+                                          f.format(e.nroPedido).toString(),
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
                                       ),
-                                      const Text('Fecha: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                      const Text(
+                                        'Fecha: ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Expanded(
                                         flex: 4,
                                         child: Text(
                                           DateFormat('dd/MM/yyyy').format(
-                                              DateTime.parse(
-                                                  e.fecha.toString())),
-                                          style: const TextStyle(
-                                            fontSize: 12,
+                                            DateTime.parse(e.fecha.toString()),
                                           ),
+                                          style: const TextStyle(fontSize: 12),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
+                                  const SizedBox(height: 5),
                                   Row(
                                     children: [
                                       const Expanded(
                                         flex: 1,
-                                        child: Text('N° Pedido de Obra: ',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppTheme.primary,
-                                              fontWeight: FontWeight.bold,
-                                            )),
+                                        child: Text(
+                                          'N° Pedido de Obra: ',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppTheme.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       Expanded(
                                         flex: 2,
-                                        child: Text(e.nroPedidoObra,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
+                                        child: Text(
+                                          e.nroPedidoObra,
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
+                                  const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      const Text('Total Items Aprobados: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                      const Text(
+                                        'Total Items Aprobados: ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Expanded(
                                         flex: 1,
                                         child: Text(
-                                            e.totalItemAprobados.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
+                                          e.totalItemAprobados.toString(),
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
                                       ),
-                                      const SizedBox(
-                                        width: 20,
+                                      const SizedBox(width: 20),
+                                      const Text(
+                                        'Importe Aprob.: ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      const Text('Importe Aprob.: ',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          )),
                                       Expanded(
                                         flex: 2,
                                         child: Text(
-                                            NumberFormat.currency(symbol: '\$')
-                                                .format(e.importeAprobados),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            )),
+                                          NumberFormat.currency(
+                                            symbol: '\$',
+                                          ).format(e.importeAprobados),
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -301,19 +310,22 @@ class ComprasScreenState extends State<ComprasScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: IconButton(
-                          onPressed: () async {
-                            bool result = await showConfirmDialog(context,
-                                title: 'Atención!',
-                                content:
-                                    'Está seguro de firmar el Pedido N° ${e.nroPedido} de ${NumberFormat.currency(symbol: '\$').format(e.importeAprobados)}?');
-                            if (result) {
-                              _firmarPedido(e.idfirma, e.nroPedido);
-                            }
-                          },
-                          icon: const FaIcon(
-                            FontAwesomeIcons.signature,
-                            color: Colors.white,
-                          )),
+                        onPressed: () async {
+                          bool result = await showConfirmDialog(
+                            context,
+                            title: 'Atención!',
+                            content:
+                                'Está seguro de firmar el Pedido N° ${e.nroPedido} de ${NumberFormat.currency(symbol: '\$').format(e.importeAprobados)}?',
+                          );
+                          if (result) {
+                            _firmarPedido(e.idfirma, e.nroPedido);
+                          }
+                        },
+                        icon: const FaIcon(
+                          FontAwesomeIcons.signature,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -325,8 +337,10 @@ class ComprasScreenState extends State<ComprasScreen> {
     );
   }
 
-//----------------------- _getCompras -----------------------------
+  //----------------------- _getCompras -----------------------------
   Future<void> _getCompras() async {
+    final appStateProvider = context.watch<AppStateProvider>();
+    User user = appStateProvider.user;
     setState(() {
       _showLoader = true;
     });
@@ -338,13 +352,16 @@ class ComprasScreenState extends State<ComprasScreen> {
         _showLoader = false;
       });
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
       return;
     }
 
     Response response = Response(isSuccess: false);
 
-    response = await ApiHelper.getPEPedidos(widget.user.idUsuario);
+    response = await ApiHelper.getPEPedidos(user.idUsuario);
 
     if (!response.isSuccess) {
       if (mounted) {
@@ -358,10 +375,9 @@ class ComprasScreenState extends State<ComprasScreen> {
         _showLoader = false;
         _compras = response.result;
         _compras.sort((a, b) {
-          return a.nroPedido
-              .toString()
-              .toLowerCase()
-              .compareTo(b.nroPedido.toString().toLowerCase());
+          return a.nroPedido.toString().toLowerCase().compareTo(
+            b.nroPedido.toString().toLowerCase(),
+          );
         });
       });
     }
@@ -380,7 +396,10 @@ class ComprasScreenState extends State<ComprasScreen> {
         _showLoader = false;
       });
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
       return;
     }
 
@@ -400,10 +419,9 @@ class ComprasScreenState extends State<ComprasScreen> {
         _showLoader = false;
         _comprasByNroPedido = response.result;
         _comprasByNroPedido.sort((a, b) {
-          return a.nroPedido
-              .toString()
-              .toLowerCase()
-              .compareTo(b.nroPedido.toString().toLowerCase());
+          return a.nroPedido.toString().toLowerCase().compareTo(
+            b.nroPedido.toString().toLowerCase(),
+          );
         });
       });
     }
@@ -420,18 +438,22 @@ class ComprasScreenState extends State<ComprasScreen> {
           _showLoader = false;
         });
         await customErrorDialog(
-            context, 'Error', 'Verifica que estés conectado a Internet');
+          context,
+          'Error',
+          'Verifica que estés conectado a Internet',
+        );
         return;
       }
 
       Response response = Response(isSuccess: false);
 
-      Map<String, dynamic> request = {
-        'NroPedido': nroPedido,
-      };
+      Map<String, dynamic> request = {'NroPedido': nroPedido};
 
       response = await ApiHelper.put(
-          '/api/PEPedidos/PutPEPPedido/', nroPedido.toString(), request);
+        '/api/PEPedidos/PutPEPPedido/',
+        nroPedido.toString(),
+        request,
+      );
 
       if (!response.isSuccess) {
         if (mounted) {
@@ -448,7 +470,7 @@ class ComprasScreenState extends State<ComprasScreen> {
     }
   }
 
-//----------------------- _firmarPedido ---------------------------
+  //----------------------- _firmarPedido ---------------------------
   void _firmarPedido(int idfirma, int nroPedido) async {
     setState(() {
       _showLoader = true;
@@ -461,18 +483,22 @@ class ComprasScreenState extends State<ComprasScreen> {
         _showLoader = false;
       });
       await customErrorDialog(
-          context, 'Error', 'Verifica que estés conectado a Internet');
+        context,
+        'Error',
+        'Verifica que estés conectado a Internet',
+      );
       return;
     }
 
     Response response = Response(isSuccess: false);
 
-    Map<String, dynamic> request = {
-      'IDFIRMA': idfirma,
-    };
+    Map<String, dynamic> request = {'IDFIRMA': idfirma};
 
     response = await ApiHelper.put(
-        '/api/PEPedidos/PutPedidosFirma/', idfirma.toString(), request);
+      '/api/PEPedidos/PutPedidosFirma/',
+      idfirma.toString(),
+      request,
+    );
 
     if (!response.isSuccess) {
       if (mounted) {
@@ -484,21 +510,4 @@ class ComprasScreenState extends State<ComprasScreen> {
     _getCompras();
     _getPEPedidosByNroPedido(nroPedido);
   }
-
-//----------------------- _goInfoObra ---------------------------
-  // void _goInfoObra(Obra obra) async {
-  //   String? result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => ObraInfoScreen(
-  //         user: widget.user,
-  //         obra: obra,
-  //       ),
-  //     ),
-  //   );
-  //   if (result == 'yes' || result != 'yes') {
-  //     _getObras();
-  //     setState(() {});
-  //   }
-  // }
 }

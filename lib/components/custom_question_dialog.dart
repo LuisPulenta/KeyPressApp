@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../themes/app_theme.dart';
+import 'package:keypressapp/config/theme/app_theme.dart';
 
 Future<String?> customQuestionDialog(
   BuildContext context, {

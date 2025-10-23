@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../../themes/app_theme.dart';
+import '../../config/theme/app_theme.dart';
 import '../screens.dart';
 
 class ObraInfoScreen extends StatefulWidget {

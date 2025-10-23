@@ -2,16 +2,17 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:keypressapp/config/router/app_router.dart';
+import 'package:keypressapp/providers/providers.dart';
 import 'package:keypressapp/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/loader_component.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../screens.dart';
 
 class FlotaTurnosTallerScreen extends StatefulWidget {
-  final User user;
-  const FlotaTurnosTallerScreen({super.key, required this.user});
+  const FlotaTurnosTallerScreen({super.key});
 
   @override
   State<FlotaTurnosTallerScreen> createState() =>
@@ -46,12 +47,8 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
         backgroundColor: primaryColor,
         child: const Icon(Icons.add),
         onPressed: () async {
-          String? result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FlotaTurnosAgregarScreen(user: widget.user),
-            ),
-          );
+          String? result = await appRouter.push('/flotaturnosagregar');
+
           if (result == 'yes') {
             _getTurnos();
             setState(() {});
@@ -391,6 +388,8 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
 
   //-------------------------- _getTurnos -------------------------------
   Future<void> _getTurnos() async {
+    final appStateProvider = context.read<AppStateProvider>();
+    User user = appStateProvider.user;
     setState(() {
       _showLoader = true;
     });
@@ -410,7 +409,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
 
     Response response = Response(isSuccess: false);
 
-    response = await ApiHelper.getTurnos(widget.user.idUsuario.toString());
+    response = await ApiHelper.getTurnos(user.idUsuario.toString());
 
     setState(() {
       _showLoader = false;

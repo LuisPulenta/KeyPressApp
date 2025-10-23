@@ -1,19 +1,18 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keypressapp/config/router/app_router.dart';
+import 'package:keypressapp/models/models.dart';
+import 'package:keypressapp/providers/app_state_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../config/theme/app_theme.dart';
 import '../../helpers/api_helper.dart';
-import '../../models/models.dart';
-import '../../themes/app_theme.dart';
 import '../../widgets/widgets.dart';
-import '../screens.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
-  final Empresa empresa;
-
-  const HomeScreen({super.key, required this.user, required this.empresa});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,21 +22,17 @@ class _HomeScreenState extends State<HomeScreen> {
   //----------------------- Variables -----------------------------
   String direccion = '';
   int? _nroConexion = 0;
-
-  //----------------------- initState -----------------------------
-  @override
-  void initState() {
-    super.initState();
-  }
+  User? user;
+  Empresa? empresa;
 
   //----------------------- Pantalla ------------------------------
   @override
   Widget build(BuildContext context) {
+    final appStateProvider = context.watch<AppStateProvider>();
+    user = appStateProvider.user;
+    empresa = appStateProvider.empresa;
     return Scaffold(
-      appBar: AppBar(
-        //title: const Text('Keypress App'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(centerTitle: true),
       drawer: _getMenu(),
       body: _getBody(),
     );
@@ -95,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 5),
                   Center(
                     child: Text(
-                      "${widget.user.nombre!.replaceAll("  ", "")} ${widget.user.apellido!.replaceAll("  ", "")}",
+                      "${user!.nombre!.replaceAll("  ", "")} ${user!.apellido!.replaceAll("  ", "")}",
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -112,15 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               //--------------- Obras ---------------
               InkWell(
-                onTap: widget.empresa.habilitaObras == 1
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ObrasMenuScreen(user: widget.user),
-                          ),
-                        );
+                onTap: empresa!.habilitaObras == 1
+                    ? () {
+                        appRouter.push('/obrasmenu');
                       }
                     : null,
                 child: SizedBox(
@@ -128,10 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Boton(
                     icon: FontAwesomeIcons.personDigging,
                     texto: 'Obras',
-                    color1: widget.empresa.habilitaObras == 1
+                    color1: empresa!.habilitaObras == 1
                         ? const Color.fromARGB(255, 51, 7, 7)
                         : const Color.fromARGB(200, 104, 101, 101),
-                    color2: widget.empresa.habilitaObras == 1
+                    color2: empresa!.habilitaObras == 1
                         ? const Color.fromARGB(255, 85, 51, 67)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -140,17 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
               //--------------- Compras ---------------
               InkWell(
                 onTap:
-                    widget.empresa.habilitaCompras == 1 &&
-                        widget.user.estadoInv == true &&
-                        widget.user.compras == true
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ComprasScreen(user: widget.user),
-                          ),
-                        );
+                    empresa!.habilitaCompras == 1 &&
+                        user!.estadoInv == true &&
+                        user!.compras == true
+                    ? () {
+                        appRouter.push('/compras');
                       }
                     : null,
                 child: SizedBox(
@@ -159,15 +142,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: FontAwesomeIcons.cartShopping,
                     texto: 'Compras',
                     color1:
-                        widget.empresa.habilitaCompras == 1 &&
-                            widget.user.estadoInv == true &&
-                            widget.user.compras == true
+                        empresa!.habilitaCompras == 1 &&
+                            user!.estadoInv == true &&
+                            user!.compras == true
                         ? const Color.fromARGB(255, 226, 105, 245)
                         : const Color.fromARGB(200, 104, 101, 101),
                     color2:
-                        widget.empresa.habilitaCompras == 1 &&
-                            widget.user.estadoInv == true &&
-                            widget.user.compras == true
+                        empresa!.habilitaCompras == 1 &&
+                            user!.estadoInv == true &&
+                            user!.compras == true
                         ? const Color.fromARGB(255, 228, 177, 201)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -179,14 +162,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               //--------------- Instalaciones ---------------
               InkWell(
-                onTap: widget.empresa.habilitaInstalaciones == 1
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const InstalacionesScreen(),
-                          ),
-                        );
+                onTap: empresa!.habilitaInstalaciones == 1
+                    ? () {
+                        appRouter.push('/instalaciones');
                       }
                     : null,
                 child: SizedBox(
@@ -194,10 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Boton(
                     icon: FontAwesomeIcons.towerBroadcast,
                     texto: 'Instalaciones',
-                    color1: widget.empresa.habilitaInstalaciones == 1
+                    color1: empresa!.habilitaInstalaciones == 1
                         ? const Color.fromARGB(255, 8, 115, 44)
                         : const Color.fromARGB(200, 104, 101, 101),
-                    color2: widget.empresa.habilitaInstalaciones == 1
+                    color2: empresa!.habilitaInstalaciones == 1
                         ? const Color.fromARGB(255, 112, 227, 74)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -205,15 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               //--------------- FLota ---------------
               InkWell(
-                onTap: widget.empresa.habilitaFlotas == 1
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                FlotaMenuScreen(user: widget.user),
-                          ),
-                        );
+                onTap: empresa!.habilitaFlotas == 1
+                    ? () {
+                        appRouter.push('/flota');
                       }
                     : null,
                 child: SizedBox(
@@ -221,10 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Boton(
                     icon: FontAwesomeIcons.car,
                     texto: 'Flota',
-                    color1: widget.empresa.habilitaFlotas == 1
+                    color1: empresa!.habilitaFlotas == 1
                         ? const Color(0xff6989F5)
                         : const Color.fromARGB(200, 104, 101, 101),
-                    color2: widget.empresa.habilitaFlotas == 1
+                    color2: empresa!.habilitaFlotas == 1
                         ? const Color(0xff906EF5)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -236,14 +208,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               //--------------- RRHH ---------------
               InkWell(
-                onTap: widget.empresa.habilitaRRHH == 1
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RrhhScreen(),
-                          ),
-                        );
+                onTap: empresa!.habilitaRRHH == 1
+                    ? () {
+                        appRouter.push('/rrhh');
                       }
                     : null,
                 child: SizedBox(
@@ -251,10 +218,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Boton(
                     icon: FontAwesomeIcons.peopleArrows,
                     texto: 'RR.HH.',
-                    color1: widget.empresa.habilitaRRHH == 1
+                    color1: empresa!.habilitaRRHH == 1
                         ? const Color.fromARGB(255, 9, 238, 185)
                         : const Color.fromARGB(200, 104, 101, 101),
-                    color2: widget.empresa.habilitaRRHH == 1
+                    color2: empresa!.habilitaRRHH == 1
                         ? const Color.fromARGB(255, 141, 231, 192)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -262,14 +229,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               //--------------- FLota ---------------
               InkWell(
-                onTap: widget.empresa.habilitaReciboSueldos == 1
-                    ? () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RecibosSueldoScreen(),
-                          ),
-                        );
+                onTap: empresa!.habilitaReciboSueldos == 1
+                    ? () {
+                        appRouter.push('/recibossueldo');
                       }
                     : null,
                 child: SizedBox(
@@ -277,10 +239,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Boton(
                     icon: FontAwesomeIcons.fileInvoiceDollar,
                     texto: 'Recibos Sueldo',
-                    color1: widget.empresa.habilitaReciboSueldos == 1
+                    color1: empresa!.habilitaReciboSueldos == 1
                         ? const Color.fromARGB(255, 228, 101, 10)
                         : const Color.fromARGB(200, 104, 101, 101),
-                    color2: widget.empresa.habilitaReciboSueldos == 1
+                    color2: empresa!.habilitaReciboSueldos == 1
                         ? const Color.fromARGB(255, 221, 159, 101)
                         : const Color.fromARGB(199, 216, 213, 213),
                   ),
@@ -325,11 +287,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     await prefs.setString('userBody', '');
-    await prefs.setString('empresaBody', '').then((_) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+    await prefs.setString('empresa!.Body', '').then((_) {
+      appRouter.pushReplacement('/login');
     });
   }
 
@@ -369,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )),
                       ),
                       Text(
-                        '${widget.user.nombre} ${widget.user.apellido}',
+                        '${user!.nombre} ${user!.apellido}',
                         style: (const TextStyle(color: AppTheme.primary)),
                       ),
                     ],
@@ -407,13 +366,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Términos y Condiciones',
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TerminosScreen(),
-                              ),
-                            );
+                          onTap: () {
+                            appRouter.push('/terminos');
                           },
                         ),
                       ),
@@ -431,13 +385,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Cómo cuidamos tu privacidad',
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const PrivacidadScreen(),
-                              ),
-                            );
+                          onTap: () {
+                            appRouter.push('/privacidad');
                           },
                         ),
                       ),
@@ -456,13 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                           onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const DefensaConsumidorScreen(),
-                              ),
-                            );
+                            appRouter.push('/defensaconsumidor');
                           },
                         ),
                       ),
@@ -480,13 +423,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Notificaciones',
                 style: TextStyle(fontSize: 15, color: Colors.white),
               ),
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationsScreen(),
-                  ),
-                );
+              onTap: () {
+                appRouter.push('/notificaciones');
               },
             ),
             const Divider(color: Colors.white, height: 1),
@@ -501,13 +439,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Enviar Notificación',
                 style: TextStyle(fontSize: 15, color: Colors.white),
               ),
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SendNotificationScreen(),
-                  ),
-                );
+              onTap: () {
+                appRouter.push('/enviarnotificacion');
               },
             ),
             const Divider(color: Colors.white, height: 1),

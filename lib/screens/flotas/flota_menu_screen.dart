@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keypressapp/config/router/app_router.dart';
 
-import '../../models/user.dart';
 import '../../widgets/widgets.dart';
-import '../screens.dart';
 
 class FlotaMenuScreen extends StatelessWidget {
-  final User user;
-
-  const FlotaMenuScreen({super.key, required this.user});
+  const FlotaMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +48,7 @@ class FlotaMenuScreen extends StatelessWidget {
           ),
           InkWell(
             onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlotaKmPreventivoScreen(user: user),
-                ),
-              );
+              appRouter.push('/flotakmpreventivo');
             },
             child: SizedBox(
               width: ancho,
@@ -71,12 +63,7 @@ class FlotaMenuScreen extends StatelessWidget {
           const SizedBox(height: 5),
           InkWell(
             onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlotaCheckListScreen(user: user),
-                ),
-              );
+              appRouter.push('/flotachecklist');
             },
             child: SizedBox(
               width: ancho,
@@ -91,12 +78,7 @@ class FlotaMenuScreen extends StatelessWidget {
           const SizedBox(height: 5),
           InkWell(
             onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlotaTurnosTallerScreen(user: user),
-                ),
-              );
+              appRouter.push('/flotaturnostaller');
             },
             child: SizedBox(
               width: ancho,
