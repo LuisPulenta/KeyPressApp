@@ -54,8 +54,11 @@ class AppStateProvider with ChangeNotifier {
   Future<void> initializeHomeData() async {
     // Cargar los datos de SharedPreferences y configurar el estado
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isRemembered = prefs.getBool('isRemembered') ?? false;
+
     String companySelected = prefs.getString('company') ?? '';
+    bool isRemembered = prefs.getBool('isRemembered') ?? false;
+
+    await _getEmpresa(companySelected);
 
     if (companySelected.isEmpty) {
       setShowCompanyPage(true);
@@ -63,18 +66,25 @@ class AppStateProvider with ChangeNotifier {
       setShowCompanyPage(false);
       if (isRemembered) {
         String? userBody = prefs.getString('userBody');
+        String? empresa = prefs.getString('empresa');
         String date = prefs.getString('date').toString();
         String dateAlmacenada = date.substring(0, 10);
         String dateActual = DateTime.now().toString().substring(0, 10);
-        if (userBody != null && userBody != '') {
+        if (userBody != null &&
+            userBody != '' &&
+            empresa != null &&
+            empresa != '') {
           var decodedJson = jsonDecode(userBody);
           setUser(User.fromJson(decodedJson));
-          setShowLoginPage(dateAlmacenada != dateActual);
+          if (dateAlmacenada != dateActual) {
+            setShowLoginPage(true);
+          } else {
+            setShowLoginPage(false);
+          }
         }
       }
     }
     setIsLoading(false);
-    _getEmpresa(companySelected);
   }
 
   //-------------------------------------------------------------------------------

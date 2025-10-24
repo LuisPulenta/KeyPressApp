@@ -171,6 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //------------------------------ _getEmpresa --------------------------
   Future<void> _getEmpresa() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
@@ -198,6 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final appStateProvider = context.read<AppStateProvider>();
     appStateProvider.setEmpresa(_empresa!);
+
+    await prefs.setString('empresa', jsonEncode(_empresa!.toJson()));
   }
   //----------------------- Pantalla ------------------------------
 
@@ -568,6 +571,10 @@ class _LoginScreenState extends State<LoginScreen> {
     await _postWebSesion(webSesion);
 
     await prefs.setInt('nroConexion', resultado);
+
+    await prefs.setString('userBody', body);
+    await prefs.setBool('isRemembered', _rememberme);
+    await prefs.setString('date', DateTime.now().toString());
 
     //---------- Registra Token Notification ----------
 

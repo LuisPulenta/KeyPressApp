@@ -58,9 +58,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Aseguramos que initializeHomeData se ejecute al inicio
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Inicializar los datos del estado
-      context.read<AppStateProvider>().initializeHomeData();
+      await context.read<AppStateProvider>().initializeHomeData();
     });
 
     return MaterialApp.router(

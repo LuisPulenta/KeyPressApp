@@ -19,7 +19,7 @@ class PermissionsProvider with ChangeNotifier {
       isGpsEnabled &&
       isLocationPermissionGranted &&
       isCameraPermissionGranted &&
-      _isPushNotificationsGranted &&
+      isPushNotificationsGranted &&
       isPhonePermissionGranted;
 
   bool get isReady => _isReady;
@@ -96,6 +96,7 @@ class PermissionsProvider with ChangeNotifier {
     _isLocationPermissionGranted = gpsInitStatus[1];
     _isCameraPermissionGranted = gpsInitStatus[2];
     _isPhonePermissionGranted = gpsInitStatus[3];
+    _isPushNotificationsGranted = gpsInitStatus[4];
     _isReady = true;
 
     notifyListeners();

@@ -63,7 +63,9 @@ class _NotificationsView extends StatelessWidget {
             }
           },
           child: ListTile(
-            title: Text(notification.title),
+            title: Text(
+              'Id: ${notification.messageId} - ${notification.title}',
+            ),
             subtitle: Text(notification.body),
             leading: notification.imageUrl != null
                 ? Image.network(notification.imageUrl!)
@@ -78,8 +80,6 @@ class _NotificationsView extends StatelessWidget {
   }
 
   //---------------------- onDeleteContact ----------------------------
-  //-------------------------------------------------------------------
-
   void onDeleteNotification(String messageId) {
     final notificationBloc = context2.read<NotificationsBloc>();
     notificationBloc.removeMessageBy(messageId);
