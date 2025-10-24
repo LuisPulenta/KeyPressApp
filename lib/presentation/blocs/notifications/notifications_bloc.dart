@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keypressapp/config/local_notifications/local_notifications.dart';
 import 'package:keypressapp/firebase_options.dart';
 import 'package:keypressapp/models/models.dart';
 
@@ -90,7 +89,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     showLocalNotification!(
       id: ++pushNumberId,
       body: notification.body,
-      data: notification.user,
+      data: notification.messageId,
       title: notification.title,
     );
 
