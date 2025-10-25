@@ -9,6 +9,7 @@ import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.dart';
 import 'package:keypressapp/providers/providers.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/theme/app_theme.dart';
 
@@ -102,13 +103,25 @@ class _HandleNotificationInteraccionsState
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
-  void _handleMessage(RemoteMessage message) {
-    context.read<NotificationsBloc>().handleRemoteMessage(message);
+  void _handleMessage(RemoteMessage message) async {
+    // Obtener SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final String userBody = prefs.getString('userBody') ?? '';
 
-    final messageId = message.messageId
-        ?.replaceAll(':', '')
-        .replaceAll('%', '');
-    appRouter.push('/push-details/$messageId');
+    // Verificar si el usuario está logueado
+    if (userBody == '') {
+      // Si no está logueado, redirige al login
+      appRouter.push('/login');
+    } else {
+      context.read<NotificationsBloc>().handleRemoteMessage(message);
+      // Si está logueado, procede a la pantalla de detalles
+      final messageId = message.messageId
+          ?.replaceAll(':', '')
+          .replaceAll('%', '');
+      appRouter.push('/home');
+      appRouter.push('/notificaciones');
+      appRouter.push('/push-details/$messageId');
+    }
   }
 
   @override
