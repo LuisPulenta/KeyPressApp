@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:keypressapp/models/models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 
 import '../helpers/helpers.dart';
 
@@ -52,11 +52,8 @@ class AppStateProvider with ChangeNotifier {
 
   //-------------------------------------------------------------------------------
   Future<void> initializeHomeData() async {
-    // Cargar los datos de SharedPreferences y configurar el estado
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String companySelected = prefs.getString('company') ?? '';
-    bool isRemembered = prefs.getBool('isRemembered') ?? false;
+    String companySelected = Preferences.company;
+    bool isRemembered = Preferences.isRemembered;
 
     await _getEmpresa(companySelected);
 
@@ -65,15 +62,12 @@ class AppStateProvider with ChangeNotifier {
     } else {
       setShowCompanyPage(false);
       if (isRemembered) {
-        String? userBody = prefs.getString('userBody');
-        String? empresa = prefs.getString('empresa');
-        String date = prefs.getString('date').toString();
+        String? userBody = Preferences.userBody;
+        String? empresa = Preferences.empresa;
+        String date = Preferences.date;
         String dateAlmacenada = date.substring(0, 10);
         String dateActual = DateTime.now().toString().substring(0, 10);
-        if (userBody != null &&
-            userBody != '' &&
-            empresa != null &&
-            empresa != '') {
+        if (userBody != '' && empresa != '') {
           var decodedJson = jsonDecode(userBody);
           setUser(User.fromJson(decodedJson));
           if (dateAlmacenada != dateActual) {

@@ -11,8 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.dart';
 import 'package:keypressapp/providers/app_state_provider.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/components.dart';
 import '../../config/theme/app_theme.dart';
@@ -162,16 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //----------------------- _getData ------------------------------
   void _getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    companySelected = prefs.getString('company') ?? '';
-    connectionSelected = prefs.getString('connection') ?? '';
+    companySelected = Preferences.company;
+    connectionSelected = Preferences.connection;
     setState(() {});
     _getEmpresa();
   }
 
   //------------------------------ _getEmpresa --------------------------
   Future<void> _getEmpresa() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {});
@@ -200,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final appStateProvider = context.read<AppStateProvider>();
     appStateProvider.setEmpresa(_empresa!);
 
-    await prefs.setString('empresa', jsonEncode(_empresa!.toJson()));
+    Preferences.empresa = jsonEncode(_empresa!.toJson());
   }
   //----------------------- Pantalla ------------------------------
 
@@ -466,8 +464,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Map<String, dynamic> request = {'Email': _email, 'Password': _password};
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
 
     var url = Uri.parse('$apiUrl/Api/Account/GetUserByEmail');
     var response = await http.post(
@@ -570,11 +567,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await _postWebSesion(webSesion);
 
-    await prefs.setInt('nroConexion', resultado);
-
-    await prefs.setString('userBody', body);
-    await prefs.setBool('isRemembered', _rememberme);
-    await prefs.setString('date', DateTime.now().toString());
+    Preferences.nroConexion = resultado;
+    Preferences.userBody = body;
+    Preferences.isRemembered = _rememberme;
+    Preferences.date = DateTime.now().toString();
 
     //---------- Registra Token Notification ----------
 

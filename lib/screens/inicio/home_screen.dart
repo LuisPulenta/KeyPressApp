@@ -4,8 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/models/models.dart';
 import 'package:keypressapp/providers/app_state_provider.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme/app_theme.dart';
 import '../../helpers/api_helper.dart';
@@ -276,20 +276,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //----------------------- _logOut -------------------------------
   void _logOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
     //------------ Guarda en WebSesion la fecha y hora de salida ----------
-    _nroConexion = prefs.getInt('nroConexion');
+    _nroConexion = Preferences.nroConexion;
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
       await ApiHelper.putWebSesion(_nroConexion!);
     }
 
-    await prefs.setString('userBody', '');
-    await prefs.setString('empresa!.Body', '').then((_) {
-      appRouter.pushReplacement('/login');
-    });
+    Preferences.userBody = '';
+    Preferences.empresa = '';
+    appRouter.pushReplacement('/login');
   }
 
   //----------------------- _getMenu -------------------------------

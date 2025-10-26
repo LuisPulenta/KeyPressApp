@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 
 import '../models/models.dart';
 import 'constants.dart';
@@ -13,8 +13,7 @@ class ApiHelper {
     String id,
     Map<String, dynamic> request,
   ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
 
     var url = Uri.parse('$apiUrl$controller$id');
     var response = await http.put(
@@ -38,8 +37,7 @@ class ApiHelper {
     String controller,
     Map<String, dynamic> request,
   ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
 
     var url = Uri.parse('$apiUrl$controller');
     var response = await http.post(
@@ -60,8 +58,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> delete(String controller, String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl$controller$id');
     var response = await http.delete(
       url,
@@ -80,8 +77,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getObras(String proyectomodulo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Obras/GetObras/$proyectomodulo');
     var response = await http.post(
       url,
@@ -108,8 +104,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getObra(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Obras/GetObra/$id');
     var response = await http.get(
       url,
@@ -178,8 +173,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> putWebSesion(int nroConexion) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
 
     var url = Uri.parse('$apiUrl/api/WebSesions/$nroConexion');
 
@@ -202,8 +196,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getPEPedidos(int idUsuario) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/PEPedidos/GetPEPedidos/$idUsuario');
     var response = await http.post(
       url,
@@ -230,8 +223,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getPEPedidosByNroPedido(int nroPedido) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse(
       '$apiUrl/api/PEPedidos/GetPEPedidosByNroPedido/$nroPedido',
     );
@@ -263,8 +255,7 @@ class ApiHelper {
     String controller,
     Map<String, dynamic> request,
   ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl$controller');
     var response = await http
         .post(
@@ -286,8 +277,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getNroRegistroMax() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/VehiculosKilometraje/GetNroRegistroMax');
     var response = await http.get(
       url,
@@ -309,8 +299,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getProgramasPrev(String codigo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetProgramasPrev/$codigo');
     var response = await http.post(
       url,
@@ -337,8 +326,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getVehiculoByChapa(String chapa) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetVehiculoByChapa/$chapa');
     var response = await http.post(
       url,
@@ -359,8 +347,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getKilometrajes(String codigo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetKilometrajes/$codigo');
     var response = await http.post(
       url,
@@ -387,8 +374,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getPreventivos(String codigo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetPreventivos/$codigo');
     var response = await http.post(
       url,
@@ -415,8 +401,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getUsuarioChapa(String codigo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetUsuarioChapa/$codigo');
     var response = await http.get(
       url,
@@ -437,8 +422,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getVehiculosCheckLists(String idUser) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse(
       '$apiUrl/api/VehiculosCheckLists/GetVehiculosCheckLists/$idUser',
     );
@@ -468,8 +452,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getCheckListFotos(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse(
       '$apiUrl/api/VehiculosCheckListsFotos/GetVehiculosCheckListsFoto/$id',
     );
@@ -498,8 +481,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> deleteVehiculosCheckListsFoto(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse(
       '$apiUrl/api/VehiculosCheckListsFotos/DeleteVehiculosCheckListsFoto/$id',
     );
@@ -522,8 +504,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> deleteVehiculosCheckListsFotos(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse(
       '$apiUrl/api/VehiculosCheckListsFotos/DeleteVehiculosCheckListsFotos/$id',
     );
@@ -546,8 +527,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getClientes2() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Clientes/GetClientes');
     var response = await http.get(
       url,
@@ -574,8 +554,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getCausante(String codigo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Causantes/GetCausanteByCodigo2/$codigo');
     var response = await http.get(
       url,
@@ -596,8 +575,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getCausantesTalleres() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Causantes/GetTalleres');
 
     var response = await http.post(
@@ -625,8 +603,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getTurnos(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/Vehiculos/GetTurnos/$id');
 
     var response = await http.post(
@@ -654,8 +631,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getNotificationUsers() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/UsuarioTokens/GetUsuarios');
 
     var response = await http.post(
@@ -683,8 +659,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getNotificationToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/token');
 
     var response = await http.get(
@@ -708,8 +683,7 @@ class ApiHelper {
 
   //---------------------------------------------------------------------------
   static Future<Response> getTokensByUser(String user) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiUrl = prefs.getString('connection') ?? '';
+    String apiUrl = Preferences.connection;
     var url = Uri.parse('$apiUrl/api/UsuarioTokens/GetTokensByUser/$user');
 
     var response = await http.post(

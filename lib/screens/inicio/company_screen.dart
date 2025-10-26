@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:keypressapp/config/router/app_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 
 import '../../components/components.dart';
 import '../../config/theme/app_theme.dart';
@@ -60,16 +60,10 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 : AppTheme.primary.withOpacity(0.5),
                           ),
                           onPressed: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setString(
-                              'company',
-                              apisToSelect[index].company,
-                            );
-                            await prefs.setString(
-                              'connection',
-                              apisToSelect[index].connection,
-                            );
+                            Preferences.company = apisToSelect[index].company;
+                            Preferences.connection =
+                                apisToSelect[index].connection;
+
                             appRouter.pushReplacement('/loading');
                           },
                           child: Text(apisToSelect[index].company),

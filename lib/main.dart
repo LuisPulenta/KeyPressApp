@@ -8,8 +8,8 @@ import 'package:keypressapp/config/local_notifications/local_notifications.dart'
 import 'package:keypressapp/config/router/app_router.dart';
 import 'package:keypressapp/presentation/blocs/notifications/notifications_bloc.dart';
 import 'package:keypressapp/providers/providers.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/theme/app_theme.dart';
 
@@ -20,6 +20,7 @@ void main() async {
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
   WidgetsFlutterBinding.ensureInitialized();
+  await Preferences.init();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   await NotificationsBloc.initializeFCM();
@@ -104,9 +105,7 @@ class _HandleNotificationInteraccionsState
   }
 
   void _handleMessage(RemoteMessage message) async {
-    // Obtener SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final String userBody = prefs.getString('userBody') ?? '';
+    final String userBody = Preferences.userBody;
 
     // Verificar si el usuario está logueado
     if (userBody == '') {
