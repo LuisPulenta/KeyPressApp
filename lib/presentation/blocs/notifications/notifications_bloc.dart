@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -6,6 +7,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keypressapp/firebase_options.dart';
 import 'package:keypressapp/models/models.dart';
+import 'package:keypressapp/providers/db_provider.dart';
+import 'package:keypressapp/shared_preferences/preferences.dart';
 
 part 'notifications_event.dart';
 part 'notifications_state.dart';
@@ -24,10 +27,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   final Future<void> Function()? requestLocalNotificationPermissions;
   final void Function({
-    required int id,
+    int id,
+    String messageId,
+    String sentDate,
     String? title,
     String? body,
     String? data,
+    bool readed,
   })?
   showLocalNotification;
 
@@ -38,10 +44,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     on<NotificationStatusChanged>(_notificationStatusChanged);
     on<NotificationReceiver>(_onPushMessageReceived);
     on<NotificationRemove>(_onNotificationRemove);
+    on<MarkNotificationAsRead>(_onMarkNotificationAsRead);
+    on<LoadNotificationsFromDb>(_loadNotificationsFromDB);
 
     initialStatusCheck();
     //Listener para notificaciones en Foreground
     _onForegroundMessage();
+    loadNotificationsFromDB();
   }
 
   //-------------------------------------------------------------------------------
@@ -72,9 +81,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   //-------------------------------------------------------------------------------
-  void handleRemoteMessage(RemoteMessage message) {
+  Future<void> handleRemoteMessage(RemoteMessage message) async {
     if (message.notification == null) return;
-    final notification = PushMessage(
+    PushMessage notification = PushMessage(
+      id: 0,
       messageId:
           message.messageId?.replaceAll(':', '').replaceAll('%', '') ?? '',
       title: message.notification!.title ?? '',
@@ -86,24 +96,21 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           : message.notification!.apple?.imageUrl,
     );
 
-    showLocalNotification!(
-      id: ++pushNumberId,
-      body: notification.body,
-      data: notification.messageId,
-      title: notification.title,
-    );
+    final id = await DBProvider.db.newNotificationRaw(notification);
+    notification = notification.copyWith(id: id);
 
-    // if (showLocalNotification != null) {
-    //   showLocalNotification!(
-    //     id: ++pushNumberId,
-    //     body: notification.body,
-    //     data: notification.user,
-    //     title: notification.title,
-    //   );
-    // }
-
+    if (showLocalNotification != null) {
+      showLocalNotification!(
+        id: notification.id!,
+        messageId: notification.messageId,
+        sentDate: notification.sentDate.toString(),
+        body: notification.body,
+        data: notification.messageId,
+        title: notification.title,
+        readed: notification.readed,
+      );
+    }
     add(NotificationReceiver(notification));
-    //print(notification);
   }
 
   //-------------------------------------------------------------------------------
@@ -125,7 +132,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         notifications: [event.pushMessage, ...state.notifications],
       ),
     );
-    print('NOTIFICACIONES: ${state.notifications.length}');
   }
 
   //----------------------------------------------------------------------------------
@@ -170,7 +176,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   //----------------------------------------------------------------------------------
-  void removeMessageBy(String pushMessageId) {
+  void removeMessageBy(String pushMessageId) async {
     final exist = state.notifications.any(
       (element) => element.messageId == pushMessageId,
     );
@@ -179,5 +185,33 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       (element) => element.messageId == pushMessageId,
     );
     add(NotificationRemove(message));
+    await DBProvider.db.deleteNotification(message.id!);
+  }
+
+  //----------------------------------------------------------------------------------
+  Future<void> loadNotificationsFromDB() async {
+    String user = User.fromJson(jsonDecode(Preferences.userBody)).login;
+    if (user != '') {
+      List<PushMessage> notifications = await DBProvider.db
+          .getAllNotificationsByUser(user);
+      emit(state.copyWith(notifications: notifications));
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  void _onMarkNotificationAsRead(
+    MarkNotificationAsRead event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    await DBProvider.db.markAsRead(event.notificationId);
+    loadNotificationsFromDB();
+  }
+
+  //----------------------------------------------------------------------------------
+  void _loadNotificationsFromDB(
+    LoadNotificationsFromDb event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    loadNotificationsFromDB();
   }
 }

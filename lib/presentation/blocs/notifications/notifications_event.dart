@@ -21,3 +21,13 @@ class NotificationRemove extends NotificationsEvent {
 
   NotificationRemove(this.removeMessage);
 }
+
+class MarkNotificationAsRead extends NotificationsEvent {
+  final int notificationId;
+
+  MarkNotificationAsRead(this.notificationId);
+}
+
+class LoadNotificationsFromDb extends NotificationsEvent {
+  LoadNotificationsFromDb();
+}

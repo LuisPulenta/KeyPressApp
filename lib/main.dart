@@ -33,7 +33,7 @@ void main() async {
           create: (_) => NotificationsBloc(
             requestLocalNotificationPermissions:
                 LocalNotifications.requestPermissionLocalNotification,
-            showLocalNotification: LocalNotifications.showLocalNotification,
+            //showLocalNotification: LocalNotifications.showLocalNotification,
           ),
         ),
       ],
