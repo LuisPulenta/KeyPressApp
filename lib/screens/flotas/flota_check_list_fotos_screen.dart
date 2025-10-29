@@ -498,7 +498,7 @@ class _FlotaCheckListFotosScreenState extends State<FlotaCheckListFotosScreen> {
     setState(() {});
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
       await showAlertDialog(
         context: context,
@@ -581,7 +581,7 @@ class _FlotaCheckListFotosScreenState extends State<FlotaCheckListFotosScreen> {
     setState(() {});
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
       await showAlertDialog(
         context: context,
@@ -628,7 +628,7 @@ class _FlotaCheckListFotosScreenState extends State<FlotaCheckListFotosScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });

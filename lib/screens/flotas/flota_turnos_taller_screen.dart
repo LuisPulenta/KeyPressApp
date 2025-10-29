@@ -368,7 +368,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
   Future<void> _getTalleres() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       showMyDialog(
         'Error',
         'Verifica que estés conectado a Internet',
@@ -396,7 +396,7 @@ class _FlotaTurnosTallerScreenState extends State<FlotaTurnosTallerScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });

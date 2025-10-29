@@ -11,9 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/components.dart';
+import '../../config/theme/app_theme.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../../config/theme/app_theme.dart';
 import '../screens.dart';
 
 class ObraInfoScreen extends StatefulWidget {
@@ -749,7 +749,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     setState(() {});
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
 
       await customErrorDialog(
@@ -860,7 +860,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     setState(() {});
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
 
       await customErrorDialog(
@@ -897,7 +897,7 @@ class ObraInfoScreenState extends State<ObraInfoScreen> {
     _obrasDocumentosFotos = [];
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
 
       await customErrorDialog(

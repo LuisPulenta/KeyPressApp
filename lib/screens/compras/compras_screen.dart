@@ -347,7 +347,7 @@ class ComprasScreenState extends State<ComprasScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });
@@ -391,7 +391,7 @@ class ComprasScreenState extends State<ComprasScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });
@@ -433,7 +433,7 @@ class ComprasScreenState extends State<ComprasScreen> {
 
       var connectivityResult = await Connectivity().checkConnectivity();
 
-      if (connectivityResult == ConnectivityResult.none) {
+      if (connectivityResult.contains(ConnectivityResult.none)) {
         setState(() {
           _showLoader = false;
         });
@@ -478,7 +478,7 @@ class ComprasScreenState extends State<ComprasScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });

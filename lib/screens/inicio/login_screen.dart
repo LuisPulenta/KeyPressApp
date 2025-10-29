@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //------------------------------ _getEmpresa --------------------------
   Future<void> _getEmpresa() async {
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {});
       await customErrorDialog(
         context,
@@ -428,7 +428,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //--------------------- _login ------------------------------------
   void _login() async {
-    final notificationsBloc = context.read<NotificationsBloc>();
     FocusScope.of(context).unfocus(); //Oculta el teclado
 
     if (!hayImei()) {
@@ -448,8 +447,9 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoader = true;
     });
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });
@@ -573,7 +573,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Preferences.date = DateTime.now().toString();
 
     //---------- Registra Token Notification ----------
-
+    final notificationsBloc = context.read<NotificationsBloc>();
     notificationsBloc.initialStatusCheck();
     String token = await notificationsBloc.getFCMToken();
 

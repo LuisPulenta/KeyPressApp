@@ -498,7 +498,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
     });
 
     var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });
@@ -636,7 +636,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
 
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       setState(() {
         _showLoader = false;
       });
@@ -717,7 +717,7 @@ class _FlotaTurnosAgregarScreenState extends State<FlotaTurnosAgregarScreen> {
   Future<void> _getTalleres() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       showMyDialog(
         'Error',
         'Verifica que estés conectado a Internet',
