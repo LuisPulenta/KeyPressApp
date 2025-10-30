@@ -110,6 +110,7 @@ class _HandleNotificationInteraccionsState
     // Verificar si el usuario está logueado
     if (userBody == '') {
       // Si no está logueado, redirige al login
+      context.read<NotificationsBloc>().handleRemoteMessage(message);
       appRouter.push('/login');
     } else {
       context.read<NotificationsBloc>().handleRemoteMessage(message);
