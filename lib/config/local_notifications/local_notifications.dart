@@ -34,12 +34,9 @@ class LocalNotifications {
   //---------------------------------------------------------------------------------------
   static void showLocalNotification({
     required int id,
-    String? messageId,
-    String? sentDate,
     String? title,
-    String? message,
+    String? body,
     String? data,
-    bool? readed,
   }) async {
     const androidDetails = AndroidNotificationDetails(
       'channelId',
@@ -56,7 +53,7 @@ class LocalNotifications {
     flutterLocalNotificactionsPlugin.show(
       id,
       title,
-      message,
+      body,
       notificationDetails,
       payload: data,
     );

@@ -27,13 +27,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   final Future<void> Function()? requestLocalNotificationPermissions;
   final void Function({
-    int id,
-    String messageId,
-    String sentDate,
+    required int id,
     String? title,
     String? body,
     String? data,
-    bool readed,
   })?
   showLocalNotification;
 
@@ -102,12 +99,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     if (showLocalNotification != null) {
       showLocalNotification!(
         id: notification.id!,
-        messageId: notification.messageId,
-        sentDate: notification.sentDate.toString(),
         body: notification.body,
         data: notification.messageId,
         title: notification.title,
-        readed: notification.readed,
       );
     }
     add(NotificationReceiver(notification));

@@ -77,9 +77,9 @@ class _NotificationsView extends StatelessWidget {
         size: 14,
       ),
       onTap: () async {
-        context.read<NotificationsBloc>().add(
-          MarkNotificationAsRead(notification.id!),
-        );
+        // context.read<NotificationsBloc>().add(
+        //   MarkNotificationAsRead(notification.id!),
+        // );
         await appRouter.push('/push-details/${notification.messageId}');
       },
     );

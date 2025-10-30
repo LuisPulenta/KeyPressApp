@@ -15,11 +15,11 @@ class DetailsScreen extends StatelessWidget {
         .watch<NotificationsBloc>()
         .getMessageById(pushMessageId);
 
+    context.read<NotificationsBloc>().add(MarkNotificationAsRead(message!.id!));
+
     return Scaffold(
       appBar: AppBar(title: const Text('Notificación'), centerTitle: true),
-      body: message != null
-          ? _DetailsView(message: message)
-          : const Center(child: Text('Notificación no existe')),
+      body: _DetailsView(message: message),
     );
   }
 }
@@ -41,6 +41,15 @@ class _DetailsView extends StatelessWidget {
           if (message.imageUrl != null)
             Image.network(message.imageUrl!, width: 150),
           const SizedBox(height: 30),
+          Text(
+            'Id: ${message.id}',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Text(
             'Fecha: ${DateFormat('dd/MM/yyyy').format(message.sentDate)}',
             textAlign: TextAlign.left,
