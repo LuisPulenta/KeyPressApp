@@ -15,7 +15,11 @@ class DetailsScreen extends StatelessWidget {
         .watch<NotificationsBloc>()
         .getMessageById(pushMessageId);
 
-    context.read<NotificationsBloc>().add(MarkNotificationAsRead(message!.id!));
+    if (message != null) {
+      context.read<NotificationsBloc>().add(
+        MarkNotificationAsRead(message.id!),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Notificación'), centerTitle: true),
@@ -26,7 +30,7 @@ class DetailsScreen extends StatelessWidget {
 
 //------------------------ _DetailsView ------------------------
 class _DetailsView extends StatelessWidget {
-  final PushMessage message;
+  final PushMessage? message;
   const _DetailsView({required this.message});
 
   @override
@@ -35,38 +39,44 @@ class _DetailsView extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (message.imageUrl != null)
-            Image.network(message.imageUrl!, width: 150),
-          const SizedBox(height: 30),
-          Text(
-            'Id: ${message.id}',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
+      child: message != null
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (message!.imageUrl != null)
+                  Image.network(message!.imageUrl!, width: 150),
+                const SizedBox(height: 30),
+                Text(
+                  'Id: ${message!.id}',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Fecha: ${DateFormat('dd/MM/yyyy').format(message!.sentDate)}',
+                  textAlign: TextAlign.left,
+                ),
+                Text('Mensaje para el Usuario: ${message!.user}'),
+                const Divider(color: Colors.black),
+                Text(
+                  message!.title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(message!.body),
+              ],
+            )
+          : Center(
+              child: Text(
+                'El mensaje ya no existe en la Base de Datos interna',
+              ),
             ),
-          ),
-          Text(
-            'Fecha: ${DateFormat('dd/MM/yyyy').format(message.sentDate)}',
-            textAlign: TextAlign.left,
-          ),
-          Text('Mensaje para el Usuario: ${message.user}'),
-          const Divider(color: Colors.black),
-          Text(
-            message.title,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(message.body),
-        ],
-      ),
     );
   }
 }
